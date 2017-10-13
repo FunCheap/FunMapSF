@@ -26,7 +26,7 @@ public class HomeActivity extends AppCompatActivity {
     private String TAG = this.getClass().getSimpleName();
 
     @BindView(R.id.bottom_navigation)
-    BottomNavigationView mBottomNav;
+    public BottomNavigationView mBottomNav;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

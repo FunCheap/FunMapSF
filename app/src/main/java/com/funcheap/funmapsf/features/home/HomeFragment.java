@@ -26,11 +26,11 @@ import butterknife.ButterKnife;
 public class HomeFragment extends Fragment {
 
     @BindView(R.id.pager_container_home)
-    ViewPager mHomePager;
+    public ViewPager mHomePager;
     @BindView(R.id.tabs_home)
-    TabLayout mTabLayout;
+    public TabLayout mTabLayout;
     @BindView(R.id.fab_save_filter)
-    FloatingActionButton mFabSaveFilter;
+    public FloatingActionButton mFabSaveFilter;
 
     public static Fragment newInstance() {
         Bundle args = new Bundle();
