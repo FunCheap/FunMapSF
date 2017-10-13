@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Jayson on 10/11/2017.
  *
- * Holds the state of the MapsActivity. {@link ViewModel}s survive rotation and
+ * Holds the state of the HomeFragment. {@link ViewModel}s survive rotation and
  * can be accessed by multiple activities/fragments, making it an ideal place to hold
  * view states.
  *
