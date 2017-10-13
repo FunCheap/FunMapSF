@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Jayson on 10/13/2017.
- *
+ * <p>
  * Adapter Delegate that handles binding normal Event items to a RecyclerView.
  */
 
@@ -53,7 +53,10 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
 
         EventViewHolder viewHolder = (EventViewHolder) holder;
 
-        viewHolder.text.setText(items.get(position).getTitle());
+        viewHolder.title.setText(items.get(position).getTitle());
+        viewHolder.dateTime.setText(items.get(position).getStartDate());
+        viewHolder.price.setText(items.get(position).getCost());
+        viewHolder.venue.setText(items.get(position).getVenue().getName());
     }
 
     /**
@@ -62,7 +65,13 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
     public static class EventViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.text_title)
-        public TextView text;
+        public TextView title;
+        @BindView(R.id.text_date_time)
+        public TextView dateTime;
+        @BindView(R.id.text_price)
+        public TextView price;
+        @BindView(R.id.text_venue)
+        public TextView venue;
 
         public EventViewHolder(View itemView) {
             super(itemView);

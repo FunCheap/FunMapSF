@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.VisibleForTesting;
 
 import com.funcheap.funmapsf.commons.models.Events;
+import com.funcheap.funmapsf.commons.models.Venue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,13 @@ public class EventsRepoSingleton {
             dummyEvent.setTitle("Event " + i);
             dummyEvent.setContent("Content " + i);
             dummyEvent.setCost("$" + i);
+            dummyEvent.setStartDate("October 13, 2017");
+            dummyEvent.setEndDate("October 14, 2017");
+
+            Venue dummyVenue = new Venue();
+            dummyVenue.setName("Somewhere in SF");
+            dummyEvent.setVenue(dummyVenue);
+
             // TODO Populate more dummy fields
 
             eventsList.add(dummyEvent);
