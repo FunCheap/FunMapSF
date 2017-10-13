@@ -36,7 +36,7 @@ public class MapsViewModel extends ViewModel {
      *
      * TODO This should factor any filter settings specified by the user
      */
-    LiveData<List<Events>> getEventsLiveData() {
+    public LiveData<List<Events>> getEventsData() {
         if (mEventsLiveData == null) {
             mEventsLiveData = mEventsRepo.getEvents();
         }

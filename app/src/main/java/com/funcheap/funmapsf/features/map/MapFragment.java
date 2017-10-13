@@ -84,7 +84,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
      * changes. On change, populate the map.
      */
     private void initEvents() {
-        mMapsViewModel.getEventsLiveData().observe(this, eventsList -> {
+        mMapsViewModel.getEventsData().observe(this, eventsList -> {
             // Add markers from eventsList here
         });
     }

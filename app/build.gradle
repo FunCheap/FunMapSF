@@ -67,6 +67,9 @@ dependencies {
     // GSON
     compile "com.google.code.gson:gson:${gson_version}"
 
+    // Adapter Delegates
+    compile 'com.hannesdorfmann:adapterdelegates3:3.0.2-SNAPSHOT'
+
 }
 
 allprojects {
@@ -76,5 +79,6 @@ allprojects {
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url 'https://maven.google.com' }
         maven { url "https://www.jitpack.io" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
 }

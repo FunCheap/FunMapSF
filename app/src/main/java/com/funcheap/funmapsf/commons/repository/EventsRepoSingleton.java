@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.VisibleForTesting;
 
 import com.funcheap.funmapsf.commons.models.Events;
+import com.funcheap.funmapsf.commons.models.Venue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,16 +53,36 @@ public class EventsRepoSingleton {
 
         // Returns an empty list at first. The list is replaced when the async work finishes
         // and all observing views are notified.
-        eventsLiveData.setValue(new ArrayList<Events>());
+        // Return dummy data for now
+        eventsLiveData.setValue(generateDummyEvents());
         return eventsLiveData;
     }
 
     /**
-     * TODO Generates dummy {@link Events} for testing
-     * @return A List of events
+     * Generates dummy {@link Events} for testing
+     * @return A List of dummy events
      */
     List<Events> generateDummyEvents() {
-        return null;
+        List<Events> eventsList = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            Events dummyEvent = new Events();
+            dummyEvent.setTitle("Event " + i);
+            dummyEvent.setContent("Content " + i);
+            dummyEvent.setCost("$" + i);
+            dummyEvent.setStartDate("October 13, 2017");
+            dummyEvent.setEndDate("October 14, 2017");
+
+            Venue dummyVenue = new Venue();
+            dummyVenue.setName("Somewhere in SF");
+            dummyEvent.setVenue(dummyVenue);
+
+            // TODO Populate more dummy fields
+
+            eventsList.add(dummyEvent);
+        }
+
+        return eventsList;
     }
 
 }

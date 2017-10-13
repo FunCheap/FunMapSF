@@ -10,4 +10,10 @@ import com.funcheap.funmapsf.features.list.ListBaseFragment;
  */
 
 public class ListClusterFragment extends ListBaseFragment {
+
+    // TODO Build out this fragment similar to ListBookmarksFragment
+    @Override
+    protected void bindData() {
+
+    }
 }
