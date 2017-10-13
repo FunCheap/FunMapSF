@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">FunMap SF</string>
     <string name="title_activity_maps">FunMap SF</string>
+
+    <string name="bottom_nav_search">Search</string>
+    <string name="bottom_nav_filters">Filters</string>
+    <string name="bottom_nav_bookmarks">Bookmarks</string>
 </resources>

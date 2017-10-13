@@ -19,7 +19,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 /**
  * Created by Jayson on 10/11/2017.
  *
- * This is the fragment used to display our main MapView.
+ * This is the fragment used to display our MapView.
  */
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
