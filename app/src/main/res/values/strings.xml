@@ -5,4 +5,5 @@
     <string name="bottom_nav_search">Search</string>
     <string name="bottom_nav_filters">Filters</string>
     <string name="bottom_nav_bookmarks">Bookmarks</string>
+    <string name="content_description_event_photo">Event photo</string>
 </resources>

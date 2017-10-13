@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.funcheap.funmapsf.R;
+import com.funcheap.funmapsf.features.list.bookmarks.ListBookmarksFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
                     Toast.makeText(this, "Open Filters fragment!", Toast.LENGTH_LONG).show();
                     return true;
                 case R.id.action_bookmarks:
-                    Toast.makeText(this, "Open Bookmarks fragment!", Toast.LENGTH_LONG).show();
+                    loadFragment(ListBookmarksFragment.newInstance());
                     return true;
                 default:
                     Log.d(TAG, "initBottomNav: Unrecognized menu selection!");

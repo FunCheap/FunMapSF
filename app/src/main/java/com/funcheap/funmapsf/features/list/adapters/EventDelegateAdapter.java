@@ -53,7 +53,7 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
 
         EventViewHolder viewHolder = (EventViewHolder) holder;
 
-        viewHolder.text.setText("I've been set by the adapter!");
+        viewHolder.text.setText(items.get(position).getTitle());
     }
 
     /**
@@ -61,7 +61,7 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
      */
     public static class EventViewHolder extends RecyclerView.ViewHolder {
 
-        @BindView(R.id.text_dummy)
+        @BindView(R.id.text_title)
         public TextView text;
 
         public EventViewHolder(View itemView) {
