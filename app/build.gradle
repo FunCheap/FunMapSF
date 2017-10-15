@@ -22,6 +22,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 def support_version = "26.1.0"
@@ -40,10 +44,6 @@ dependencies {
     compile "com.android.support:recyclerview-v7:${support_version}"
     compile "com.android.support:cardview-v7:${support_version}"
     compile "com.android.support:design:${support_version}"
-
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.google.android.gms:play-services-maps:11.0.4'
-    testCompile 'junit:junit:4.12'
 
     // Android Architecture
     compile "android.arch.lifecycle:extensions:${and_arch_versrion}"
@@ -67,10 +67,16 @@ dependencies {
     // GSON
     compile "com.google.code.gson:gson:${gson_version}"
 
-    // Adapter Delegates
-    compile 'com.hannesdorfmann:adapterdelegates3:3.0.2-SNAPSHOT'
+    compile 'com.wdullaer:materialdatetimepicker:1.5.1'
 
-}
+    // Adapter Delegates
+    
+
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.google.android.gms:play-services-maps:11.0.4'
+    compile 'com.hannesdorfmann:adapterdelegates3:3.0.2-SNAPSHOT'
+    testCompile 'junit:junit:4.12'
+    }
 
 allprojects {
     repositories {
