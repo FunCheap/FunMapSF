@@ -45,6 +45,9 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:11.0.4'
     testCompile 'junit:junit:4.12'
 
+    // Maps utils
+    compile 'com.google.maps.android:android-maps-utils:0.3.+'
+
     // Android Architecture
     compile "android.arch.lifecycle:extensions:${and_arch_versrion}"
     compile "android.arch.lifecycle:compiler:${and_arch_versrion}"
@@ -69,6 +72,10 @@ dependencies {
 
     // Adapter Delegates
     compile 'com.hannesdorfmann:adapterdelegates3:3.0.2-SNAPSHOT'
+
+    // Parceler for db flow
+    compile 'org.parceler:parceler-api:1.1.6'
+    annotationProcessor 'org.parceler:parceler:1.1.6'
 
 }
 

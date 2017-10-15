@@ -1,20 +1,31 @@
 package com.funcheap.funmapsf.features.map;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.funcheap.funmapsf.R;
+import com.funcheap.funmapsf.commons.models.Events;
+import com.funcheap.funmapsf.commons.utils.EventRenderer;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.Cluster;
+import com.google.maps.android.clustering.ClusterManager;
+
+import java.util.ArrayList;
 
 /**
  * Created by Jayson on 10/11/2017.
@@ -22,13 +33,21 @@ import com.google.android.gms.maps.model.MarkerOptions;
  * This is the fragment used to display our MapView.
  */
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback,
+        ClusterManager.OnClusterClickListener<Events>,
+        ClusterManager.OnClusterInfoWindowClickListener<Events>,
+        ClusterManager.OnClusterItemClickListener<Events>,
+        ClusterManager.OnClusterItemInfoWindowClickListener<Events>{
 
     private final String TAG = this.getClass().getSimpleName();
 
     private SupportMapFragment mMapFragment;
     private GoogleMap mMap;
     private MapsViewModel mMapsViewModel;
+    ArrayList<Events> eventlist;
+    private ClusterManager<Events> mClusterManager;
+    private Context mCtx;
+
 
     public static MapFragment newInstance() {
         Bundle args = new Bundle();
@@ -36,6 +55,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         MapFragment fragment = new MapFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mCtx = context;
     }
 
     @Nullable
@@ -53,7 +78,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         // Find our MapFragment and be notified when the map is ready to be used.
         mMapFragment = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map));
         mMapFragment.getMapAsync(this);
-
+        eventlist = new ArrayList<>();
         // Get a reference to our ViewModel shared by our Activity
         mMapsViewModel = ViewModelProviders.of(getActivity()).get(MapsViewModel.class);
     }
@@ -69,14 +94,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        if (mMap != null) {
+            return;
+        }
         mMap = googleMap;
-
         initEvents();
-
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        startDemo();
     }
 
     /**
@@ -88,4 +111,84 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             // Add markers from eventsList here
         });
     }
+
+
+    private void setListeners(){
+            getMap().setOnCameraChangeListener(mClusterManager);
+            getMap().setOnMarkerClickListener(mClusterManager);
+            getMap().setOnInfoWindowClickListener(mClusterManager);
+            mClusterManager.setOnClusterClickListener(this);
+            mClusterManager.setOnClusterInfoWindowClickListener(this);
+            mClusterManager.setOnClusterItemClickListener(this);
+            mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+            }
+
+    private void setMapUISettings(){
+            getMap().getUiSettings().setZoomControlsEnabled(true);
+            getMap().getUiSettings().setRotateGesturesEnabled(false);
+            getMap().getUiSettings().setScrollGesturesEnabled(true);
+            getMap().getUiSettings().setTiltGesturesEnabled(false);
+            }
+
+
+    @Override
+    public boolean onClusterClick(Cluster<Events> cluster) {
+
+        String firstName = cluster.getItems().iterator().next().getTitle();
+        Toast.makeText(mCtx, cluster.getSize() + " (including " + firstName + ")", Toast.LENGTH_SHORT).show();
+        Log.i("Cluster","onClusterClick "+cluster.getItems().size());
+        return false;
+    }
+
+    @Override
+    public void onClusterInfoWindowClick(Cluster<Events> cluster) {
+        // Does nothing, but you could go to a list of the users.
+    }
+
+    @Override
+    public boolean onClusterItemClick(Events event) {
+        Toast.makeText(mCtx, event.getTitle(), Toast.LENGTH_SHORT).show();
+
+        return false;
+    }
+
+    @Override
+    public void onClusterItemInfoWindowClick(Events event) {
+
+    }
+
+
+    private GoogleMap getMap() {
+        return mMap;
+    }
+
+
+    protected void startDemo() {
+        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.7749,-122.4194), 10));
+        mClusterManager = new ClusterManager<Events>(mCtx, getMap());
+        LoadfromDBTask task = new LoadfromDBTask();
+        task.execute();
+        setListeners();
+        setMapUISettings();
+    }
+
+
+    class LoadfromDBTask extends AsyncTask<Void,Void,ArrayList<Events>> {
+
+        @Override
+        protected ArrayList<Events> doInBackground(Void... voids) {
+            return Events.eventsDBQuery();
+        }
+
+
+        @Override
+        protected void onPostExecute(ArrayList<Events> events) {
+            eventlist.addAll(events);
+            mClusterManager.addItems(eventlist);
+            mClusterManager.setRenderer(new EventRenderer(mCtx,getMap(),mClusterManager));
+            mClusterManager.cluster();
+        }
+    }
+
+
 }
