@@ -1,6 +1,8 @@
 package com.funcheap.funmapsf.features.list.adapters;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.widget.TextView;
 
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
+import com.funcheap.funmapsf.features.detail.DetailActivity;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 
 import java.util.List;
@@ -26,9 +29,13 @@ import butterknife.ButterKnife;
 public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
 
     private LayoutInflater mInflater;
+    private Events mEvent;
+    private Context mContext;
+    private static final String EVENT_EXTRA = "event_extra";
 
     public EventDelegateAdapter(Activity activity) {
         this.mInflater = activity.getLayoutInflater();
+        this.mContext = activity.getApplicationContext();
     }
 
     @Override
@@ -41,7 +48,19 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
     @NonNull
     @Override
     protected RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent) {
-        return new EventViewHolder(mInflater.inflate(R.layout.listitem_event, parent, false));
+        View view = mInflater.inflate(R.layout.listitem_event, parent, false);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mEvent != null)
+                {
+                    Intent intent = new Intent(mContext, DetailActivity.class);
+                    intent.putExtra(EVENT_EXTRA, mEvent);
+                    mContext.startActivity(intent);
+                }
+            }
+        });
+        return new EventViewHolder(view);
     }
 
     @Override
@@ -52,6 +71,7 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
             @NonNull List<Object> payloads) {
 
         EventViewHolder viewHolder = (EventViewHolder) holder;
+        mEvent = items.get(position);
 
         viewHolder.title.setText(items.get(position).getTitle());
         viewHolder.dateTime.setText(items.get(position).getStartDate());
