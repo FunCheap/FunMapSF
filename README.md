@@ -4,18 +4,18 @@ FunMapSF is an event browsing app that takes the curated events from sf.funcheap
 
  * Users can view events from sf.funcheap.com on a Google Map view.
    - Events are shown as icons based on the event type
-   - Clustered events are consolidated into a numbered bubble.
+   [x] Clustered events are consolidated into a numbered bubble.
  * Users can select a "List View" to view a list of all events currently shown on the map.
-   - List view contains a background image and information such as title, location, price, and date/time, and a "bookmark" button.
+   [x] List view contains a background image and information such as title, location, price, and date/time, and a "bookmark" button.
  * Users can click a cluster bubble and see a list of events from that cluster.
- * Users can click an event icon or list item to view details in an "Event Detail" 
+ [x] Users can click an event icon or list item to view details in an "Event Detail" 
    screen
-   - Description, location, start/end dates and times, location, headline photo
-   - Bookmark button
-   - Share event button
-   - Add to calendar button
-   - Map view of the location along with a "Directions" button.
-   - Click a link to view an event webpage
+   [x] Description, location, start/end dates and times, location, headline photo
+   [x] Bookmark button
+   [x] Share event button
+   [x] Add to calendar button
+   [x] Map view of the location along with a "Directions" button.
+    - Click a link to view an event webpage
  * Users can search and apply filters to the map
    - Events matching a search parameter. Should be matched against event 
     * Date Range
@@ -33,7 +33,7 @@ FunMapSF is an event browsing app that takes the curated events from sf.funcheap
  * Users can save filters and view them in a "Saved filters" section
    - Users can elect to be notified when events are added to each filter.
  * Users can view bookmarked events on a list
- * Events are stored and filtered using a local database periodically updated using Firebase, since no API exists for sf.funcheap.com.
+ [x] Events are stored and filtered using a local database periodically updated using Firebase, since no API exists for sf.funcheap.com.
    - When new events are added, check if it matches user subscriptions. If it does, 
      push a notification to that user. Clicking a notification will bring users to the 
      event detail page.
