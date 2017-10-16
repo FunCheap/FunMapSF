@@ -7,6 +7,7 @@
     <dimen name="padding_medium">16dp</dimen>
     <dimen name="padding_large">24dp</dimen>
 
+
     <dimen name="image_small">48dp</dimen>
 
     <dimen name="margin_tiny">2dp</dimen>
@@ -14,4 +15,18 @@
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">16dp</dimen>
     <dimen name="margin_xlarge">24dp</dimen>
+
+    <dimen name="largeText">25sp</dimen>
+    <dimen name="mediumText">16sp</dimen>
+    <dimen name="smallText">14sp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+
+    <dimen name="cardview_elevation">10dp</dimen>
+    <dimen name="cardview_corner_radius">3dp</dimen>
+
+    <dimen name="padding_top">5dp</dimen>
+    <dimen name="padding_left">10dp</dimen>
+
+    <dimen name="small_text">12sp</dimen>
 </resources>
