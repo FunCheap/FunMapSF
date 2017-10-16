@@ -70,13 +70,20 @@ dependencies {
     compile 'com.wdullaer:materialdatetimepicker:1.5.1'
 
     // Adapter Delegates
-    
-
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.google.android.gms:play-services-maps:11.0.4'
     compile 'com.hannesdorfmann:adapterdelegates3:3.0.2-SNAPSHOT'
     testCompile 'junit:junit:4.12'
+    
+    // Maps utils
+    compile 'com.google.maps.android:android-maps-utils:0.3.+'
+    
+    // Parceler for db flow
+    compile 'org.parceler:parceler-api:1.1.6'
+    annotationProcessor 'org.parceler:parceler:1.1.6'
+    
     }
+
 
 allprojects {
     repositories {

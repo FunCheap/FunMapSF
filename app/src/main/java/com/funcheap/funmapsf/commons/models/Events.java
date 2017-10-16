@@ -1,37 +1,82 @@
 
 package com.funcheap.funmapsf.commons.models;
 
+import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.funcheap.funmapsf.commons.database.MyDatabase;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ForeignKey;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Events implements Parcelable {
+@Table(database = MyDatabase.class)
+@org.parceler.Parcel(analyze={Events.class})
+public class Events extends BaseModel implements Parcelable,ClusterItem
+{
 
-    private long id;
-    private String title;
-    private String permalink;
-    private String content;
-    private String excerpt;
-    private String publishDate;
-    private String modifiedDate;
-    private String author;
-    private String startDate;
-    private String endDate;
-    private String cost;
-    private String costDetails;
-    private String bartStation;
-    private Venue venue;
-    private String thumbnail;
-    private List<String> categories = null;
-    private List<Object> tags = null;
+    @PrimaryKey
+    @Column
+    long id;
+    @Column
+    String title;
+    @Column
+    String permalink;
+    @Column
+    String content;
+    String excerpt;
+    @Column
+    String publishDate;
+    @Column
+    String modifiedDate;
+    @Column
+    String author;
+    @Column
+    String startDate;
+    @Column
+    String endDate;
+    @Column
+    String cost;
+    @Column
+    String costDetails;
+    @Column
+    String bartStation;
+    @Column
+    @ForeignKey(saveForeignKeyModel = true)
+    Venue venue;
+    @Column
+    String thumbnail;
+    @Column
+    String categories = null;
+    @Column
+    String tags = null;
+    @Column
+    double latitude;
+    @Column
+    double longitude;
+
+    LatLng position;
+    List<String> categoriesList = null;
+    List<String> tagsList = null;
+
+
+
     public final static Parcelable.Creator<Events> CREATOR = new Creator<Events>() {
-
         @SuppressWarnings({
                 "unchecked"
         })
@@ -61,13 +106,42 @@ public class Events implements Parcelable {
         this.bartStation = ((String) in.readValue((String.class.getClassLoader())));
         this.venue = ((Venue) in.readValue((Venue.class.getClassLoader())));
         this.thumbnail = ((String) in.readValue((String.class.getClassLoader())));
-        in.readList(this.categories, (java.lang.String.class.getClassLoader()));
-        in.readList(this.tags, (java.lang.Object.class.getClassLoader()));
+        this.categories = ((String) in.readValue((String.class.getClassLoader())));
+        this.tags = ((String) in.readValue((String.class.getClassLoader())));
+        this.latitude = ((double) in.readValue((double.class.getClassLoader())));
+        this.longitude = ((double) in.readValue((double.class.getClassLoader())));
+        this.position = in.readParcelable(LatLng.class.getClassLoader());
+        this.categoriesList = in.readArrayList(String.class.getClassLoader());
+        this.tagsList = in.readArrayList(String.class.getClassLoader());
     }
 
     public Events() {
     }
 
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setPosition(LatLng mPosition) {
+        this.position = mPosition;
+    }
+
+    public LatLng getPosition() {
+        return position;
+    }
     public long getId() {
         return id;
     }
@@ -188,20 +262,36 @@ public class Events implements Parcelable {
         this.thumbnail = thumbnail;
     }
 
-    public List<String> getCategories() {
+    public String getCategories() {
         return categories;
     }
 
-    public void setCategories(List<String> categories) {
+    public void setCategories(String categories) {
         this.categories = categories;
     }
 
-    public List<Object> getTags() {
+    public String getTags() {
         return tags;
     }
 
-    public void setTags(List<Object> tags) {
+    public void setTags(String tags) {
         this.tags = tags;
+    }
+
+    public List<String> getCategoriesList() {
+        return categoriesList;
+    }
+
+    public void setCategoriesList(List<String> categoriesList) {
+        this.categoriesList = categoriesList;
+    }
+
+    public List<String> getTagsList() {
+        return tagsList;
+    }
+
+    public void setTagsList(List<String> tagsList) {
+        this.tagsList = tagsList;
     }
 
     public void writeToParcel(Parcel dest, int flags) {
@@ -220,8 +310,13 @@ public class Events implements Parcelable {
         dest.writeValue(bartStation);
         dest.writeValue(venue);
         dest.writeValue(thumbnail);
-        dest.writeList(categories);
-        dest.writeList(tags);
+        dest.writeValue(categories);
+        dest.writeValue(tags);
+        dest.writeValue(latitude);
+        dest.writeValue(longitude);
+        dest.writeParcelable(this.position, flags);
+        dest.writeList(categoriesList);
+        dest.writeList(tagsList);
     }
 
     public int describeContents() {
@@ -229,10 +324,10 @@ public class Events implements Parcelable {
     }
 
 
-    public static ArrayList<Events> fromJSON(JSONArray response) throws JSONException {
+    public static ArrayList<Events> fromJSON(JSONArray response, Context context) throws JSONException{
         ArrayList<Events> eventList = new ArrayList<>();
 
-        for (int i = 0; i < response.length(); i++) {
+        for(int i =0;i<response.length();i++){
             JSONObject object = response.getJSONObject(i);
             Events event = new Events();
             event.id = object.getLong("id");
@@ -243,30 +338,61 @@ public class Events implements Parcelable {
             event.publishDate = object.getString("publishDate");
             event.modifiedDate = object.getString("modifiedDate");
             event.author = object.getString("author");
-            event.startDate = object.getString("startDate");
-            event.endDate = object.getString("endDate");
-            event.cost = object.getString("cost");
-            event.costDetails = object.getString("costDetails");
-            event.bartStation = object.getString("bartStation");
+            event.startDate= object.getString("startDate");
+            event.endDate= object.getString("endDate");
+            event.cost= object.getString("cost");
+            event.costDetails= object.getString("costDetails");
+            event.bartStation= object.getString("bartStation");
             event.venue = Venue.fromJSON(object.getJSONObject("venue"));
-            event.thumbnail = object.getString("thumbnail");
-            event.categories = getCategoryList(object.getJSONArray("categories"));
+            event.thumbnail= object.getString("thumbnail");
+            event.categories = getCategoryString(object.getJSONArray("categories"));
             event.tags = null;
-
+            event.latitude = 37.7749; // setting default values with SFO latitude
+            event.longitude = -122.4194; // setting default values with SFO longitude
+            LatLng sfo = new LatLng(37.7749,-122.4194); // setting default values with SFO latlng
+            event.position = sfo;
+            event.categoriesList = new ArrayList<>();
+            event.tagsList = new ArrayList<>();
+            event.save();
             eventList.add(event);
         }
 
         return eventList;
     }
 
-    public static ArrayList<String> getCategoryList(JSONArray array) throws JSONException {
-        ArrayList<String> categoryList = new ArrayList<>();
-        for (int i = 0; i < array.length(); i++) {
-            categoryList.add(array.getString(i));
+    public static String getCategoryString(JSONArray array) throws JSONException{
+        StringBuilder categoryList = new StringBuilder();
+        int len = array.length();
+        for(int i = 0;i<len;i++){
+            categoryList.append(array.getString(i));
+            if(len>1 && i<len-1){
+                categoryList.append(",");
+            }
         }
 
-        return categoryList;
+        return categoryList.toString();
     }
+
+    public static ArrayList<Events> eventsDBQuery(){
+        ArrayList<Events> list = new ArrayList<>();
+
+        list = (ArrayList<Events>) SQLite.select().from(Events.class).queryList();
+
+        for(int i=0;i<list.size();i++){
+            Events event = list.get(i);
+            event.setPosition(new LatLng(event.getLatitude(),event.getLongitude()));
+            event.categoriesList = new ArrayList<>();
+            event.tagsList = new ArrayList<>();
+
+            //Removing and Inserting the event after filling position, categoriesList, tagsList
+            list.remove(i);
+            list.add(i,event);
+        }
+
+        return list;
+
+    }
+
 
 }
 
