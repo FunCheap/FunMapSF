@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.commons.utils.EventRenderer;
+import com.funcheap.funmapsf.features.detail.DetailActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -40,6 +41,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         ClusterManager.OnClusterItemInfoWindowClickListener<Events>{
 
     private final String TAG = this.getClass().getSimpleName();
+    private static final String EVENT_EXTRA = "event_extra";
 
     private SupportMapFragment mMapFragment;
     private GoogleMap mMap;
@@ -147,8 +149,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public boolean onClusterItemClick(Events event) {
-        Toast.makeText(mCtx, event.getTitle(), Toast.LENGTH_SHORT).show();
-
+        Intent intent = new Intent();
+        intent.setClass(mCtx, DetailActivity.class);
+        intent.putExtra(EVENT_EXTRA,event);
+        startActivity(intent);
         return false;
     }
 
