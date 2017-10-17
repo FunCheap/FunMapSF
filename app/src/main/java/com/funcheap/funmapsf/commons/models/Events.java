@@ -69,6 +69,9 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
     double latitude;
     @Column
     double longitude;
+    @Column
+    boolean bookmarked;
+
 
     LatLng position;
     List<String> categoriesList = null;
@@ -113,9 +116,18 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
         this.position = in.readParcelable(LatLng.class.getClassLoader());
         this.categoriesList = in.readArrayList(String.class.getClassLoader());
         this.tagsList = in.readArrayList(String.class.getClassLoader());
+        this.bookmarked = in.readByte() != 0;
     }
 
     public Events() {
+    }
+
+    public boolean isBookmarked() {
+        return bookmarked;
+    }
+
+    public void setBookmarked(boolean bookmarked) {
+        this.bookmarked = bookmarked;
     }
 
 
@@ -317,6 +329,7 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
         dest.writeParcelable(this.position, flags);
         dest.writeList(categoriesList);
         dest.writeList(tagsList);
+        dest.writeByte((byte) (bookmarked ? 1 : 0));
     }
 
     public int describeContents() {
@@ -353,6 +366,7 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
             event.position = sfo;
             event.categoriesList = new ArrayList<>();
             event.tagsList = new ArrayList<>();
+            event.bookmarked=false;
             event.save();
             eventList.add(event);
         }
