@@ -41,7 +41,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".features.detail.DetailActivity"></activity>
+        <activity android:name=".features.detail.DetailActivity"/>
+        <activity android:name=".features.list.cluster.ListClusterActivity"/>
     </application>
 
 </manifest>

@@ -49,15 +49,13 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
     @Override
     protected RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent) {
         View view = mInflater.inflate(R.layout.listitem_event, parent, false);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mEvent != null)
-                {
-                    Intent intent = new Intent(mContext, DetailActivity.class);
-                    intent.putExtra(EVENT_EXTRA, mEvent);
-                    mContext.startActivity(intent);
-                }
+        view.setOnClickListener( myView -> {
+            if (mEvent != null)
+            {
+                Intent intent = new Intent(mContext, DetailActivity.class);
+                intent.putExtra(EVENT_EXTRA, mEvent);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(intent);
             }
         });
         return new EventViewHolder(view);

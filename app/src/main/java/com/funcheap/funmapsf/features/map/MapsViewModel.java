@@ -21,10 +21,10 @@ import java.util.List;
 public class MapsViewModel extends ViewModel {
     private final String TAG = this.getClass().getSimpleName();
 
-    EventsRepoSingleton mEventsRepo;
+    private EventsRepoSingleton mEventsRepo;
 
     // Holds the events to show on the map
-    LiveData<List<Events>> mEventsLiveData;
+    private LiveData<List<Events>> mEventsLiveData;
 
     public MapsViewModel() {
         mEventsRepo = EventsRepoSingleton.getEventsRepo();

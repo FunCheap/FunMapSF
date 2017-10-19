@@ -1,0 +1,58 @@
+{
+  "project_info": {
+    "project_number": "1003232572431",
+    "firebase_url": "https://funmap-sf.firebaseio.com",
+    "project_id": "funmap-sf",
+    "storage_bucket": "funmap-sf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1003232572431:android:3b5c2424113b20da",
+        "android_client_info": {
+          "package_name": "com.funcheap.funmapsf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1003232572431-chdhn93mun85u2kmfi2pghqqhlol3d3f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.funcheap.funmapsf",
+            "certificate_hash": "a4fc039c9c65dddf076669c832917545e54a3452"
+          }
+        },
+        {
+          "client_id": "1003232572431-1ou7ttsp9ajoatfd80dfp32au84k9od6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzKIL_UknbPSEeaj-HEbWxctJ7xPoZaOA"
+        },
+        {
+          "current_key": "AIzaSyAyxbND49uSRhsaDpRMcbjx0tub18acUBk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1003232572431-1ou7ttsp9ajoatfd80dfp32au84k9od6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

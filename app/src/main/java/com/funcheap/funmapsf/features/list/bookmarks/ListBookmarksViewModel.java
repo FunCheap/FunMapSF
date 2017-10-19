@@ -1,6 +1,7 @@
 package com.funcheap.funmapsf.features.list.bookmarks;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 
 import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.features.list.ListBaseViewModel;
@@ -18,7 +19,7 @@ class ListBookmarksViewModel extends ListBaseViewModel {
     public LiveData<List<Events>> getBookmarksEventsData() {
         if (mEventsData == null) {
             // Call our model to get the appropriate LiveData
-            mEventsData = mEventsRepo.getEvents();
+            mEventsData = (MutableLiveData<List<Events>>) mEventsRepo.getEvents();
         }
         return mEventsData;
     }
