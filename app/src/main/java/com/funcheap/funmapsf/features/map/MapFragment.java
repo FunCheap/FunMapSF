@@ -10,12 +10,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.commons.utils.EventRenderer;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
+import com.funcheap.funmapsf.features.list.cluster.ListClusterActivity;
+import com.funcheap.funmapsf.features.list.cluster.ListClusterFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -23,6 +24,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
+
+import java.util.ArrayList;
 
 /**
  * Created by Jayson on 10/11/2017.
@@ -44,7 +47,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private MapsViewModel mMapsViewModel;
     private ClusterManager<Events> mClusterManager;
     private Context mCtx;
-
 
     public static MapFragment newInstance() {
         Bundle args = new Bundle();
@@ -94,17 +96,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             return;
         }
         mMap = googleMap;
-        initEvents();
         startDemo();
+        initEvents();
     }
 
     @Override
     public boolean onClusterClick(Cluster<Events> cluster) {
 
-        String firstName = cluster.getItems().iterator().next().getTitle();
-        Toast.makeText(mCtx, cluster.getSize() + " (including " + firstName + ")", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(mCtx, ListClusterActivity.class);
+        intent.putParcelableArrayListExtra(
+                ListClusterFragment.EVENT_LIST_EXTRA, new ArrayList<>(cluster.getItems()));
+        startActivity(intent);
+
         Log.i("Cluster", "onClusterClick " + cluster.getItems().size());
-        return false;
+        return true;
     }
 
     @Override
@@ -118,7 +123,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         intent.setClass(mCtx, DetailActivity.class);
         intent.putExtra(EVENT_EXTRA, event);
         startActivity(intent);
-        return false;
+        return true;
     }
 
     @Override

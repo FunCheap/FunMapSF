@@ -20,4 +20,12 @@ public class ListBaseViewModel extends ViewModel {
     protected EventsRepoSingleton mEventsRepo = EventsRepoSingleton.getEventsRepo();
     protected LiveData<List<Events>> mEventsData;
 
+    public void setEventsData(LiveData<List<Events>> eventsData){
+        mEventsData = eventsData;
+    }
+
+    public LiveData<List<Events>> getEventsData() {
+        return  mEventsData;
+    }
+
 }

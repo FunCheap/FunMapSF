@@ -1,5 +1,7 @@
 package com.funcheap.funmapsf.features.list;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,17 +29,26 @@ import butterknife.ButterKnife;
 
 public abstract class ListBaseFragment extends Fragment {
 
+    private ListBaseViewModel mListBaseViewModel;
+
     @BindView(R.id.recycler_event_list)
     protected RecyclerView mEventRecycler;
 
     /**
-     * Subclasses must implement this method to load and bind a datasource to the recycler
+     * Subclasses must implement this method to provide datasource to the recycler
      * view. Request a LiveData<List<Event>> from the appropriate ViewModel by calling
      * <pre><code>
-     *     MyViewModel.getLiveData().observe( data -> { onBindData(data) } );
+     *     return MyViewModel.getSomeLiveData();
+     * </code></pre>
+     *
+     * You can also create your own LiveData like so
+     * <pre><code>
+     *     MutableLiveData<List<Events>> eventsData = new MutableLiveData<<>>();
+     *     eventsData.setValue(someEventsList);
+     *     return eventsData;
      * </code></pre>
      */
-    protected abstract void bindData();
+    protected abstract LiveData<List<Events>> getEventData();
 
     @Nullable
     @Override
@@ -45,7 +56,10 @@ public abstract class ListBaseFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_event_list, container, false);
         ButterKnife.bind(this, root);
 
+        mListBaseViewModel = ViewModelProviders.of(getActivity()).get(ListBaseViewModel.class);
+
         initRecyclerView();
+        mListBaseViewModel.setEventsData(getEventData());
         bindData();
 
         return root;
@@ -57,7 +71,15 @@ public abstract class ListBaseFragment extends Fragment {
                 new EventAdapter(getActivity(), new ArrayList<>()));
     }
 
-    protected void onBindData(List<Events> eventsList) {
+    protected void bindData() {
+        mListBaseViewModel.getEventsData().observe(this, this::onEventsChanged);
+    }
+
+    /**
+     * This runs each time a change is detected in the list of Events.
+     * @param eventsList the new list of Events.
+     */
+    protected void onEventsChanged(List<Events> eventsList) {
         ((EventAdapter) mEventRecycler.getAdapter()).replaceEvents(eventsList);
     }
 }

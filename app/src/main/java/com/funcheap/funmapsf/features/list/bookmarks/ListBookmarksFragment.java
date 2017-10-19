@@ -1,5 +1,6 @@
 package com.funcheap.funmapsf.features.list.bookmarks;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,7 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.features.list.ListBaseFragment;
+
+import java.util.List;
 
 /**
  * Created by Jayson on 10/11/2017.
@@ -43,8 +47,8 @@ public class ListBookmarksFragment extends ListBaseFragment {
     }
 
     @Override
-    protected void bindData() {
-        // Bind data from ListBookmarksViewModel to our adapter via the onBindData method
-        mListBookmarksViewModel.getBookmarksEventsData().observe(this, this::onBindData);
+    protected LiveData<List<Events>> getEventData() {
+        // Bind data from ListBookmarksViewModel to our adapter via the onEventsChanged method
+        return mListBookmarksViewModel.getBookmarksEventsData();
     }
 }

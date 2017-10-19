@@ -56,6 +56,7 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
                 {
                     Intent intent = new Intent(mContext, DetailActivity.class);
                     intent.putExtra(EVENT_EXTRA, mEvent);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 }
             }
