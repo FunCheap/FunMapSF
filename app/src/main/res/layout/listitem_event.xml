@@ -30,7 +30,7 @@
 
         <TextView
             android:id="@+id/text_title"
-            style="@style/ListTitleStyle"
+            style="@style/EventListTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_small"
@@ -45,7 +45,7 @@
 
         <TextView
             android:id="@+id/text_date_time"
-            style="@style/ListSubtitleStyle"
+            style="@style/EventListSubtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_small"
@@ -57,7 +57,7 @@
 
         <TextView
             android:id="@+id/text_price"
-            style="@style/ListSubtitleStyle"
+            style="@style/EventListSubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -79,7 +79,7 @@
             android:id="@+id/text_venue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/ListSubtitleStyle"
+            style="@style/EventListSubtitle"
             app:layout_constraintRight_toRightOf="@id/img_bookmark"
             app:layout_constraintTop_toTopOf="@id/text_price"
             app:layout_constraintBottom_toBottomOf="@id/text_price"
