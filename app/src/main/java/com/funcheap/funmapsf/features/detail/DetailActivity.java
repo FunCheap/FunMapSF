@@ -1,5 +1,6 @@
 package com.funcheap.funmapsf.features.detail;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
@@ -37,6 +38,7 @@ public class DetailActivity extends AppCompatActivity implements DatePickerDialo
     @BindView(R.id.ivBackdrop)
     ImageView ivBackdrop;
 
+    private DetailViewModel mDetailViewModel;
     private ActivityDetailBinding mBinding;
     private Events mEvents;
     private static final String EVENT_EXTRA = "event_extra";
@@ -48,15 +50,27 @@ public class DetailActivity extends AppCompatActivity implements DatePickerDialo
                 this, R.layout.activity_detail);
         ButterKnife.bind(this);
 
+        mDetailViewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
+
+        initToolbar();
+        initEvent();
+
+    }
+
+    private void initToolbar() {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        mEvents = getIntent().getExtras().getParcelable(EVENT_EXTRA);
-        if (mEvents != null)
-        {
-            mBinding.setEvents(mEvents);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    private void initEvent() {
+        mEvents = getIntent().getExtras().getParcelable(EVENT_EXTRA);
+        mDetailViewModel.setEventData(mEvents);
+
+        mDetailViewModel.getEventData().observe(this, events -> mBinding.setEvents(events));
+
     }
 
     public void onCalenderClick(View v)
