@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.util.Log;
 
 import com.funcheap.funmapsf.commons.models.Events;
+import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.commons.models.Venue;
 import com.google.android.gms.common.api.Response;
 
@@ -60,6 +61,24 @@ public class EventsRepoSingleton {
         // Returns a null list at first. The list is replaced when the async work finishes
         // and all observing views are notified.
         return eventsLiveData;
+    }
+
+    /**
+     * Returns the users saved filters
+     * @return a list of saved filters
+     */
+    public LiveData<List<Filter>> getSavedFilters() {
+        MutableLiveData<List<Filter>> filterData = new MutableLiveData<>();
+
+        // Populate with dummy filters
+        List<Filter> filterList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Filter filter = new Filter();
+            filter.id = i;
+            filterList.add(filter);
+        }
+        filterData.setValue(filterList);
+        return filterData;
     }
 
     /**
