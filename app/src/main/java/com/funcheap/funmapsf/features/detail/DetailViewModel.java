@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.funcheap.funmapsf.commons.models.Events;
+import com.funcheap.funmapsf.commons.repository.EventsRepoSingleton;
 
 /**
  * Created by Jayson on 10/11/2017.
@@ -13,6 +14,8 @@ import com.funcheap.funmapsf.commons.models.Events;
  */
 
 public class DetailViewModel extends ViewModel {
+
+    private EventsRepoSingleton mEventsRepoSingleton = EventsRepoSingleton.getEventsRepo();
     private MutableLiveData<Events> eventData;
 
     public void setEventData(Events event) {
@@ -24,6 +27,10 @@ public class DetailViewModel extends ViewModel {
 
     public LiveData<Events> getEventData() {
         return eventData;
+    }
+
+    public LiveData<Events> getEventById(long id) {
+        return mEventsRepoSingleton.getEventById(id);
     }
 
 }

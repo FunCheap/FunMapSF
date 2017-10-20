@@ -2,8 +2,6 @@
 package com.funcheap.funmapsf.commons.models;
 
 import android.content.Context;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -21,7 +19,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -390,9 +387,11 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
         }
 
         return list;
-
     }
 
+    public static Events getEventById(long eventId){
+        return SQLite.select().from(Events.class).where(Events_Table.id.eq(eventId)).querySingle();
+    }
 
 }
 

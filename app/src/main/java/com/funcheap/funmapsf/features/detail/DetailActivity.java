@@ -10,6 +10,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -27,7 +28,11 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DetailActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener{
+public class DetailActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
+
+    public static final String EVENT_EXTRA_ID = "event_extra_id";
+    private static final String EVENT_EXTRA = "event_extra";
+    private final String TAG = this.getClass().getSimpleName();
 
     @BindView(R.id.appbar)
     AppBarLayout appbar;
@@ -40,8 +45,6 @@ public class DetailActivity extends AppCompatActivity implements DatePickerDialo
 
     private DetailViewModel mDetailViewModel;
     private ActivityDetailBinding mBinding;
-    private Events mEvents;
-    private static final String EVENT_EXTRA = "event_extra";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,9 +55,8 @@ public class DetailActivity extends AppCompatActivity implements DatePickerDialo
 
         mDetailViewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
 
-        initToolbar();
         initEvent();
-
+        initToolbar();
     }
 
     private void initToolbar() {
@@ -65,22 +67,33 @@ public class DetailActivity extends AppCompatActivity implements DatePickerDialo
         }
     }
 
+    /**
+     * Gets an intent passed as an extra. If not, attempt to get an EventID passed through an
+     * extra and obtain the corresponding event.
+     */
     private void initEvent() {
-        mEvents = getIntent().getExtras().getParcelable(EVENT_EXTRA);
-        mDetailViewModel.setEventData(mEvents);
+        Intent intent = getIntent();
 
-        mDetailViewModel.getEventData().observe(this, events -> mBinding.setEvents(events));
-
+        if (intent.hasExtra(EVENT_EXTRA)) {
+            // Get event directly
+            Events event = getIntent().getExtras().getParcelable(EVENT_EXTRA);
+            mDetailViewModel.setEventData(event);
+            mDetailViewModel.getEventData().observe(this, events -> mBinding.setEvents(events));
+        } else if (intent.hasExtra(EVENT_EXTRA_ID)) {
+            // Get event by ID
+            long id = Long.parseLong(getIntent().getStringExtra(EVENT_EXTRA_ID));
+            mDetailViewModel.getEventById(id).observe(this, events -> mBinding.setEvents(events));
+        } else {
+            Log.d(TAG, "initEvent: No valid Event data was given!");
+        }
     }
 
-    public void onCalenderClick(View v)
-    {
+    public void onCalenderClick(View v) {
         Toast.makeText(getApplicationContext(), "onCalenderClick", Toast.LENGTH_SHORT).show();
         showDate();
     }
 
-    public void onDirectionsClick(View v)
-    {
+    public void onDirectionsClick(View v) {
         Toast.makeText(getApplicationContext(), "onDirectionsClick", Toast.LENGTH_SHORT).show();
         String uri = "http://maps.google.com/maps?daddr=" + "37.8199 N,122.4483 W";
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
@@ -88,34 +101,31 @@ public class DetailActivity extends AppCompatActivity implements DatePickerDialo
         startActivity(intent);
     }
 
-    public void onShareClick(View v)
-    {
+    public void onShareClick(View v) {
         Toast.makeText(getApplicationContext(), "onShareClick", Toast.LENGTH_SHORT).show();
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, mEvents.getTitle());
+        shareIntent.putExtra(Intent.EXTRA_TEXT, mDetailViewModel.getEventData().getValue().getTitle());
         startActivity(Intent.createChooser(shareIntent, "Share link using"));
     }
 
-    public void onSaveClick(View v)
-    {
+    public void onSaveClick(View v) {
         Toast.makeText(getApplicationContext(), "onSaveClick", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onTimeSet(RadialPickerLayout radialPickerLayout, int hour, int minute) {
-     //   setTime(hour, minute);
+        //   setTime(hour, minute);
     }
 
     @Override
     public void onDateSet(DatePickerDialog datePickerDialog, int year, int month, int day) {
-     //   setDate(year, month, day);
+        //   setDate(year, month, day);
         showTime();
     }
 
-    public void showDate()
-    {
+    public void showDate() {
         Date date = new Date();
 
         Calendar calendar = Calendar.getInstance();
@@ -130,8 +140,7 @@ public class DetailActivity extends AppCompatActivity implements DatePickerDialo
         datePickerDialog.show(getFragmentManager(), "DateFragment");
     }
 
-    public void showTime()
-    {
+    public void showTime() {
         Date date = new Date();
 
         Calendar calendar = Calendar.getInstance();

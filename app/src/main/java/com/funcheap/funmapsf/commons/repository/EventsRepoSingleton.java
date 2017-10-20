@@ -63,6 +63,17 @@ public class EventsRepoSingleton {
         return eventsLiveData;
     }
 
+    public LiveData<Events> getEventById(long id) {
+        MutableLiveData<Events> eventData = new MutableLiveData<>();
+
+        Observable.fromCallable(() -> Events.getEventById(id))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(eventData::setValue);
+
+        return eventData;
+    }
+
     /**
      * Returns the users saved filters
      * @return a list of saved filters
