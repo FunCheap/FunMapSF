@@ -7,9 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.funcheap.funmapsf.R;
+import com.funcheap.funmapsf.features.filter.list.ListFiltersFragment;
 import com.funcheap.funmapsf.features.list.bookmarks.ListBookmarksFragment;
 
 import butterknife.BindView;
@@ -46,7 +46,7 @@ public class HomeActivity extends AppCompatActivity {
                     loadFragment(HomeFragment.newInstance());
                     return true;
                 case R.id.action_filters:
-                    Toast.makeText(this, "Open Filters fragment!", Toast.LENGTH_LONG).show();
+                    loadFragment(ListFiltersFragment.newInstance());
                     return true;
                 case R.id.action_bookmarks:
                     loadFragment(ListBookmarksFragment.newInstance());

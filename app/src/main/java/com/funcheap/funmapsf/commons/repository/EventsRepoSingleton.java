@@ -68,7 +68,14 @@ public class EventsRepoSingleton {
      * @return a list of saved filters
      */
     public LiveData<List<Filter>> getSavedFilters() {
-        return null;
+        MutableLiveData<List<Filter>> filterData = new MutableLiveData<>();
+
+        List<Filter> filterList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            filterList.add(new Filter());
+        }
+        filterData.setValue(filterList);
+        return filterData;
     }
 
     /**
