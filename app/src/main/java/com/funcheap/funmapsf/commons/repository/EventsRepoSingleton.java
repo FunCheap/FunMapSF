@@ -70,9 +70,12 @@ public class EventsRepoSingleton {
     public LiveData<List<Filter>> getSavedFilters() {
         MutableLiveData<List<Filter>> filterData = new MutableLiveData<>();
 
+        // Populate with dummy filters
         List<Filter> filterList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
-            filterList.add(new Filter());
+            Filter filter = new Filter();
+            filter.id = i;
+            filterList.add(filter);
         }
         filterData.setValue(filterList);
         return filterData;

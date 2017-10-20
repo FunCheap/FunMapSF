@@ -1,17 +1,21 @@
 package com.funcheap.funmapsf.features.filter.list.adapters;
 
 import android.app.Activity;
-import android.content.Context;
+import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Filter;
+import com.funcheap.funmapsf.features.filter.list.ListFilterViewModel;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 
 import java.util.List;
@@ -27,14 +31,15 @@ import butterknife.ButterKnife;
 
 public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
 
+    private static final String FILTER_EXTRA = "filter_extra";
+    private final String TAG = this.getClass().getSimpleName();
     private LayoutInflater mInflater;
     private Filter mFilter;
-    private Context mContext;
-    private static final String FILTER_EXTRA = "filter_extra";
+    private ListFilterViewModel mListFilterViewModel;
 
     public FilterDelegateAdapter(Activity activity) {
         this.mInflater = activity.getLayoutInflater();
-        this.mContext = activity.getApplicationContext();
+        mListFilterViewModel = ViewModelProviders.of((FragmentActivity) activity).get(ListFilterViewModel.class);
     }
 
     @Override
@@ -65,10 +70,18 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
         FilterViewHolder viewHolder = (FilterViewHolder) holder;
         mFilter = items.get(position);
 
-        String text = "Filter item " + position;
-        String subtext = "Filter subtext " + position;
+        String text = "Filter item " + items.get(position).id;
+        String subtext = "Filter subtext " + items.get(position).id;
         viewHolder.txtTitle.setText(text);
         viewHolder.txtParams.setText(subtext);
+
+        viewHolder.btnDelete.setOnClickListener( view -> {
+            Log.d(TAG, "Delete button clicked!");
+            Toast.makeText(view.getContext(), text + " deleted!", Toast.LENGTH_LONG).show();
+
+            mListFilterViewModel.deleteFilter(position);
+        });
+
     }
 
     /**

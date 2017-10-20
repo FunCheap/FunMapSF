@@ -22,7 +22,16 @@ public class ListFilterViewModel extends ViewModel {
     private MutableLiveData<List<Filter>> mFiltersData;
 
     public LiveData<List<Filter>> getSavedFilters() {
-        return mEventRepoSingleton.getSavedFilters();
+        mFiltersData = (MutableLiveData<List<Filter>>) mEventRepoSingleton.getSavedFilters();
+        return mFiltersData;
+    }
+
+    public void deleteFilter(int i) {
+        // TODO Include code to delete the filter from our database
+
+        List<Filter> filterList = mFiltersData.getValue();
+        filterList.remove(i);
+        mFiltersData.setValue(filterList);
     }
 
 }

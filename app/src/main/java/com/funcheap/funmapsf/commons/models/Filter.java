@@ -6,4 +6,5 @@ package com.funcheap.funmapsf.commons.models;
 
 public class Filter {
     // Stub for the Filter class
+    public int id;
 }
