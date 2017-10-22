@@ -1,18 +1,23 @@
 package com.funcheap.funmapsf.features.list.adapters;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
+import com.funcheap.funmapsf.features.filter.list.ListFilterViewModel;
+import com.funcheap.funmapsf.features.list.ListBaseViewModel;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 
 import java.util.List;
@@ -31,11 +36,13 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
     private LayoutInflater mInflater;
     private Events mEvent;
     private Context mContext;
+    private ListBaseViewModel mListBaseViewModel;
     private static final String EVENT_EXTRA = "event_extra";
 
     public EventDelegateAdapter(Activity activity) {
         this.mInflater = activity.getLayoutInflater();
         this.mContext = activity.getApplicationContext();
+        mListBaseViewModel = ViewModelProviders.of((FragmentActivity) activity).get(ListBaseViewModel.class);
     }
 
     @Override
@@ -75,6 +82,10 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
         viewHolder.dateTime.setText(items.get(position).getStartDate());
         viewHolder.price.setText(items.get(position).getCost());
         viewHolder.venue.setText(items.get(position).getVenue().getVenueAddress());
+
+        viewHolder.imgBookmark.setOnClickListener( view -> {
+//            items.get(position)
+        });
     }
 
     /**
@@ -90,6 +101,8 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
         public TextView price;
         @BindView(R.id.text_venue)
         public TextView venue;
+        @BindView(R.id.img_bookmark)
+        public ImageView imgBookmark
 
         public EventViewHolder(View itemView) {
             super(itemView);
