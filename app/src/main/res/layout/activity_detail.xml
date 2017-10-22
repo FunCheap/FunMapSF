@@ -90,7 +90,7 @@
                             android:id="@+id/tvEventAddress"
                             style="@style/SecondaryText"
                             android:layout_below="@+id/tvEventName"
-                            android:text="@{events.venue.address}"
+                            android:text="@{events.venue.venueAddress}"
                             android:paddingTop="@dimen/padding_top"
                             android:paddingLeft="@dimen/padding_small"/>
                         <TextView

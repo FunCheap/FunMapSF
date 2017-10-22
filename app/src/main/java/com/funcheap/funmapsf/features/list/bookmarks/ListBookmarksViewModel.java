@@ -14,7 +14,7 @@ import java.util.List;
  * ViewModel to hold the state of the ListBookmarksFragment
  */
 
-class ListBookmarksViewModel extends ListBaseViewModel {
+public class ListBookmarksViewModel extends ListBaseViewModel {
 
     public LiveData<List<Events>> getBookmarksEventsData() {
         if (mEventsData == null) {

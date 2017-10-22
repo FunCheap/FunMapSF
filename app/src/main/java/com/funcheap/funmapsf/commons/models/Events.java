@@ -54,7 +54,7 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
     @Column
     String bartStation;
     @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ForeignKey(saveForeignKeyModel = false)
     Venue venue;
     @Column
     String thumbnail;
@@ -372,12 +372,16 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
 
     public static ArrayList<Events> eventsDBQuery(){
         ArrayList<Events> list = new ArrayList<>();
+        ArrayList<Venue> venueList = new ArrayList<>();
 
         list = (ArrayList<Events>) SQLite.select().from(Events.class).queryList();
+        venueList = (ArrayList<Venue>) SQLite.select().from(Venue.class).queryList();
 
         for(int i=0;i<list.size();i++){
             Events event = list.get(i);
-            event.setPosition(new LatLng(event.getLatitude(),event.getLongitude()));
+            Venue venue = venueList.get(i);
+            event.venue = venue;
+            event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()),Double.parseDouble(event.venue.getLongitude())));
             event.categoriesList = new ArrayList<>();
             event.tagsList = new ArrayList<>();
 
@@ -387,6 +391,7 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
         }
 
         return list;
+
     }
 
     public static Events getEventById(long eventId){

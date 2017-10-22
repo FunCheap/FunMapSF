@@ -74,7 +74,7 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
         viewHolder.title.setText(items.get(position).getTitle());
         viewHolder.dateTime.setText(items.get(position).getStartDate());
         viewHolder.price.setText(items.get(position).getCost());
-        viewHolder.venue.setText(items.get(position).getVenue().getName());
+        viewHolder.venue.setText(items.get(position).getVenue().getVenueAddress());
     }
 
     /**
