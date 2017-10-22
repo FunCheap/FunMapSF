@@ -1,5 +1,6 @@
 package com.funcheap.funmapsf.features.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.funcheap.funmapsf.R;
+import com.funcheap.funmapsf.features.detail.DetailActivity;
 import com.funcheap.funmapsf.features.filter.list.ListFiltersFragment;
 import com.funcheap.funmapsf.features.filter.edit.EditFilterFragment;
 import com.funcheap.funmapsf.features.list.bookmarks.ListBookmarksFragment;
@@ -40,7 +42,24 @@ public class HomeActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
+        checkNotification();
+
         initBottomNav();
+    }
+
+    /**
+     * Checks if we've been opened from a notification. If so, launch
+     * the DetailActivity to the corresponding event.
+     */
+    private void checkNotification() {
+        Intent intent = getIntent();
+        if (intent.getExtras() != null && intent.hasExtra(DetailActivity.EVENT_EXTRA_ID)) {
+            Log.d(TAG, "checkNotification: Launching directly to detail activity with EventID = "
+                    + intent.getStringExtra(DetailActivity.EVENT_EXTRA_ID));
+            intent.setClass(this, DetailActivity.class);
+            startActivity(intent);
+        }
+
     }
 
     private void initBottomNav() {
