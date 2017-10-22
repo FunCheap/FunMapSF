@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/image_size"
+        android:textColor="@android:color/black"
+        android:gravity="center_horizontal"
+        android:text="@string/save_filter"
+        android:textSize="@dimen/smallText"
+        android:textStyle="bold"
+        android:id="@+id/save_filter" />
+
+
+    <EditText
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/name_filter"
+        android:maxLines="1"
+        android:id="@+id/edit_filter_name"
+        android:layout_marginTop="@dimen/padding_left"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="@dimen/padding_top"
+        android:layout_below="@id/save_filter"
+        />
+
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_background"
+        android:layout_marginLeft="@dimen/button_margin"
+        android:layout_marginRight="@dimen/button_margin"
+        android:gravity="center"
+        android:text="@string/cancel"
+        android:textColor="@color/mdtp_white"
+        android:id="@+id/cancel"
+        android:layout_below="@+id/edit_filter_name"
+        android:layout_marginBottom="@dimen/image_size"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/button_margin"
+        android:text="@string/save"
+        android:gravity="center"
+        android:textColor="@color/mdtp_white"
+        android:id="@+id/save"
+        android:background="@drawable/button_background"
+        android:layout_below="@+id/edit_filter_name"
+        android:layout_toRightOf="@+id/cancel"
+        android:layout_marginBottom="@dimen/image_size"/>
+
+</RelativeLayout>
+</layout>

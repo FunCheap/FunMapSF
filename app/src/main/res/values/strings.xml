@@ -8,4 +8,22 @@
     <string name="content_description_event_photo">Event photo</string>
 
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
+    <string name="when">WHEN</string>
+    <string name="where">WHERE</string>
+    <string name="address">Address</string>
+    <string name="price">PRICE</string>
+    <string name="categories">CATEGORIES</string>
+    <string name="done">DONE</string>
+
+    <string-array name="price_options_array">
+        <item>FREE</item>
+        <item>CHARGED</item>
+    </string-array>
+
+    <string name="save_filter">Do you want to Save this Filter?</string>
+    <string name="name_filter">Filter name</string>
+    <string name="save">SAVE</string>
+    <string name="cancel">CANCEL</string>
+    <string name="search">Search</string>
+
 </resources>
