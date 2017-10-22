@@ -54,7 +54,7 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
     @Column
     String bartStation;
     @Column
-    @ForeignKey(saveForeignKeyModel = true)
+    @ForeignKey(saveForeignKeyModel = false)
     Venue venue;
     @Column
     String thumbnail;
