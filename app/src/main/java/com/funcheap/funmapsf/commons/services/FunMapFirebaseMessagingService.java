@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.funcheap.funmapsf.R;
+import com.funcheap.funmapsf.features.detail.DetailActivity;
 import com.funcheap.funmapsf.features.home.HomeActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -65,6 +66,10 @@ public class FunMapFirebaseMessagingService extends FirebaseMessagingService {
      */
     private void sendNotification(RemoteMessage remoteMessage) {
         Intent intent = new Intent(this, HomeActivity.class);
+        String extraIdKey = DetailActivity.EVENT_EXTRA_ID;
+        if (remoteMessage.getData().containsKey(extraIdKey)) {
+            intent.putExtra(extraIdKey, remoteMessage.getData().get(extraIdKey));
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_ONE_SHOT);
