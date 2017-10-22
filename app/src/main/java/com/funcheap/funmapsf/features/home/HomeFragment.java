@@ -5,13 +5,16 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.funcheap.funmapsf.R;
+import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +34,8 @@ public class HomeFragment extends Fragment {
     public TabLayout mTabLayout;
     @BindView(R.id.fab_save_filter)
     public FloatingActionButton mFabSaveFilter;
+    @BindView(R.id.filter_settings_home)
+    public LinearLayout mFilter;
 
     public static Fragment newInstance() {
         Bundle args = new Bundle();
@@ -38,6 +43,10 @@ public class HomeFragment extends Fragment {
         HomeFragment fragment = new HomeFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public interface FilterClickListener{
+        public void onFilterClicked();
     }
 
     @Nullable
@@ -49,7 +58,19 @@ public class HomeFragment extends Fragment {
         mHomePager.setAdapter(new HomePagerAdapter(getChildFragmentManager(), getContext()));
         mTabLayout.setupWithViewPager(mHomePager);
         mFabSaveFilter.setOnClickListener(
-                view -> Toast.makeText(getContext(), "Save filter!", Toast.LENGTH_LONG).show());
+                view -> {
+                    FragmentManager fm = getChildFragmentManager();
+                    SaveFilterDialogFragment saveFilter = SaveFilterDialogFragment.newInstance();
+                    saveFilter.show(fm,"save_flter");
+                });
+
+        mFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FilterClickListener listener = (FilterClickListener) getActivity();
+                listener.onFilterClicked();
+            }
+        });
 
         return root;
     }
