@@ -18,13 +18,19 @@ import org.json.JSONObject;
 public class Venue extends BaseModel implements Parcelable
 {
 
-    @PrimaryKey
+    @PrimaryKey(autoincrement = true)
     @Column
-    long id;
+    int id;
     @Column
-    String name;
+    String venueId;
     @Column
-    String address;
+    String venueName;
+    @Column
+    String venueAddress;
+    @Column
+    String latitude;
+    @Column
+    String longitude;
     public final static Parcelable.Creator<Venue> CREATOR = new Creator<Venue>() {
 
 
@@ -43,43 +49,74 @@ public class Venue extends BaseModel implements Parcelable
             ;
 
     protected Venue(Parcel in) {
-        this.id = ((long) in.readValue((long.class.getClassLoader())));
-        this.name = ((String) in.readValue((String.class.getClassLoader())));
-        this.address = ((String) in.readValue((String.class.getClassLoader())));
+        this.id = ((int) in.readValue((Integer.class.getClassLoader())));
+        this.venueId = ((String) in.readValue((String.class.getClassLoader())));
+        this.venueName = ((String) in.readValue((String.class.getClassLoader())));
+        this.venueAddress = ((String) in.readValue((String.class.getClassLoader())));
+        this.latitude = ((String) in.readValue((String.class.getClassLoader())));
+        this.longitude = ((String) in.readValue((String.class.getClassLoader())));
 
     }
 
     public Venue() {
     }
 
-    public long getId() {
+    public void setUniqueId(int uniqueId) {
+        this.id = uniqueId;
+    }
+
+    public void setVenueId(String venueId) {
+        this.venueId = venueId;
+    }
+
+    public void setVenueName(String venueName) {
+        this.venueName = venueName;
+    }
+
+    public void setVenueAddress(String venueAddress) {
+        this.venueAddress = venueAddress;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public long getUniqueId() {
+
         return id;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public String getVenueId() {
+        return venueId;
     }
 
-    public String getName() {
-        return name;
+    public String getVenueName() {
+        return venueName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getVenueAddress() {
+        return venueAddress;
     }
 
-    public String getAddress() {
-        return address;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public String getLongitude() {
+        return longitude;
     }
 
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(id);
-        dest.writeValue(name);
-        dest.writeValue(address);
+        dest.writeValue(venueId);
+        dest.writeValue(venueName);
+        dest.writeValue(venueAddress);
+        dest.writeValue(latitude);
+        dest.writeValue(longitude);
     }
 
     public int describeContents() {
@@ -89,9 +126,9 @@ public class Venue extends BaseModel implements Parcelable
 
     public static Venue fromJSON(JSONObject response) throws JSONException {
         Venue venue = new Venue();
-        venue.id = response.getLong("id");
-        venue.name = response.getString("name");
-        venue.address = response.getString("address");
+        venue.venueId = response.getString("id");
+        venue.venueName = response.getString("name");
+        venue.venueAddress = response.getString("address");
         venue.save();
         return venue;
 

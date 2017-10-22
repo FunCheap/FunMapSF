@@ -109,7 +109,7 @@ public class EventsRepoSingleton {
             dummyEvent.setEndDate("October 14, 2017");
 
             Venue dummyVenue = new Venue();
-            dummyVenue.setName("Somewhere in SF");
+            dummyVenue.setVenueAddress("Somewhere in SF");
             dummyEvent.setVenue(dummyVenue);
 
             // TODO Populate more dummy fields
