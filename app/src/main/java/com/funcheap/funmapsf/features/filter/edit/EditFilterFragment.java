@@ -1,5 +1,6 @@
 package com.funcheap.funmapsf.features.filter.edit;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,16 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
-import android.widget.TableLayout;
-import android.widget.TextView;
 
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Filter;
+import com.funcheap.funmapsf.features.map.MapsViewModel;
 
 import org.honorato.multistatetogglebutton.MultiStateToggleButton;
 
@@ -54,6 +51,8 @@ public class EditFilterFragment extends Fragment {
         //for handling back key pressed
         public void setSelectedFragment(EditFilterFragment editFilterFragment);
     }
+
+    private MapsViewModel mMapsViewModel;
 
     @BindView(R.id.when_spin)
     Spinner when_spin;
@@ -91,9 +90,11 @@ public class EditFilterFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_edit_filter, container, false);
         ButterKnife.bind(this, view);
+
+        mMapsViewModel = ViewModelProviders.of(getActivity()).get(MapsViewModel.class);
+
         prepareSelectedFragment();
         prepareWhenList();
         preparePlace();
@@ -172,7 +173,6 @@ public class EditFilterFragment extends Fragment {
     }
 
 
-
     private void searchDBandSendEvents(){
 
         FilterSavedListener listener = (FilterSavedListener) getActivity();
@@ -180,10 +180,12 @@ public class EditFilterFragment extends Fragment {
         Filter filter = new Filter();
         filter.setQuery(search.getText().toString());
         filter.setWhenDate((String)(when_spin.getSelectedItem()));
-        filter.setFree(price_mstb.getValue()==1?false:true); // 1 means charged --> Free = false
+        filter.setFree(price_mstb.getValue() == 1); // 1 == true == FREE, 0 == false == Any
         filter.setVenueQuery(edit_where.getText().toString());
         filter.setCategories(categoriesSelected.toString());
-        listener.onFilterSaved(filter);
+
+        // Complete filter
+        mMapsViewModel.setFilter(filter);
 
         //Todo: search the db with all the chosen parameters
     }

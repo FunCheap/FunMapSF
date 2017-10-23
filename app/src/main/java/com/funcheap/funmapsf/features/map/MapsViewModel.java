@@ -2,9 +2,13 @@ package com.funcheap.funmapsf.features.map;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Transformations;
 import android.arch.lifecycle.ViewModel;
+
 import com.funcheap.funmapsf.commons.models.Events;
+import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.commons.repository.EventsRepoSingleton;
+
 import java.util.List;
 
 /**
@@ -22,8 +26,10 @@ public class MapsViewModel extends ViewModel {
 
     private EventsRepoSingleton mEventsRepo;
 
+    private MutableLiveData<Filter> mCurrentFilter = new MutableLiveData<>();
     // Holds the events to show on the map
-    private LiveData<List<Events>> mEventsLiveData;
+    private LiveData<List<Events>> mEventsLiveData = Transformations.switchMap(mCurrentFilter,
+            (filter) -> mEventsRepo.getFilteredEvents(filter));
 
     public MapsViewModel() {
         mEventsRepo = EventsRepoSingleton.getEventsRepo();
@@ -36,11 +42,20 @@ public class MapsViewModel extends ViewModel {
      * TODO This should factor any filter settings specified by the user
      */
     public LiveData<List<Events>> getEventsData() {
-        if (mEventsLiveData == null) {
-            mEventsLiveData = mEventsRepo.getEvents();
-        }
-
+        // init filter if it doesn't exist
+        getFilter();
         return mEventsLiveData;
+    }
+
+    public LiveData<Filter> getFilter() {
+        if (mCurrentFilter.getValue() == null) {
+            mCurrentFilter.setValue(Filter.getDefaultFilter());
+        }
+        return mCurrentFilter;
+    }
+
+    public void setFilter(Filter filter) {
+        mCurrentFilter.setValue(filter);
     }
 
     public void setEvents(List<Events> list){

@@ -7,9 +7,7 @@ import android.util.Log;
 import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.commons.models.Venue;
-import com.google.android.gms.common.api.Response;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +15,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
-import static android.R.attr.id;
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.L;
 
 /**
  * Created by Jayson on 10/11/2017.
@@ -29,6 +27,7 @@ import static android.R.attr.id;
 
 public class EventsRepoSingleton {
 
+    private final String TAG = this.getClass().getSimpleName();
     private static EventsRepoSingleton mEventsRepo;
 
     private EventsRepoSingleton() {
@@ -65,6 +64,21 @@ public class EventsRepoSingleton {
         return eventsLiveData;
     }
 
+    public LiveData<List<Events>> getFilteredEvents(Filter filter) {
+        Log.d(TAG, "getFilteredEvents: Retrieved filtered events!");
+        MutableLiveData<List<Events>> eventsLiveData = new MutableLiveData<>();
+
+        // Do some async work to populate the events list
+        Observable.fromCallable(() -> Events.getFilteredEvents(filter))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(eventsLiveData::setValue);
+
+        // Returns a null list at first. The list is replaced when the async work finishes
+        // and all observing views are notified.
+        return eventsLiveData;
+    }
+
     public LiveData<List<Events>> getBookmarkedEvents() {
         MutableLiveData<List<Events>> eventsLiveData = new MutableLiveData<>();
 
@@ -79,7 +93,7 @@ public class EventsRepoSingleton {
         return eventsLiveData;
     }
 
-    public LiveData<Events> getEventById(long id) {
+    public LiveData<Events> getEventById(String id) {
         MutableLiveData<Events> eventData = new MutableLiveData<>();
 
         Observable.fromCallable(() -> Events.getEventById(id))
@@ -92,6 +106,7 @@ public class EventsRepoSingleton {
 
     /**
      * Returns the users saved filters
+     *
      * @return a LiveData containing a list of saved filters
      */
     public LiveData<List<Filter>> getSavedFilters() {

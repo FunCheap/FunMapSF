@@ -99,7 +99,7 @@ public class DetailActivity extends AppCompatActivity {
             setImage();
         } else if (intent.hasExtra(EVENT_EXTRA_ID)) {
             // Get event by ID
-            long id = Long.parseLong(getIntent().getStringExtra(EVENT_EXTRA_ID));
+            String id = getIntent().getStringExtra(EVENT_EXTRA_ID);
             mDetailViewModel.getEventById(id).observe(this, events -> mBinding.setEvents(events));
         } else {
             Log.d(TAG, "initEvent: No valid Event data was given!");
@@ -111,14 +111,7 @@ public class DetailActivity extends AppCompatActivity {
 
         Picasso.Builder builder = new Picasso.Builder(this);
         builder.indicatorsEnabled(true);
-        builder.listener(new Picasso.Listener()
-        {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-            {
-                exception.printStackTrace();
-            }
-        });
+        builder.listener((picasso, uri, exception) -> exception.printStackTrace());
         builder.build().load(mDetailViewModel.getEventData().getValue().getThumbnail()).fit().centerCrop().into(ivBackdrop);
 
 

@@ -112,6 +112,7 @@ public class Filter extends BaseModel implements Parcelable {
 
     protected Filter(Parcel in) {
         id = in.readInt();
+        filterName = in.readString();
         query = in.readString();
         whenDate = in.readString();
         explicitStartDate = in.readString();
@@ -144,6 +145,7 @@ public class Filter extends BaseModel implements Parcelable {
     @Override
     public void writeToParcel(Parcel parcel, int i) {
         parcel.writeInt(id);
+        parcel.writeString(filterName);
         parcel.writeString(query);
         parcel.writeString(whenDate);
         parcel.writeString(explicitStartDate);
@@ -154,7 +156,7 @@ public class Filter extends BaseModel implements Parcelable {
     }
 
     //This is the default filter with all default Values set
-    public static Filter setDefaultFilter() {
+    public static Filter getDefaultFilter() {
         Filter filter = new Filter();
 
         filter.filterName = "Default";
