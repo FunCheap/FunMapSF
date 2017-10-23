@@ -84,14 +84,17 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
         viewHolder.venue.setText(items.get(position).getVenue().getVenueAddress());
 
         viewHolder.imgBookmark.setOnClickListener( view -> {
-            items.get(position).setBookmark(true);
-            items.get(position).save();
+            Events event = items.get(position);
+            event.setBookmark(!event.isBookmark());
+            event.save();
 
-            if (items.get(position).isBookmark()) {
+            if (event.isBookmark()) {
                 Toast.makeText(mContext, "Event bookmarked!", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(mContext, "Event un-bookmarked!", Toast.LENGTH_LONG).show();
             }
+
+            // TODO Visually change icon to show bookmarked or un-bookmarked
         });
     }
 

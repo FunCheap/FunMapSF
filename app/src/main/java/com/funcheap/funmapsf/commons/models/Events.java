@@ -396,6 +396,28 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
         return SQLite.select().from(Events.class).where(Events_Table.id.eq(eventId)).querySingle();
     }
 
+    public static ArrayList<Events> bookmarkedEventsDBQuery() {
+        ArrayList<Events> list;
+        ArrayList<Venue> venueList;
+
+        list = (ArrayList<Events>) SQLite.select().from(Events.class).where(Events_Table.bookmark.eq(true)).queryList();
+        venueList = (ArrayList<Venue>) SQLite.select().from(Venue.class).queryList();
+
+        for(int i=0;i<list.size();i++){
+            Events event = list.get(i);
+            Venue venue = venueList.get(i);
+            event.venue = venue;
+            event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()),Double.parseDouble(event.venue.getLongitude())));
+            event.categoriesList = new ArrayList<>();
+            event.tagsList = new ArrayList<>();
+
+            //Removing and Inserting the event after filling position, categoriesList, tagsList
+            list.remove(i);
+            list.add(i,event);
+        }
+
+        return list;
+    }
 }
 
 
