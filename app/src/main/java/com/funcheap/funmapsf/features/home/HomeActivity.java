@@ -55,7 +55,7 @@ public class HomeActivity extends AppCompatActivity implements
         mMapsModel = ViewModelProviders.of(this).get(MapsViewModel.class);
 
         initBottomNav();
-        mFilter = Filter.setDefaultFilter();
+        mFilter = Filter.getDefaultFilter();
     }
 
     /**
@@ -124,7 +124,7 @@ public class HomeActivity extends AppCompatActivity implements
         mBottomNav.setVisibility(View.VISIBLE);
         // update the events in Map View  based on filter
         if(!filter.getQuery().isEmpty()){
-            mMapsModel.setEvents(Events.getEvents(filter.getQuery()));
+            mMapsModel.setEvents(Events.getFilteredEvents(filter));
             mFilter = filter;
         }
         mSelectedFragment=null;
@@ -148,7 +148,6 @@ public class HomeActivity extends AppCompatActivity implements
             mBottomNav.setVisibility(View.VISIBLE);
             mSelectedFragment = null;
         }
-
     }
 
     // On FAB Click the filter is saved with filter name

@@ -9,6 +9,7 @@
 
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
 
+    <!-- Filters Screen -->
     <string name="when">WHEN</string>
     <string name="where">WHERE</string>
     <string name="address">Address</string>
@@ -17,8 +18,40 @@
     <string name="done">DONE</string>
 
     <string-array name="price_options_array">
+        <item>ANY</item>
         <item>FREE</item>
-        <item>CHARGED</item>
+    </string-array>
+
+    <string-array name="when_array">
+        <item>Today</item>
+        <item>Tomorrow</item>
+        <item>This Week</item>
+        <item>This Weekend</item>
+        <item>Next Week</item>
+        <item>This Month</item>
+        <item>Next Month</item>
+    </string-array>
+
+    <string-array name="categories_array">
+        <item>Top Pick</item>
+        <item>Annual Event</item>
+        <item>Art &amp; Museums</item>
+        <item>Charity &amp; Volunteering</item>
+        <item>Club / DJ</item>
+        <item>Comedy</item>
+        <item>Eating &amp; Drinking</item>
+        <item>Fairs &amp; Festivals</item>
+        <item>Free Stuff</item>
+        <item>Fun &amp; Games</item>
+        <item>Geek Event</item>
+        <item>Kids &amp; Families</item>
+        <item>Lectures &amp; Workshops</item>
+        <item>Literature</item>
+        <item>Live Music</item>
+        <item>Movies</item>
+        <item>Shopping &amp; Fashion</item>
+        <item>Sports &amp; Fitness</item>
+        <item>Theater &amp; Performance</item>
     </string-array>
 
     <string name="save_filter">Do you want to Save this Filter?</string>

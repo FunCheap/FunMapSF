@@ -424,15 +424,15 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
     }
 
 
-	public static List<Events> getEvents(String query){
+	public static List<Events> getFilteredEvents(Filter filter){
         List<Events> list;
-        list = SQLite.select().from(Events.class).where(Events_Table.title.like("%" + query + "%")).queryList();
+        list = SQLite.select().from(Events.class).where(Events_Table.title.like("%" + filter.getQuery() + "%")).queryList();
         ArrayList<Venue> venueList = new ArrayList<>();
         venueList = (ArrayList<Venue>) SQLite.select().from(Venue.class).queryList();
 
         for(int i=0;i<list.size();i++){
             Events event = list.get(i);
-            Venue venue = venueList.get((int)event.getId());
+            Venue venue = venueList.get((int)event.getId() - 1);
             event.venue = venue;
             event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()),Double.parseDouble(event.venue.getLongitude())));
             event.categoriesList = new ArrayList<>();
