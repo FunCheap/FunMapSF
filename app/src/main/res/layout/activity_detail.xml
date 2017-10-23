@@ -204,7 +204,16 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:id="@+id/tvEventDetail"
+                    android:id="@+id/tvEventPermalink"
+                    android:text="@{events.permalink}"
+                    android:paddingTop="@dimen/padding_top"
+                    android:paddingLeft="@dimen/padding_left"
+                    android:linksClickable="true"
+                    android:onClick="onLinkClick"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/tvContent"
                     android:text="@{events.content}"
                     android:paddingTop="@dimen/padding_top"
                     android:paddingLeft="@dimen/padding_left"/>
