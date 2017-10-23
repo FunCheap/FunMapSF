@@ -12,11 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
-import com.funcheap.funmapsf.features.filter.list.ListFilterViewModel;
 import com.funcheap.funmapsf.features.list.ListBaseViewModel;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 
@@ -84,7 +84,14 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
         viewHolder.venue.setText(items.get(position).getVenue().getVenueAddress());
 
         viewHolder.imgBookmark.setOnClickListener( view -> {
-//            items.get(position)
+            items.get(position).setBookmark(true);
+            items.get(position).save();
+
+            if (items.get(position).isBookmark()) {
+                Toast.makeText(mContext, "Event bookmarked!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(mContext, "Event un-bookmarked!", Toast.LENGTH_LONG).show();
+            }
         });
     }
 
@@ -102,7 +109,7 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
         @BindView(R.id.text_venue)
         public TextView venue;
         @BindView(R.id.img_bookmark)
-        public ImageView imgBookmark
+        public ImageView imgBookmark;
 
         public EventViewHolder(View itemView) {
             super(itemView);

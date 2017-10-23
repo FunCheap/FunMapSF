@@ -31,11 +31,14 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
     @Column
     long id;
     @Column
+    String eventId;
+    @Column
     String title;
     @Column
     String permalink;
     @Column
     String content;
+    @Column
     String excerpt;
     @Column
     String publishDate;
@@ -63,18 +66,11 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
     @Column
     String tags = null;
     @Column
-    double latitude;
-    @Column
-    double longitude;
-    @Column
-    boolean bookmarked;
-
+    boolean bookmark;
 
     LatLng position;
     List<String> categoriesList = null;
     List<String> tagsList = null;
-
-
 
     public final static Parcelable.Creator<Events> CREATOR = new Creator<Events>() {
         @SuppressWarnings({
@@ -92,6 +88,7 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
 
     protected Events(Parcel in) {
         this.id = ((long) in.readValue((long.class.getClassLoader())));
+        this.eventId = ((String) in.readValue((String.class.getClassLoader())));
         this.title = ((String) in.readValue((String.class.getClassLoader())));
         this.permalink = ((String) in.readValue((String.class.getClassLoader())));
         this.content = ((String) in.readValue((String.class.getClassLoader())));
@@ -108,40 +105,29 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
         this.thumbnail = ((String) in.readValue((String.class.getClassLoader())));
         this.categories = ((String) in.readValue((String.class.getClassLoader())));
         this.tags = ((String) in.readValue((String.class.getClassLoader())));
-        this.latitude = ((double) in.readValue((double.class.getClassLoader())));
-        this.longitude = ((double) in.readValue((double.class.getClassLoader())));
         this.position = in.readParcelable(LatLng.class.getClassLoader());
         this.categoriesList = in.readArrayList(String.class.getClassLoader());
         this.tagsList = in.readArrayList(String.class.getClassLoader());
-        this.bookmarked = in.readByte() != 0;
+        this.bookmark = in.readByte() != 0;
     }
 
     public Events() {
     }
 
-    public boolean isBookmarked() {
-        return bookmarked;
+    public boolean isBookmark() {
+        return bookmark;
     }
 
-    public void setBookmarked(boolean bookmarked) {
-        this.bookmarked = bookmarked;
+    public void setBookmark(boolean bookmark) {
+        this.bookmark = bookmark;
     }
 
-
-    public double getLatitude() {
-        return latitude;
+    public String getEventId() {
+        return eventId;
     }
 
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
     }
 
     public void setPosition(LatLng mPosition) {
@@ -305,6 +291,7 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
 
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(id);
+        dest.writeValue(eventId);
         dest.writeValue(title);
         dest.writeValue(permalink);
         dest.writeValue(content);
@@ -321,12 +308,10 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
         dest.writeValue(thumbnail);
         dest.writeValue(categories);
         dest.writeValue(tags);
-        dest.writeValue(latitude);
-        dest.writeValue(longitude);
         dest.writeParcelable(this.position, flags);
         dest.writeList(categoriesList);
         dest.writeList(tagsList);
-        dest.writeByte((byte) (bookmarked ? 1 : 0));
+        dest.writeByte((byte) (bookmark ? 1 : 0));
     }
 
     public int describeContents() {
@@ -341,6 +326,7 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
             JSONObject object = response.getJSONObject(i);
             Events event = new Events();
             event.id = object.getLong("id");
+            event.eventId = object.getString("eventId");
             event.title = object.getString("title");
             event.permalink = object.getString("permalink");
             event.content = object.getString("content");
@@ -357,13 +343,11 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
             event.thumbnail= object.getString("thumbnail");
             event.categories = getCategoryString(object.getJSONArray("categories"));
             event.tags = null;
-            event.latitude = 37.7749; // setting default values with SFO latitude
-            event.longitude = -122.4194; // setting default values with SFO longitude
             LatLng sfo = new LatLng(37.7749,-122.4194); // setting default values with SFO latlng
             event.position = sfo;
             event.categoriesList = new ArrayList<>();
             event.tagsList = new ArrayList<>();
-            event.bookmarked=false;
+            event.bookmark =false;
             event.save();
             eventList.add(event);
         }
