@@ -63,6 +63,20 @@ public class EventsRepoSingleton {
         return eventsLiveData;
     }
 
+    public LiveData<List<Events>> getBookmarkedEvents() {
+        MutableLiveData<List<Events>> eventsLiveData = new MutableLiveData<>();
+
+        // Do some async work to populate the events list
+        Observable.fromCallable(Events::bookmarkedEventsDBQuery)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(eventsLiveData::setValue);
+
+        // Returns a null list at first. The list is replaced when the async work finishes
+        // and all observing views are notified.
+        return eventsLiveData;
+    }
+
     public LiveData<Events> getEventById(long id) {
         MutableLiveData<Events> eventData = new MutableLiveData<>();
 
@@ -119,5 +133,4 @@ public class EventsRepoSingleton {
 
         return eventsList;
     }
-
 }

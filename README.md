@@ -32,7 +32,7 @@ FunMapSF is an event browsing app that takes the curated events from sf.funcheap
       - Any other categories Ex: Top Pick, Annual, Pets, etc...
  * Users can save filters and view them in a "Saved filters" section
    - Users can elect to be notified when events are added to each filter.
- * Users can view bookmarked events on a list
+ * Users can view bookmark events on a list
  * [x] Events are stored and filtered using a local database periodically updated using Firebase, since no API exists for sf.funcheap.com.
    - When new events are added, check if it matches user subscriptions. If it does, 
      push a notification to that user. Clicking a notification will bring users to the 

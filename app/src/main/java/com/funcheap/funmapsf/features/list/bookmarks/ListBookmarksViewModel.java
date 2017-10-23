@@ -19,7 +19,7 @@ public class ListBookmarksViewModel extends ListBaseViewModel {
     public LiveData<List<Events>> getBookmarksEventsData() {
         if (mEventsData == null) {
             // Call our model to get the appropriate LiveData
-            mEventsData = (MutableLiveData<List<Events>>) mEventsRepo.getEvents();
+            mEventsData = (MutableLiveData<List<Events>>) mEventsRepo.getBookmarkedEvents();
         }
         return mEventsData;
     }

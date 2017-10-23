@@ -1,20 +1,24 @@
 package com.funcheap.funmapsf.features.list.adapters;
 
 import android.app.Activity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
+import com.funcheap.funmapsf.features.list.ListBaseViewModel;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.squareup.picasso.Picasso;
 
@@ -37,11 +41,13 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
     private LayoutInflater mInflater;
     private Events mEvent;
     private Context mContext;
+    private ListBaseViewModel mListBaseViewModel;
     private static final String EVENT_EXTRA = "event_extra";
 
     public EventDelegateAdapter(Activity activity) {
         this.mInflater = activity.getLayoutInflater();
         this.mContext = activity.getApplicationContext();
+        mListBaseViewModel = ViewModelProviders.of((FragmentActivity) activity).get(ListBaseViewModel.class);
     }
 
     @Override
@@ -73,6 +79,21 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
         viewHolder.price.setText(items.get(position).getCost());
         viewHolder.venue.setText(items.get(position).getVenue().getVenueAddress());
 
+        viewHolder.imgBookmark.setOnClickListener( view -> {
+            Events event = items.get(position);
+            event.setBookmark(!event.isBookmarked());
+            event.save();
+
+            if (event.isBookmarked()) {
+                Toast.makeText(mContext, "Event bookmarked!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(mContext, "Event un-bookmarked!", Toast.LENGTH_LONG).show();
+            }
+
+            // TODO Visually change icon to show bookmarked or un-bookmarked
+        });
+
+        // Load Image
         Picasso.Builder builder = new Picasso.Builder(mContext);
         builder.indicatorsEnabled(true);
         builder.listener(new Picasso.Listener()
@@ -109,6 +130,8 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
         public TextView price;
         @BindView(R.id.text_venue)
         public TextView venue;
+        @BindView(R.id.img_bookmark)
+        public ImageView imgBookmark;
         @BindView(R.id.ivItemImg)
         public ImageView ivItemImg;
 

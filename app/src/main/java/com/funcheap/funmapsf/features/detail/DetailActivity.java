@@ -175,7 +175,18 @@ public class DetailActivity extends AppCompatActivity {
 
     public void onSaveClick(View v) {
         Toast.makeText(getApplicationContext(), "onSaveClick", Toast.LENGTH_SHORT).show();
+        Events event = mDetailViewModel.getEventData().getValue();
+        if (event != null) {
+            event.setBookmark(!event.isBookmarked());
+            event.save();
+            if (event.isBookmarked()) {
+                Toast.makeText(this, "Event bookmarked!", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Event un-bookmarked!", Toast.LENGTH_LONG).show();
+            }
+        }
 
+        // TODO Visually change icon to show bookmarked or un-bookmarked
     }
 
     public void onLinkClick(View v)
