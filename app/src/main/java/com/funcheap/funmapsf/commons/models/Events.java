@@ -114,7 +114,7 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
     public Events() {
     }
 
-    public boolean isBookmark() {
+    public boolean isBookmarked() {
         return bookmark;
     }
 

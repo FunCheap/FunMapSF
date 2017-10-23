@@ -85,10 +85,10 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
 
         viewHolder.imgBookmark.setOnClickListener( view -> {
             Events event = items.get(position);
-            event.setBookmark(!event.isBookmark());
+            event.setBookmark(!event.isBookmarked());
             event.save();
 
-            if (event.isBookmark()) {
+            if (event.isBookmarked()) {
                 Toast.makeText(mContext, "Event bookmarked!", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(mContext, "Event un-bookmarked!", Toast.LENGTH_LONG).show();
