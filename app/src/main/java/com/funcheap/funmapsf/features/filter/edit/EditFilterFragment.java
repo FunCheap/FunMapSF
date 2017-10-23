@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -20,6 +21,7 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.funcheap.funmapsf.R;
+import com.funcheap.funmapsf.commons.models.Filter;
 
 import org.honorato.multistatetogglebutton.MultiStateToggleButton;
 
@@ -48,7 +50,7 @@ public class EditFilterFragment extends Fragment {
             "Eating & Drinking","Fairs & Festivals","Free Stuff","Fun & Games","Live Music","Movies","Shopping & Fashion"
     };
 	public interface FilterSavedListener{
-        public void onFilterSaved();
+        public void onFilterSaved(Filter filter);
         //for handling back key pressed
         public void setSelectedFragment(EditFilterFragment editFilterFragment);
     }
@@ -61,10 +63,16 @@ public class EditFilterFragment extends Fragment {
     MultiStateToggleButton price_mstb;
     @BindView(R.id.category_spin) Spinner category_spin;
     @BindView(R.id.button_list) GridView grid_button_list;
-    @BindView(R.id.done)
-    Button done;
+    @BindView(R.id.done) Button done;
+    @BindView(R.id.search) EditText search;
     ArrayList<String> whenList;
     Context mCtx;
+
+    ArrayList<String> categoryList;
+    ArrayAdapter<String> categoryAdp;
+    ArrayList<String> categoriesSelected;
+    GridButtonAdapter gridButtonAdp;
+
 
     public static EditFilterFragment newInstance() {
         Bundle args = new Bundle();
@@ -116,13 +124,13 @@ public class EditFilterFragment extends Fragment {
 
     private void prepareCategories(){
         List<String> temp = Arrays.asList(CATEGORIES);
-        ArrayList<String> categoryList = new ArrayList<>();
+        categoryList = new ArrayList<>();
         categoryList.addAll(temp);
-        ArrayAdapter<String> categoryAdp = new ArrayAdapter<String>(mCtx,
+        categoryAdp = new ArrayAdapter<String>(mCtx,
                 android.R.layout.simple_dropdown_item_1line, categoryList);
         category_spin.setAdapter(categoryAdp);
-        ArrayList<String> categoriesSelected = new ArrayList<>();
-        GridButtonAdapter gridButtonAdp = new GridButtonAdapter(mCtx, categoriesSelected);
+        categoriesSelected = new ArrayList<>();
+        gridButtonAdp = new GridButtonAdapter(mCtx, categoriesSelected);
         grid_button_list.setAdapter(gridButtonAdp);
 
         category_spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -168,7 +176,15 @@ public class EditFilterFragment extends Fragment {
     private void searchDBandSendEvents(){
 
         FilterSavedListener listener = (FilterSavedListener) getActivity();
-        listener.onFilterSaved();
+
+        Filter filter = new Filter();
+        filter.setQuery(search.getText().toString());
+        filter.setWhenDate((String)(when_spin.getSelectedItem()));
+        filter.setFree(price_mstb.getValue()==1?false:true); // 1 means charged --> Free = false
+        filter.setVenueQuery(edit_where.getText().toString());
+        filter.setCategories(categoriesSelected.toString());
+        listener.onFilterSaved(filter);
+
         //Todo: search the db with all the chosen parameters
     }
 

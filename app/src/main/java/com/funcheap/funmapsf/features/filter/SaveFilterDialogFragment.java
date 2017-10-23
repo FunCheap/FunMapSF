@@ -13,6 +13,8 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 import com.funcheap.funmapsf.R;
 import org.honorato.multistatetogglebutton.MultiStateToggleButton;
 import butterknife.BindView;
@@ -26,6 +28,10 @@ import butterknife.ButterKnife;
  */
 
 public class SaveFilterDialogFragment extends DialogFragment {
+
+    public interface SaveFilterListener{
+        public void saveFilter(String filterName);
+    }
 
     private static final String TAG = "SaveFilterDialogFragment";
 
@@ -59,8 +65,14 @@ public class SaveFilterDialogFragment extends DialogFragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Todo : Save the filters into Filter db
-                dismiss();
+                if(!edit_filter_name.getText().toString().isEmpty()) {
+                    SaveFilterListener listener = (SaveFilterListener) getActivity();
+                    listener.saveFilter(edit_filter_name.getText().toString());
+                    dismiss();
+                }
+                else{
+                    Toast.makeText((getActivity().getApplicationContext()), "Cannot Save ! Filter name is empty", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
