@@ -1,5 +1,6 @@
 package com.funcheap.funmapsf.features.home;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,10 +12,14 @@ import android.util.Log;
 import android.view.View;
 
 import com.funcheap.funmapsf.R;
+import com.funcheap.funmapsf.commons.models.Events;
+import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
+import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
 import com.funcheap.funmapsf.features.filter.list.ListFiltersFragment;
 import com.funcheap.funmapsf.features.filter.edit.EditFilterFragment;
 import com.funcheap.funmapsf.features.list.bookmarks.ListBookmarksFragment;
+import com.funcheap.funmapsf.features.map.MapsViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,13 +33,17 @@ import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity implements 
 		HomeFragment.FilterClickListener,
-        EditFilterFragment.FilterSavedListener{
+        EditFilterFragment.FilterSavedListener,
+        SaveFilterDialogFragment.SaveFilterListener {
 
     private String TAG = this.getClass().getSimpleName();
-    private EditFilterFragment selectedFragment;
+    private EditFilterFragment mSelectedFragment;
 
     @BindView(R.id.bottom_navigation)
     public BottomNavigationView mBottomNav;
+
+    MapsViewModel mMapsModel;
+    Filter mFilter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,8 +52,10 @@ public class HomeActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
 
         checkNotification();
+        mMapsModel = ViewModelProviders.of(this).get(MapsViewModel.class);
 
         initBottomNav();
+        mFilter = Filter.setDefaultFilter();
     }
 
     /**
@@ -93,6 +104,8 @@ public class HomeActivity extends AppCompatActivity implements
         ft.commit();
     }
 
+
+    // Callback from HomeFragment to launch EditFilterFragment
     @Override
     public void onFilterClicked() {
         EditFilterFragment frag = EditFilterFragment.newInstance();
@@ -103,29 +116,45 @@ public class HomeActivity extends AppCompatActivity implements
         ft.commit();
     }
 
+
+    // Callback from EditFilterFragment to apply filter,
+    // Get the events list from the db based on the filter and update the Map View
     @Override
-    public void onFilterSaved() {
+    public void onFilterSaved(Filter filter) {
         mBottomNav.setVisibility(View.VISIBLE);
+        // update the events in Map View  based on filter
+        if(!filter.getQuery().isEmpty()){
+            mMapsModel.setEvents(Events.getEvents(filter.getQuery()));
+            mFilter = filter;
+        }
+        mSelectedFragment=null;
     }
 
     @Override
     public void setSelectedFragment(EditFilterFragment editFilterFragment) {
-        this.selectedFragment = editFilterFragment;
+        this.mSelectedFragment = editFilterFragment;
     }
 
 
     @Override
     public void onBackPressed() {
-        if(selectedFragment == null) {
+        if(mSelectedFragment == null) {
             // Selected fragment did not consume the back press event.
             super.onBackPressed();
         }
         else{
-
             // For EditFilterFragment if back key is pressed
             getSupportFragmentManager().popBackStack();
             mBottomNav.setVisibility(View.VISIBLE);
+            mSelectedFragment = null;
         }
 
+    }
+
+    // On FAB Click the filter is saved with filter name
+    @Override
+    public void saveFilter(String filterName) {
+        mFilter.setFilterName(filterName);
+        mFilter.save();
     }
 }

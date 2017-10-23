@@ -139,6 +139,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mMapsViewModel.getEventsData().observe(this, eventsList -> {
             // Add markers from updated eventsList
             if (!eventsList.isEmpty()) {
+                mClusterManager.clearItems();
                 mClusterManager.addItems(eventsList);
                 mClusterManager.setRenderer(new EventRenderer(mCtx, getMap(), mClusterManager));
                 mClusterManager.cluster();

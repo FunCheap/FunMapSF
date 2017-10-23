@@ -1,11 +1,10 @@
 package com.funcheap.funmapsf.features.map;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
-
 import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.commons.repository.EventsRepoSingleton;
-
 import java.util.List;
 
 /**
@@ -42,6 +41,10 @@ public class MapsViewModel extends ViewModel {
         }
 
         return mEventsLiveData;
+    }
+
+    public void setEvents(List<Events> list){
+        ((MutableLiveData)mEventsLiveData).setValue(list);
     }
 
 }
