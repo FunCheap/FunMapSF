@@ -7,13 +7,16 @@ import com.funcheap.funmapsf.commons.database.MyDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
+
+import java.util.List;
 
 /**
  * Created by Jayson on 10/19/2017.
  */
 @Table(database = MyDatabase.class)
-@org.parceler.Parcel(analyze={Filter.class})
+@org.parceler.Parcel(analyze = {Filter.class})
 public class Filter extends BaseModel implements Parcelable {
     @PrimaryKey(autoincrement = true)
     @Column
@@ -41,6 +44,14 @@ public class Filter extends BaseModel implements Parcelable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getFilterName() {
+        return filterName;
+    }
+
+    public void setFilterName(String filterName) {
+        this.filterName = filterName;
     }
 
     public String getQuery() {
@@ -98,13 +109,6 @@ public class Filter extends BaseModel implements Parcelable {
     public void setCategories(String categories) {
         this.categories = categories;
     }
-    public String getFilterName() {
-        return filterName;
-    }
-
-    public void setFilterName(String filterName) {
-        this.filterName = filterName;
-    }
 
     protected Filter(Parcel in) {
         id = in.readInt();
@@ -117,7 +121,7 @@ public class Filter extends BaseModel implements Parcelable {
         categories = in.readString();
     }
 
-    public Filter(){
+    public Filter() {
 
     }
 
@@ -151,18 +155,33 @@ public class Filter extends BaseModel implements Parcelable {
     }
 
     //This is the default filter with all default Values set
-    public static Filter setDefaultFilter(){
+    public static Filter setDefaultFilter() {
         Filter filter = new Filter();
 
         filter.filterName = "Default";
-        filter.query="";
-        filter.whenDate=""; //Todo set the Today's date
-        filter.explicitStartDate="";
-        filter.explicitEndDate="";
-        filter.free=true;
-        filter.venueQuery="";
-        filter.categories=""; ////Todo set the Default Category
+        filter.query = "";
+        filter.whenDate = ""; //Todo set the Today's date
+        filter.explicitStartDate = "";
+        filter.explicitEndDate = "";
+        filter.free = true;
+        filter.venueQuery = "";
+        filter.categories = ""; ////Todo set the Default Category
 
         return filter;
+    }
+
+    public static List<Filter> getSavedFilters() {
+        return SQLite.select().from(Filter.class).queryList();
+    }
+
+    public static void saveDummyFilter(String name) {
+        Filter filter = new Filter();
+        filter.setFilterName(name);
+        filter.setQuery("Party");
+        filter.setCategories("Top Pick");
+        filter.setFree(true);
+        filter.setWhenDate("Today");
+        filter.setVenueQuery("Mission");
+        filter.save();
     }
 }
