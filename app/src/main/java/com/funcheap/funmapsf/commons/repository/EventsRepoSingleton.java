@@ -79,7 +79,7 @@ public class EventsRepoSingleton {
         return eventsLiveData;
     }
 
-    public LiveData<Events> getEventById(long id) {
+    public LiveData<Events> getEventById(String id) {
         MutableLiveData<Events> eventData = new MutableLiveData<>();
 
         Observable.fromCallable(() -> Events.getEventById(id))

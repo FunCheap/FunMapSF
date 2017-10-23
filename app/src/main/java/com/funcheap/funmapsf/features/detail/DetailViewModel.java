@@ -29,7 +29,7 @@ public class DetailViewModel extends ViewModel {
         return eventData;
     }
 
-    public LiveData<Events> getEventById(long id) {
+    public LiveData<Events> getEventById(String id) {
         return mEventsRepoSingleton.getEventById(id);
     }
 

@@ -392,8 +392,12 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
 
     }
 
-    public static Events getEventById(long eventId){
-        return SQLite.select().from(Events.class).where(Events_Table.id.eq(eventId)).querySingle();
+    public static Events getEventById(String eventId){
+        return SQLite
+                .select()
+                .from(Events.class)
+                .where(Events_Table.eventId.eq(eventId))
+                .querySingle();
     }
 
     public static ArrayList<Events> bookmarkedEventsDBQuery() {
