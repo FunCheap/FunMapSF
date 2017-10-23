@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
@@ -19,11 +20,15 @@ import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
 import com.funcheap.funmapsf.features.list.ListBaseViewModel;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.funcheap.funmapsf.R.id.ivBackdrop;
+import static com.funcheap.funmapsf.R.id.ivItemImg;
 
 /**
  * Created by Jayson on 10/13/2017.
@@ -56,15 +61,6 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
     @Override
     protected RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent) {
         View view = mInflater.inflate(R.layout.listitem_event, parent, false);
-        view.setOnClickListener( myView -> {
-            if (mEvent != null)
-            {
-                Intent intent = new Intent(mContext, DetailActivity.class);
-                intent.putExtra(EVENT_EXTRA, mEvent);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(intent);
-            }
-        });
         return new EventViewHolder(view);
     }
 
@@ -96,6 +92,29 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
 
             // TODO Visually change icon to show bookmarked or un-bookmarked
         });
+
+        // Load Image
+        Picasso.Builder builder = new Picasso.Builder(mContext);
+        builder.indicatorsEnabled(true);
+        builder.listener(new Picasso.Listener()
+        {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
+            {
+                exception.printStackTrace();
+            }
+        });
+        builder.build().load(mEvent.getThumbnail()).fit().centerCrop().into(viewHolder.ivItemImg);
+
+        holder.itemView.setOnClickListener(myView -> {
+            if (mEvent != null)
+            {
+                Intent intent = new Intent(mContext, DetailActivity.class);
+                intent.putExtra(EVENT_EXTRA, items.get(position));
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -113,6 +132,8 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
         public TextView venue;
         @BindView(R.id.img_bookmark)
         public ImageView imgBookmark;
+        @BindView(R.id.ivItemImg)
+        public ImageView ivItemImg;
 
         public EventViewHolder(View itemView) {
             super(itemView);
