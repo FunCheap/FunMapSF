@@ -122,7 +122,6 @@ public class Filter extends BaseModel implements Parcelable {
     }
 
     public Filter() {
-
     }
 
     public static final Creator<Filter> CREATOR = new Creator<Filter>() {

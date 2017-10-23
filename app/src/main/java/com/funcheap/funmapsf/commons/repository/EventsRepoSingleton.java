@@ -97,10 +97,6 @@ public class EventsRepoSingleton {
     public LiveData<List<Filter>> getSavedFilters() {
         MutableLiveData<List<Filter>> filterData = new MutableLiveData<>();
 
-//        for (int i = 0; i < 10; i++) {
-//            Filter.saveDummyFilter("Dummy Filter " + i);
-//        }
-
         Observable.fromCallable(Filter::getSavedFilters)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

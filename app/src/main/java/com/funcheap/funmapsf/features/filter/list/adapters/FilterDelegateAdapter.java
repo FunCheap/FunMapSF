@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.features.filter.list.ListFilterViewModel;
+import com.funcheap.funmapsf.features.home.HomeActivity;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 
 import java.util.List;
@@ -35,10 +36,12 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
     private final String TAG = this.getClass().getSimpleName();
     private LayoutInflater mInflater;
     private ListFilterViewModel mListFilterViewModel;
+    private HomeActivity mHomeActivity; // TODO Remove this once we move to ViewModels
 
     public FilterDelegateAdapter(Activity activity) {
         this.mInflater = activity.getLayoutInflater();
         mListFilterViewModel = ViewModelProviders.of((FragmentActivity) activity).get(ListFilterViewModel.class);
+        mHomeActivity = (HomeActivity) activity;
     }
 
     @Override
@@ -70,7 +73,8 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
         viewHolder.txtParams.setText(filter.getQuery());
 
         viewHolder.view.setOnClickListener(myView -> {
-            // TODO Handle filter item click here
+            // TODO Handle filter through viewmodel and load MapFragment
+            mHomeActivity.onFilterSaved(filter);
         });
 
         viewHolder.btnDelete.setOnClickListener(view -> {
