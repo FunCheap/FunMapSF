@@ -5,10 +5,10 @@ FunMapSF is an event browsing app that takes the curated events from sf.funcheap
  * Users can view events from sf.funcheap.com on a Google Map view.
    - Events are shown as icons based on the event type
    * [x] Clustered events are consolidated into a numbered bubble.
- [x] Users can select a "List View" to view a list of all events currently shown on the map.
+ * [x] Users can select a "List View" to view a list of all events currently shown on the map.
    * [x] List view contains a background image and information such as title, location, price, and date/time, and a "bookmark" button.
- [x] Users can click a cluster bubble and see a list of events from that cluster.
- * [x] Users can click an event icon or list item to view details in an "Event Detail" 
+ * [x] Users can click a cluster bubble and see a list of events from that cluster.
+   * [x] Users can click an event icon or list item to view details in an "Event Detail" 
    screen
    * [x] Description, location, start/end dates and times, location, headline photo
    * [x] Bookmark button
