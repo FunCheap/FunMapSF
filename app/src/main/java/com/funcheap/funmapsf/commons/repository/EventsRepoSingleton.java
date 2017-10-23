@@ -17,6 +17,8 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
+import static android.R.attr.id;
+
 /**
  * Created by Jayson on 10/11/2017.
  * <p>
@@ -90,19 +92,16 @@ public class EventsRepoSingleton {
 
     /**
      * Returns the users saved filters
-     * @return a list of saved filters
+     * @return a LiveData containing a list of saved filters
      */
     public LiveData<List<Filter>> getSavedFilters() {
         MutableLiveData<List<Filter>> filterData = new MutableLiveData<>();
 
-        // Populate with dummy filters
-        List<Filter> filterList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            Filter filter = new Filter();
-            filter.id = i;
-            filterList.add(filter);
-        }
-        filterData.setValue(filterList);
+        Observable.fromCallable(Filter::getSavedFilters)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(filterData::setValue);
+
         return filterData;
     }
 

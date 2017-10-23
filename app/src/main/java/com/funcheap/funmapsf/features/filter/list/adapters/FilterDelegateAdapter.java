@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.features.filter.list.ListFilterViewModel;
+import com.funcheap.funmapsf.features.home.HomeActivity;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 
 import java.util.List;
@@ -34,12 +35,13 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
     private static final String FILTER_EXTRA = "filter_extra";
     private final String TAG = this.getClass().getSimpleName();
     private LayoutInflater mInflater;
-    private Filter mFilter;
     private ListFilterViewModel mListFilterViewModel;
+    private HomeActivity mHomeActivity; // TODO Remove this once we move to ViewModels
 
     public FilterDelegateAdapter(Activity activity) {
         this.mInflater = activity.getLayoutInflater();
         mListFilterViewModel = ViewModelProviders.of((FragmentActivity) activity).get(ListFilterViewModel.class);
+        mHomeActivity = (HomeActivity) activity;
     }
 
     @Override
@@ -52,11 +54,6 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
     @Override
     protected RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent) {
         View view = mInflater.inflate(R.layout.listitem_filter, parent, false);
-        view.setOnClickListener(myView -> {
-            if (mFilter != null) {
-                // TODO Handle filter item click here
-            }
-        });
         return new FilterViewHolder(view);
     }
 
@@ -68,18 +65,24 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
             @NonNull List<Object> payloads) {
 
         FilterViewHolder viewHolder = (FilterViewHolder) holder;
-        mFilter = items.get(position);
+        Filter filter = items.get(position);
 
         String text = "Filter item " + items.get(position).id;
         String subtext = "Filter subtext " + items.get(position).id;
-        viewHolder.txtTitle.setText(text);
-        viewHolder.txtParams.setText(subtext);
+        viewHolder.txtTitle.setText(filter.getFilterName());
+        viewHolder.txtParams.setText(filter.getQuery());
 
-        viewHolder.btnDelete.setOnClickListener( view -> {
+        viewHolder.view.setOnClickListener(myView -> {
+            // TODO Handle filter through viewmodel and load MapFragment
+            mHomeActivity.onFilterSaved(filter);
+        });
+
+        viewHolder.btnDelete.setOnClickListener(view -> {
             Log.d(TAG, "Delete button clicked!");
             Toast.makeText(view.getContext(), text + " deleted!", Toast.LENGTH_LONG).show();
 
             mListFilterViewModel.deleteFilter(position);
+            filter.delete();
         });
 
     }
@@ -89,6 +92,7 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
      */
     public static class FilterViewHolder extends RecyclerView.ViewHolder {
 
+        public View view;
         @BindView(R.id.text_title)
         public TextView txtTitle;
         @BindView(R.id.text_params)
@@ -99,6 +103,7 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
         public FilterViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            this.view = itemView;
         }
     }
 
