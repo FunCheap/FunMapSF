@@ -18,6 +18,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
@@ -26,6 +27,8 @@ import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
 import com.funcheap.funmapsf.features.filter.edit.GridButtonAdapter;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
+import com.vpaliy.chips_lover.ChipBuilder;
+import com.vpaliy.chips_lover.ChipView;
 
 import org.honorato.multistatetogglebutton.MultiStateToggleButton;
 
@@ -64,6 +67,8 @@ public class HomeFragment extends Fragment {
     public FloatingActionButton mFabSaveFilter;
     @BindView(R.id.filter_bottom_sheet)
     public RelativeLayout mFilterSheet;
+    @BindView(R.id.filter_chips)
+    public LinearLayout mChipsFilterLayout;
     @BindView(R.id.when_spin)
     public Spinner when_spin;
     @BindView(R.id.edit_where)
@@ -193,6 +198,8 @@ public class HomeFragment extends Fragment {
 
     private void searchDBandSendEvents(){
 
+        applyChips();
+
         Filter filter = new Filter();
         filter.setQuery(search.getText().toString());
         filter.setWhenDate((String)(when_spin.getSelectedItem()));
@@ -204,5 +211,21 @@ public class HomeFragment extends Fragment {
         mMapsViewModel.setFilter(filter);
 
         //Todo: search the db with all the chosen parameters
+    }
+
+    /**
+     * Create chips for each filter and display them in the mChipsFilterLayout
+     */
+    private void applyChips() {
+        for (int i = 0; i < 5; i++) {
+            ChipBuilder cb = ChipBuilder.create(getContext());
+            cb.setText("TestChip " + i);
+
+            ChipView chipView = cb.build();
+
+            // TODO Add MarginEnd to this view
+
+            mChipsFilterLayout.addView(chipView);
+        }
     }
 }
