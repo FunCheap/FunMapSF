@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
@@ -15,20 +14,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
 import com.funcheap.funmapsf.features.list.ListBaseViewModel;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.funcheap.funmapsf.R.id.ivBackdrop;
-import static com.funcheap.funmapsf.R.id.ivItemImg;
 
 /**
  * Created by Jayson on 10/13/2017.
@@ -94,17 +90,8 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
         });
 
         // Load Image
-        Picasso.Builder builder = new Picasso.Builder(mContext);
-        builder.indicatorsEnabled(true);
-        builder.listener(new Picasso.Listener()
-        {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-            {
-                exception.printStackTrace();
-            }
-        });
-        builder.build().load(mEvent.getThumbnail()).fit().centerCrop().into(viewHolder.ivItemImg);
+        Glide.with(mContext).load(mEvent.getThumbnail())
+                .into(viewHolder.ivItemImg);
 
         holder.itemView.setOnClickListener(myView -> {
             if (mEvent != null)

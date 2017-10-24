@@ -95,8 +95,6 @@ dependencies {
     // Multi-state Toogle button
     compile 'org.honorato.multistatetogglebutton:multistatetogglebutton:0.2.2'
 
-    compile 'com.squareup.picasso:picasso:2.5.2'
-
     compile 'com.android.support:customtabs:25.2.0'
 
 }

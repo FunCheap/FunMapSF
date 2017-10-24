@@ -19,10 +19,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.databinding.ActivityDetailBinding;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -108,13 +108,9 @@ public class DetailActivity extends AppCompatActivity {
 
     public void setImage()
     {
-
-        Picasso.Builder builder = new Picasso.Builder(this);
-        builder.indicatorsEnabled(true);
-        builder.listener((picasso, uri, exception) -> exception.printStackTrace());
-        builder.build().load(mDetailViewModel.getEventData().getValue().getThumbnail()).fit().centerCrop().into(ivBackdrop);
-
-
+        // Load Image
+        Glide.with(this).load(mDetailViewModel.getEventData().getValue().getThumbnail())
+                .into(ivBackdrop);
     }
 
     public void onCalenderClick(View v) {
