@@ -11,13 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Filter;
+import com.funcheap.funmapsf.commons.utils.ChipUtils;
 import com.funcheap.funmapsf.features.filter.list.ListFilterViewModel;
 import com.funcheap.funmapsf.features.home.HomeActivity;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
+import com.vpaliy.chips_lover.ChipView;
+import com.vpaliy.chips_lover.ChipsLayout;
 
 import java.util.List;
 
@@ -67,17 +69,21 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
         FilterViewHolder viewHolder = (FilterViewHolder) holder;
         Filter filter = items.get(position);
 
-        String text = "Filter item " + items.get(position).id;
-        String subtext = "Filter subtext " + items.get(position).id;
         viewHolder.txtTitle.setText(filter.getFilterName());
-        viewHolder.txtParams.setText(filter.getQuery());
+
+        // Populate Filter Chips Layout
+        ChipsLayout chipsLayout = viewHolder.chipsParams;
+        List<ChipView> chipList = ChipUtils.chipsFromFilter(filter);
+
+        for (ChipView chipView : chipList) {
+            chipsLayout.addView(chipView);
+        }
 
         // Set the filter when it's clicked
         viewHolder.view.setOnClickListener(myView -> mHomeActivity.setFilter(filter));
 
         viewHolder.btnDelete.setOnClickListener(view -> {
-            Log.d(TAG, "Delete button clicked!");
-            Toast.makeText(view.getContext(), text + " deleted!", Toast.LENGTH_LONG).show();
+            Log.d(TAG, "Deleted " + filter.getFilterName());
             mListFilterViewModel.deleteFilter(position);
         });
 
@@ -91,8 +97,8 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
         public View view;
         @BindView(R.id.text_title)
         public TextView txtTitle;
-        @BindView(R.id.text_params)
-        public TextView txtParams;
+        @BindView(R.id.chip_params)
+        public ChipsLayout chipsParams;
         @BindView(R.id.img_delete_filter)
         public ImageView btnDelete;
 

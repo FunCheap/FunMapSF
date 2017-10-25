@@ -17,17 +17,17 @@
         app:layout_constraintRight_toLeftOf="@+id/img_delete_filter"
         tools:text="Weekend Planning" />
 
-    <TextView
-        android:id="@+id/text_params"
+    <com.vpaliy.chips_lover.ChipsLayout
+        android:id="@+id/chip_params"
         style="@style/FilterListSubtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_medium"
-        android:maxLines="2"
+        app:chip_layout_horizontal_margin="@dimen/margin_small"
+        app:chip_layout_vertical_margin="@dimen/margin_small"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@id/img_delete_filter"
-        app:layout_constraintTop_toBottomOf="@id/text_title"
-        tools:text="'Fair' - This Weekend - Free - Top Pick - Annual" />
+        app:layout_constraintTop_toBottomOf="@id/text_title" />
 
     <ImageView
         android:id="@+id/img_delete_filter"
