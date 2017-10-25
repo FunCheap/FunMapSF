@@ -220,7 +220,10 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
         filter.setWhenDate((String)(when_spin.getSelectedItem()));
         filter.setFree(price_mstb.getValue() == 1); // 1 == true == FREE, 0 == false == Any
         filter.setVenueQuery(edit_where.getText().toString());
-        filter.setCategories(categoriesSelected.toString());
+        if(categoriesSelected.size()!=0)
+            filter.setCategories(categoriesSelected.toString());
+        else
+            filter.setCategories("default");
 
         // Complete filter
         mMapsViewModel.setFilter(filter);

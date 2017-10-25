@@ -161,12 +161,14 @@ public class Filter extends BaseModel implements Parcelable {
 
         filter.filterName = "Default";
         filter.query = "";
-        filter.whenDate = ""; //Todo set the Today's date
+
+
+        filter.whenDate = "Today"; //Todo set the Today's date
         filter.explicitStartDate = "";
         filter.explicitEndDate = "";
-        filter.free = true;
-        filter.venueQuery = "";
-        filter.categories = ""; ////Todo set the Default Category
+        filter.free = false;
+        filter.venueQuery = ""; // No venue , show all events of todat
+        filter.categories = "default"; // No categories
 
         return filter;
     }
