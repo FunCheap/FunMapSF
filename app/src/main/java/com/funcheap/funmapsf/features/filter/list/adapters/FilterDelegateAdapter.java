@@ -36,7 +36,7 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
     private final String TAG = this.getClass().getSimpleName();
     private LayoutInflater mInflater;
     private ListFilterViewModel mListFilterViewModel;
-    private HomeActivity mHomeActivity; // TODO Remove this once we move to ViewModels
+    private HomeActivity mHomeActivity;
 
     public FilterDelegateAdapter(Activity activity) {
         this.mInflater = activity.getLayoutInflater();
@@ -72,10 +72,8 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
         viewHolder.txtTitle.setText(filter.getFilterName());
         viewHolder.txtParams.setText(filter.getQuery());
 
-        viewHolder.view.setOnClickListener(myView -> {
-            // TODO Handle filter through viewmodel and load MapFragment
-            mHomeActivity.onFilterSaved(filter);
-        });
+        // Set the filter when it's clicked
+        viewHolder.view.setOnClickListener(myView -> mHomeActivity.setFilter(filter));
 
         viewHolder.btnDelete.setOnClickListener(view -> {
             Log.d(TAG, "Delete button clicked!");

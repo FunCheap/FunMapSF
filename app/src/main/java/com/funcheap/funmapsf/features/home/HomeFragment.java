@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.funcheap.funmapsf.R;
+import com.funcheap.funmapsf.commons.interfaces.OnBackClickCallback;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
 import com.funcheap.funmapsf.features.filter.edit.GridButtonAdapter;
@@ -47,7 +48,7 @@ import butterknife.ButterKnife;
  * well as the filter settings and SaveFiler FAB
  */
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements OnBackClickCallback {
 
     private static final String[] PLACES = new String[] {
             "San Francisco", "EastBay", "NorthBay", "Peninsula", "SouthBay"
@@ -118,6 +119,16 @@ public class HomeFragment extends Fragment {
         price_mstb.setValue(0);
 
         return root;
+    }
+
+    @Override
+    public boolean onBackClick() {
+        if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void initHomePager() {

@@ -12,12 +12,12 @@ import android.util.Log;
 import android.view.View;
 
 import com.funcheap.funmapsf.R;
-import com.funcheap.funmapsf.commons.models.Events;
+import com.funcheap.funmapsf.commons.interfaces.OnBackClickCallback;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
 import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
-import com.funcheap.funmapsf.features.filter.list.ListFiltersFragment;
 import com.funcheap.funmapsf.features.filter.edit.EditFilterDiaglogFragment;
+import com.funcheap.funmapsf.features.filter.list.ListFiltersFragment;
 import com.funcheap.funmapsf.features.list.bookmarks.ListBookmarksFragment;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
 
@@ -32,7 +32,6 @@ import butterknife.ButterKnife;
  */
 
 public class HomeActivity extends AppCompatActivity implements
-        EditFilterDiaglogFragment.FilterSavedListener,
         SaveFilterDialogFragment.SaveFilterListener {
 
     private String TAG = this.getClass().getSimpleName();
@@ -41,8 +40,7 @@ public class HomeActivity extends AppCompatActivity implements
     @BindView(R.id.bottom_navigation)
     public BottomNavigationView mBottomNav;
 
-    MapsViewModel mMapsModel;
-    Filter mFilter;
+    public MapsViewModel mMapsModel;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +52,6 @@ public class HomeActivity extends AppCompatActivity implements
         mMapsModel = ViewModelProviders.of(this).get(MapsViewModel.class);
 
         initBottomNav();
-        mFilter = Filter.getDefaultFilter();
     }
 
     /**
@@ -99,47 +96,38 @@ public class HomeActivity extends AppCompatActivity implements
     private void loadFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.disallowAddToBackStack();
-        ft.replace(R.id.content_frame_home, fragment, null);
+        ft.replace(R.id.content_frame_home, fragment, fragment.getClass().getSimpleName());
         ft.commit();
     }
 
-    // Callback from EditFilterDiaglogFragment to apply filter,
-    // Get the events list from the db based on the filter and update the Map View
-    @Override
-    public void onFilterSaved(Filter filter) {
-        mBottomNav.setVisibility(View.VISIBLE);
-        // update the events in Map View  based on filter
-        if(!filter.getQuery().isEmpty()){
-            mMapsModel.setEvents(Events.getFilteredEvents(filter));
-            mFilter = filter;
-        }
-        mSelectedFragment=null;
-    }
-
-    @Override
-    public void setSelectedFragment(EditFilterDiaglogFragment editFilterFragment) {
-        this.mSelectedFragment = editFilterFragment;
-    }
-
-
     @Override
     public void onBackPressed() {
-        if(mSelectedFragment == null) {
-            // Selected fragment did not consume the back press event.
-            super.onBackPressed();
-        }
-        else{
-            // For EditFilterDiaglogFragment if back key is pressed
-            getSupportFragmentManager().popBackStack();
-            mBottomNav.setVisibility(View.VISIBLE);
-            mSelectedFragment = null;
+        OnBackClickCallback homeFragment = (HomeFragment) getSupportFragmentManager()
+                        .findFragmentByTag(HomeFragment.class.getSimpleName());
+        if (homeFragment != null) {
+            if (!homeFragment.onBackClick()){
+                // Selected fragment did not consume the back press event.
+                super.onBackPressed();
+            }
         }
     }
 
     // On FAB Click the filter is saved with filter name
     @Override
     public void saveFilter(String filterName) {
-        mFilter.setFilterName(filterName);
-        mFilter.save();
+        Filter filter = mMapsModel.getFilter().getValue();
+        if (filter != null) {
+            filter.setFilterName(filterName);
+            filter.save();
+        }
+    }
+
+    /**
+     * Set the current filter using our MapViewModel and load the MapFragment
+     * @param filter new filter to use
+     */
+    public void setFilter(Filter filter) {
+        mMapsModel.setFilter(filter);
+        mBottomNav.setSelectedItemId(R.id.action_search);
     }
 }
