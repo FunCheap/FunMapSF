@@ -4,19 +4,19 @@
     <item
         android:id="@+id/action_search"
         android:enabled="true"
-        android:icon="@android:drawable/ic_dialog_map"
+        android:icon="@drawable/ic_map"
         android:title="@string/bottom_nav_search"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_filters"
         android:enabled="true"
-        android:icon="@android:drawable/ic_dialog_info"
+        android:icon="@drawable/ic_filter_variant"
         android:title="@string/bottom_nav_filters"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_bookmarks"
         android:enabled="true"
-        android:icon="@android:drawable/ic_dialog_alert"
+        android:icon="@drawable/ic_book_multiple"
         android:title="@string/bottom_nav_bookmarks"
         app:showAsAction="ifRoom" />
 </menu>
