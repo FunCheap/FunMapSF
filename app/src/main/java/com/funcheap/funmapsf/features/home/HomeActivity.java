@@ -17,7 +17,7 @@ import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
 import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
 import com.funcheap.funmapsf.features.filter.list.ListFiltersFragment;
-import com.funcheap.funmapsf.features.filter.edit.EditFilterFragment;
+import com.funcheap.funmapsf.features.filter.edit.EditFilterDiaglogFragment;
 import com.funcheap.funmapsf.features.list.bookmarks.ListBookmarksFragment;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
 
@@ -31,13 +31,12 @@ import butterknife.ButterKnife;
  * loads different fragments within the content container.
  */
 
-public class HomeActivity extends AppCompatActivity implements 
-		HomeFragment.FilterClickListener,
-        EditFilterFragment.FilterSavedListener,
+public class HomeActivity extends AppCompatActivity implements
+        EditFilterDiaglogFragment.FilterSavedListener,
         SaveFilterDialogFragment.SaveFilterListener {
 
     private String TAG = this.getClass().getSimpleName();
-    private EditFilterFragment mSelectedFragment;
+    private EditFilterDiaglogFragment mSelectedFragment;
 
     @BindView(R.id.bottom_navigation)
     public BottomNavigationView mBottomNav;
@@ -104,20 +103,7 @@ public class HomeActivity extends AppCompatActivity implements
         ft.commit();
     }
 
-
-    // Callback from HomeFragment to launch EditFilterFragment
-    @Override
-    public void onFilterClicked() {
-        EditFilterFragment frag = EditFilterFragment.newInstance();
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.addToBackStack("backStack");
-        mBottomNav.setVisibility(View.GONE);
-        ft.replace(R.id.content_frame_home, frag, null);
-        ft.commit();
-    }
-
-
-    // Callback from EditFilterFragment to apply filter,
+    // Callback from EditFilterDiaglogFragment to apply filter,
     // Get the events list from the db based on the filter and update the Map View
     @Override
     public void onFilterSaved(Filter filter) {
@@ -131,7 +117,7 @@ public class HomeActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void setSelectedFragment(EditFilterFragment editFilterFragment) {
+    public void setSelectedFragment(EditFilterDiaglogFragment editFilterFragment) {
         this.mSelectedFragment = editFilterFragment;
     }
 
@@ -143,7 +129,7 @@ public class HomeActivity extends AppCompatActivity implements
             super.onBackPressed();
         }
         else{
-            // For EditFilterFragment if back key is pressed
+            // For EditFilterDiaglogFragment if back key is pressed
             getSupportFragmentManager().popBackStack();
             mBottomNav.setVisibility(View.VISIBLE);
             mSelectedFragment = null;

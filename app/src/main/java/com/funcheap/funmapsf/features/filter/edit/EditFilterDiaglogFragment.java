@@ -1,13 +1,11 @@
 package com.funcheap.funmapsf.features.filter.edit;
 
+import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -36,8 +34,8 @@ import butterknife.ButterKnife;
  * {@link android.support.design.widget.BottomSheetDialogFragment}
  */
 
-public class EditFilterFragment extends Fragment {
-    private static final String TAG = "EditFilterFragment";
+public class EditFilterDiaglogFragment extends BottomSheetDialogFragment {
+    private static final String TAG = "EditFilterDiaglogFragment";
     private static final String[] PLACES = new String[] {
             "San Francisco", "EastBay", "NorthBay", "Peninsula", "SouthBay"
     };
@@ -49,7 +47,7 @@ public class EditFilterFragment extends Fragment {
 	public interface FilterSavedListener{
         public void onFilterSaved(Filter filter);
         //for handling back key pressed
-        public void setSelectedFragment(EditFilterFragment editFilterFragment);
+        public void setSelectedFragment(EditFilterDiaglogFragment editFilterFragment);
     }
 
     private MapsViewModel mMapsViewModel;
@@ -72,11 +70,10 @@ public class EditFilterFragment extends Fragment {
     ArrayList<String> categoriesSelected;
     GridButtonAdapter gridButtonAdp;
 
-
-    public static EditFilterFragment newInstance() {
+    public static EditFilterDiaglogFragment newInstance() {
         Bundle args = new Bundle();
         // Set any input args here
-        EditFilterFragment fragment = new EditFilterFragment();
+        EditFilterDiaglogFragment fragment = new EditFilterDiaglogFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -87,11 +84,13 @@ public class EditFilterFragment extends Fragment {
         mCtx = context;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_edit_filter, container, false);
-        ButterKnife.bind(this, view);
+    public void setupDialog(Dialog dialog, int style) {
+        super.setupDialog(dialog, style);
+        View contentView = View.inflate(getContext(), R.layout.fragment_edit_filter, null);
+        dialog.setContentView(contentView);
+
+        ButterKnife.bind(this, contentView);
 
         mMapsViewModel = ViewModelProviders.of(getActivity()).get(MapsViewModel.class);
 
@@ -101,7 +100,6 @@ public class EditFilterFragment extends Fragment {
         prepareCategories();
         prepareDoneClick();
         price_mstb.setValue(0);
-        return view;
     }
 
     private void prepareWhenList(){
