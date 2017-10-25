@@ -5,19 +5,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 
 import com.funcheap.funmapsf.R;
-import com.funcheap.funmapsf.commons.models.Events;
+import com.funcheap.funmapsf.commons.interfaces.OnBackClickCallback;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
 import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
-import com.funcheap.funmapsf.features.filter.list.ListFiltersFragment;
 import com.funcheap.funmapsf.features.filter.edit.EditFilterDiaglogFragment;
+import com.funcheap.funmapsf.features.filter.list.ListFilterViewModel;
+import com.funcheap.funmapsf.features.filter.list.ListFiltersFragment;
 import com.funcheap.funmapsf.features.list.bookmarks.ListBookmarksFragment;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
 
@@ -32,7 +31,6 @@ import butterknife.ButterKnife;
  */
 
 public class HomeActivity extends AppCompatActivity implements
-        EditFilterDiaglogFragment.FilterSavedListener,
         SaveFilterDialogFragment.SaveFilterListener {
 
     private String TAG = this.getClass().getSimpleName();
@@ -41,8 +39,12 @@ public class HomeActivity extends AppCompatActivity implements
     @BindView(R.id.bottom_navigation)
     public BottomNavigationView mBottomNav;
 
-    MapsViewModel mMapsModel;
-    Filter mFilter;
+    public MapsViewModel mMapsModel;
+    public ListFilterViewModel mListFiltersViewModel;
+
+    private HomeFragment mHomeFragment = (HomeFragment) HomeFragment.newInstance();
+    private ListFiltersFragment mListFiltersFragment = (ListFiltersFragment) ListFiltersFragment.newInstance();
+    private ListBookmarksFragment mListBookmarksFragment = (ListBookmarksFragment) ListBookmarksFragment.newInstance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,11 +52,12 @@ public class HomeActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
-        checkNotification();
         mMapsModel = ViewModelProviders.of(this).get(MapsViewModel.class);
+        mListFiltersViewModel = ViewModelProviders.of(this).get(ListFilterViewModel.class);
 
+        checkNotification();
         initBottomNav();
-        mFilter = Filter.getDefaultFilter();
+        loadFragments();
     }
 
     /**
@@ -72,22 +75,51 @@ public class HomeActivity extends AppCompatActivity implements
 
     }
 
+    /**
+     * Load all fragments but only show the Home fragment initially
+     */
+    private void loadFragments() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.disallowAddToBackStack()
+                .add(R.id.content_frame_home, mListBookmarksFragment, mListBookmarksFragment.getClass().getSimpleName())
+                .hide(mListBookmarksFragment)
+                .add(R.id.content_frame_home, mListFiltersFragment, mListFiltersFragment.getClass().getSimpleName())
+                .hide(mListFiltersFragment)
+                .add(R.id.content_frame_home, mHomeFragment, mHomeFragment.getClass().getSimpleName())
+                .commit();
+    }
+
     private void initBottomNav() {
-        // TODO Figure out how to stop loaded fragments from being reselected
-        mBottomNav.setVisibility(View.VISIBLE);
+        /*
+         * Programmatically show and hide fragments based on the selection
+         */
         mBottomNav.setOnNavigationItemSelectedListener(item -> {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             switch (item.getItemId()) {
                 case R.id.action_search:
-                    loadFragment(HomeFragment.newInstance());
+                    ft.disallowAddToBackStack()
+                            .hide(mListFiltersFragment)
+                            .hide(mListBookmarksFragment)
+                            .show(mHomeFragment)
+                            .commit();
                     return true;
                 case R.id.action_filters:
-                    loadFragment(ListFiltersFragment.newInstance());
+                    ft.disallowAddToBackStack()
+                            .hide(mHomeFragment)
+                            .hide(mListBookmarksFragment)
+                            .show(mListFiltersFragment)
+                            .commit();
                     return true;
                 case R.id.action_bookmarks:
-                    loadFragment(ListBookmarksFragment.newInstance());
+                    ft.disallowAddToBackStack()
+                            .hide(mListFiltersFragment)
+                            .hide(mHomeFragment)
+                            .show(mListBookmarksFragment)
+                            .commit();
                     return true;
                 default:
                     Log.d(TAG, "initBottomNav: Unrecognized menu selection!");
+                    ft.commit();
                     return false;
             }
         });
@@ -96,50 +128,36 @@ public class HomeActivity extends AppCompatActivity implements
         mBottomNav.setSelectedItemId(R.id.action_search);
     }
 
-    private void loadFragment(Fragment fragment) {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.disallowAddToBackStack();
-        ft.replace(R.id.content_frame_home, fragment, null);
-        ft.commit();
-    }
-
-    // Callback from EditFilterDiaglogFragment to apply filter,
-    // Get the events list from the db based on the filter and update the Map View
-    @Override
-    public void onFilterSaved(Filter filter) {
-        mBottomNav.setVisibility(View.VISIBLE);
-        // update the events in Map View  based on filter
-        if(!filter.getQuery().isEmpty()){
-            mMapsModel.setEvents(Events.getFilteredEvents(filter));
-            mFilter = filter;
-        }
-        mSelectedFragment=null;
-    }
-
-    @Override
-    public void setSelectedFragment(EditFilterDiaglogFragment editFilterFragment) {
-        this.mSelectedFragment = editFilterFragment;
-    }
-
-
     @Override
     public void onBackPressed() {
-        if(mSelectedFragment == null) {
-            // Selected fragment did not consume the back press event.
-            super.onBackPressed();
-        }
-        else{
-            // For EditFilterDiaglogFragment if back key is pressed
-            getSupportFragmentManager().popBackStack();
-            mBottomNav.setVisibility(View.VISIBLE);
-            mSelectedFragment = null;
+        OnBackClickCallback homeFragment = (HomeFragment) getSupportFragmentManager()
+                .findFragmentByTag(HomeFragment.class.getSimpleName());
+        if (homeFragment != null) {
+            if (!homeFragment.onBackClick()) {
+                // Selected fragment did not consume the back press event.
+                super.onBackPressed();
+            }
         }
     }
 
     // On FAB Click the filter is saved with filter name
     @Override
     public void saveFilter(String filterName) {
-        mFilter.setFilterName(filterName);
-        mFilter.save();
+        Filter filter = mMapsModel.getFilter().getValue();
+        if (filter != null) {
+            filter.setFilterName(filterName);
+            filter.save();
+            mListFiltersViewModel.addFilter(filter);
+        }
+    }
+
+    /**
+     * Set the current filter using our MapViewModel and load the MapFragment
+     *
+     * @param filter new filter to use
+     */
+    public void setFilter(Filter filter) {
+        mMapsModel.setFilter(filter);
+        mBottomNav.setSelectedItemId(R.id.action_search);
     }
 }

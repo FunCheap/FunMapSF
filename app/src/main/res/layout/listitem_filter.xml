@@ -1,42 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/padding_medium">
+    android:padding="@dimen/padding_medium"
+    android:layout_marginStart="@dimen/margin_medium"
+    android:layout_marginEnd="@dimen/margin_medium"
+    android:layout_marginTop="@dimen/margin_medium">
 
-    <TextView
-        android:id="@+id/text_title"
-        style="@style/FilterListTitle"
-        android:layout_width="0dp"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_medium"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/img_delete_filter"
-        tools:text="Weekend Planning" />
+        android:orientation="vertical"
+        android:padding="@dimen/padding_medium">
 
-    <TextView
-        android:id="@+id/text_params"
-        style="@style/FilterListSubtitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_medium"
-        android:maxLines="2"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/img_delete_filter"
-        app:layout_constraintTop_toBottomOf="@id/text_title"
-        tools:text="'Fair' - This Weekend - Free - Top Pick - Annual" />
+        <TextView
+            android:id="@+id/text_title"
+            style="@style/FilterListTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_medium"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/img_delete_filter"
+            tools:text="Weekend Planning" />
 
-    <ImageView
-        android:id="@+id/img_delete_filter"
-        android:layout_width="@dimen/image_small"
-        android:layout_height="@dimen/image_small"
-        android:src="@android:drawable/ic_delete"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <com.vpaliy.chips_lover.ChipsLayout
+            android:id="@+id/chip_params"
+            style="@style/FilterListSubtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:chip_layout_horizontal_margin="@dimen/margin_small"
+            app:chip_layout_vertical_margin="@dimen/margin_small"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/img_delete_filter"
+            app:layout_constraintTop_toBottomOf="@id/text_title" />
 
+        <ImageView
+            android:id="@+id/img_delete_filter"
+            android:layout_width="@dimen/image_small"
+            android:layout_height="@dimen/image_small"
+            android:src="@android:drawable/ic_delete"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </android.support.constraint.ConstraintLayout>
 
-</android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>

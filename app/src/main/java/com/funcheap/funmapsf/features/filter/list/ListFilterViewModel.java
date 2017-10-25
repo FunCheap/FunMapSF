@@ -3,6 +3,7 @@ package com.funcheap.funmapsf.features.filter.list;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.util.Log;
 
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.commons.repository.EventsRepoSingleton;
@@ -17,7 +18,9 @@ import java.util.List;
 
 public class ListFilterViewModel extends ViewModel {
 
-    EventsRepoSingleton mEventRepoSingleton = EventsRepoSingleton.getEventsRepo();
+    private final String TAG = this.getClass().getSimpleName();
+
+    private EventsRepoSingleton mEventRepoSingleton = EventsRepoSingleton.getEventsRepo();
 
     private MutableLiveData<List<Filter>> mFiltersData;
 
@@ -27,11 +30,19 @@ public class ListFilterViewModel extends ViewModel {
     }
 
     public void deleteFilter(int i) {
-        // TODO Include code to delete the filter from our database
-
         List<Filter> filterList = mFiltersData.getValue();
-        filterList.remove(i);
+        if (filterList.get(i) != null) {
+            filterList.get(i).delete();
+            filterList.remove(i);
+        } else {
+            Log.d(TAG, "deleteFilter: Tried to delete a non-existent filter!");
+        }
         mFiltersData.setValue(filterList);
     }
 
+    public void addFilter(Filter filter) {
+        if (mFiltersData.getValue() != null) {
+            mFiltersData.getValue().add(filter);
+        }
+    }
 }
