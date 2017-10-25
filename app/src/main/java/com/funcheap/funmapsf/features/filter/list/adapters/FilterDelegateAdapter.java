@@ -78,9 +78,7 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
         viewHolder.btnDelete.setOnClickListener(view -> {
             Log.d(TAG, "Delete button clicked!");
             Toast.makeText(view.getContext(), text + " deleted!", Toast.LENGTH_LONG).show();
-
             mListFilterViewModel.deleteFilter(position);
-            filter.delete();
         });
 
     }
