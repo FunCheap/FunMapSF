@@ -70,9 +70,10 @@
 
         <ImageView
             android:id="@+id/img_bookmark"
-            android:layout_width="@dimen/image_small"
-            android:layout_height="@dimen/image_small"
-            android:src="@android:drawable/ic_media_play"
+            android:layout_width="@dimen/image_medium"
+            android:layout_height="@dimen/image_medium"
+            tools:src="@drawable/ic_bookmark_outline"
+            android:tint="@color/icon_tint_light"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
