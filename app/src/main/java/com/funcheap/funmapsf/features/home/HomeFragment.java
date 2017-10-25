@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,8 +84,10 @@ public class HomeFragment extends Fragment {
     public Button done;
     @BindView(R.id.search)
     public EditText search;
-    ArrayList<String> whenList;
 
+    private BottomSheetBehavior mBottomSheetBehavior;
+
+    ArrayList<String> whenList;
     ArrayList<String> categoryList;
     ArrayAdapter<String> categoryAdp;
     ArrayList<String> categoriesSelected;
@@ -129,7 +132,14 @@ public class HomeFragment extends Fragment {
     }
 
     private void initBottomSheet() {
-        BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(mFilterSheet);
+        mBottomSheetBehavior = BottomSheetBehavior.from(mFilterSheet);
+        mBottomSheetBehavior.setHideable(false);
+
+        mChipsFilterLayout.setOnClickListener( view -> {
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        });
+
+        applyChips();
     }
 
     private void prepareWhenList(){
@@ -190,11 +200,9 @@ public class HomeFragment extends Fragment {
     private void prepareDoneClick(){
         done.setOnClickListener(view -> {
             searchDBandSendEvents();
-            getActivity().getSupportFragmentManager().popBackStack();
-
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
     }
-
 
     private void searchDBandSendEvents(){
 
@@ -215,17 +223,24 @@ public class HomeFragment extends Fragment {
 
     /**
      * Create chips for each filter and display them in the mChipsFilterLayout
+     *
+     * TODO Break this out into a reusable component for lists
      */
     private void applyChips() {
+        mChipsFilterLayout.removeAllViews();
+
         for (int i = 0; i < 5; i++) {
             ChipBuilder cb = ChipBuilder.create(getContext());
             cb.setText("TestChip " + i);
 
             ChipView chipView = cb.build();
-
-            // TODO Add MarginEnd to this view
+            chipView.setClickable(false);
+            chipView.setTextColor(ContextCompat.getColor(getContext(), R.color.primary_text_inverse));
+            chipView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary));
 
             mChipsFilterLayout.addView(chipView);
+
+            ((ViewGroup.MarginLayoutParams) chipView.getLayoutParams()).setMarginEnd(20);
         }
     }
 }
