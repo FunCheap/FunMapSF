@@ -44,7 +44,7 @@
             android:layout_width="@dimen/image_tiny"
             android:layout_height="@dimen/image_tiny"
             android:src="@drawable/ic_delete"
-            android:tint="@color/light_gray"
+            android:tint="@color/icon_tint_gray"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>

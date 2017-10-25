@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_fab"
         android:src="@drawable/ic_plus"
-        android:tint="@android:color/white"
+        android:tint="@color/icon_tint_light"
         app:elevation="6dp"
         app:layout_anchor="@+id/filter_bottom_sheet"
         app:layout_anchorGravity="top|right|end" />
