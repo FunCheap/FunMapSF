@@ -75,10 +75,22 @@ public class HomeActivity extends AppCompatActivity implements
 
     }
 
-    private void initBottomNav() {
-        // TODO Figure out how to stop loaded fragments from being reselected
+    /**
+     * Load all fragments but only show the Home fragment initially
+     */
+    private void loadFragments() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.disallowAddToBackStack()
+                .add(R.id.content_frame_home, mListBookmarksFragment, mListBookmarksFragment.getClass().getSimpleName())
+                .hide(mListBookmarksFragment)
+                .add(R.id.content_frame_home, mListFiltersFragment, mListFiltersFragment.getClass().getSimpleName())
+                .hide(mListFiltersFragment)
+                .add(R.id.content_frame_home, mHomeFragment, mHomeFragment.getClass().getSimpleName())
+                .commit();
+    }
 
-        /**
+    private void initBottomNav() {
+        /*
          * Programmatically show and hide fragments based on the selection
          */
         mBottomNav.setOnNavigationItemSelectedListener(item -> {
@@ -114,20 +126,6 @@ public class HomeActivity extends AppCompatActivity implements
 
         // Select the search button by default
         mBottomNav.setSelectedItemId(R.id.action_search);
-    }
-
-    /**
-     * Load all fragments but only show the Home fragment initially
-     */
-    private void loadFragments() {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.disallowAddToBackStack()
-                .add(R.id.content_frame_home, mListBookmarksFragment, mListBookmarksFragment.getClass().getSimpleName())
-                .hide(mListBookmarksFragment)
-                .add(R.id.content_frame_home, mListFiltersFragment, mListFiltersFragment.getClass().getSimpleName())
-                .hide(mListFiltersFragment)
-                .add(R.id.content_frame_home, mHomeFragment, mHomeFragment.getClass().getSimpleName())
-                .commit();
     }
 
     @Override
