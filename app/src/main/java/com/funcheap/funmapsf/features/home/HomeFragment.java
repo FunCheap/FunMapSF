@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,10 +25,10 @@ import android.widget.Spinner;
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.interfaces.OnBackClickCallback;
 import com.funcheap.funmapsf.commons.models.Filter;
+import com.funcheap.funmapsf.commons.utils.ChipUtils;
 import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
 import com.funcheap.funmapsf.features.filter.edit.GridButtonAdapter;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
-import com.vpaliy.chips_lover.ChipBuilder;
 import com.vpaliy.chips_lover.ChipView;
 
 import org.honorato.multistatetogglebutton.MultiStateToggleButton;
@@ -216,9 +215,6 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
     }
 
     private void searchDBandSendEvents(){
-
-        applyChips();
-
         Filter filter = new Filter();
         filter.setQuery(search.getText().toString());
         filter.setWhenDate((String)(when_spin.getSelectedItem()));
@@ -229,6 +225,7 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
         // Complete filter
         mMapsViewModel.setFilter(filter);
 
+        applyChips();
         //Todo: search the db with all the chosen parameters
     }
 
@@ -239,18 +236,11 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
      */
     private void applyChips() {
         mChipsFilterLayout.removeAllViews();
+        Filter filter = mMapsViewModel.getFilter().getValue();
+        List<ChipView> chipList = ChipUtils.chipsFromFilter(filter);
 
-        for (int i = 0; i < 5; i++) {
-            ChipBuilder cb = ChipBuilder.create(getContext());
-            cb.setText("TestChip " + i);
-
-            ChipView chipView = cb.build();
-            chipView.setClickable(false);
-            chipView.setTextColor(ContextCompat.getColor(getContext(), R.color.primary_text_inverse));
-            chipView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary));
-
+        for (ChipView chipView : chipList) {
             mChipsFilterLayout.addView(chipView);
-
             ((ViewGroup.MarginLayoutParams) chipView.getLayoutParams()).setMarginEnd(20);
         }
     }
