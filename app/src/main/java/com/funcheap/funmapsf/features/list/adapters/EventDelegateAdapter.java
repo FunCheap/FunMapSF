@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
+import com.funcheap.funmapsf.commons.utils.DateCostFormatter;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
 import com.funcheap.funmapsf.features.list.ListBaseViewModel;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
@@ -71,14 +72,12 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
             @NonNull RecyclerView.ViewHolder holder,
             @NonNull List<Object> payloads) {
 
-        holder.itemView.invalidate();
-
         EventViewHolder viewHolder = (EventViewHolder) holder;
         final Events event = items.get(position);
 
         viewHolder.title.setText(items.get(position).getTitle());
-        viewHolder.dateTime.setText(items.get(position).getStartDate());
-        viewHolder.price.setText(items.get(position).getCost());
+        viewHolder.dateTime.setText(DateCostFormatter.formatDate(items.get(position).getStartDate()));
+        viewHolder.price.setText(DateCostFormatter.formatCost(items.get(position).getCost()));
         viewHolder.venue.setText(items.get(position).getVenue().getVenueAddress());
 
         // Setup bookmark
@@ -106,6 +105,7 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
         // Load Image
         Glide.with(mContext).load(event.getThumbnail())
                 .into(viewHolder.ivItemImage);
+
 
         holder.itemView.setOnClickListener(myView -> {
             if (event != null)

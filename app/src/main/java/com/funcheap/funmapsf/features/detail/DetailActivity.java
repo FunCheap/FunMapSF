@@ -18,11 +18,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
+import com.funcheap.funmapsf.commons.utils.DateCostFormatter;
 import com.funcheap.funmapsf.databinding.ActivityDetailBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,6 +36,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,6 +47,8 @@ import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.funcheap.funmapsf.commons.utils.DateCostFormatter.formatDate;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -67,6 +73,10 @@ public class DetailActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.ivBackdrop)
     ImageView ivBackdrop;
+    @BindView(R.id.tvEventType)
+    TextView tvEventType;
+    @BindView(R.id.tvEventDate)
+    TextView tvEventDate;
 
     private DetailViewModel mDetailViewModel;
     private ActivityDetailBinding mBinding;
@@ -87,6 +97,10 @@ public class DetailActivity extends AppCompatActivity {
         initEvent();
         initToolbar();
         initMaps();
+
+        tvEventDate.setText(DateCostFormatter.formatDate(mDetailViewModel.getEventData().getValue().getStartDate()));
+        tvEventType.setText(DateCostFormatter.formatCost(mDetailViewModel.getEventData().getValue().getCost()));
+
     }
 
     private void initToolbar() {
@@ -262,6 +276,4 @@ public class DetailActivity extends AppCompatActivity {
         this.startActivity(i);
         return true;
     }
-
-
 }
