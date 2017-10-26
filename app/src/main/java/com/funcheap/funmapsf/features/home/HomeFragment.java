@@ -13,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -25,7 +26,6 @@ import com.funcheap.funmapsf.commons.interfaces.OnBackClickCallback;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.commons.utils.ChipUtils;
 import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
-import com.funcheap.funmapsf.features.filter.edit.GridButtonAdapter;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
 import com.vpaliy.chips_lover.ChipView;
 import com.vpaliy.chips_lover.ChipsLayout;
@@ -59,38 +59,40 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
 
     private MapsViewModel mMapsViewModel;
 
+    // Home Fragment
     @BindView(R.id.pager_container_home)
     public ViewPager mHomePager;
     @BindView(R.id.tabs_home)
     public TabLayout mTabLayout;
     @BindView(R.id.fab_save_filter)
     public FloatingActionButton mFabSaveFilter;
+
+    // Bottom Sheet
     @BindView(R.id.filter_bottom_sheet)
     public ConstraintLayout mFilterSheet;
     @BindView(R.id.filter_chips)
     public LinearLayout mChipsFilterLayout;
     @BindView(R.id.when_spin)
-    public Spinner when_spin;
+    public Spinner mSpinWhen;
     @BindView(R.id.edit_where)
-    public AutoCompleteTextView edit_where;
+    public AutoCompleteTextView mEditWhere;
     @BindView(R.id.price_mstb)
-    public MultiStateToggleButton price_mstb;
+    public MultiStateToggleButton mTogglePrice;
     @BindView(R.id.category_spin)
-    Spinner category_spin;
+    Spinner mSpinCategory;
     @BindView(R.id.category_chips)
-    public ChipsLayout chips_list_category;
+    public ChipsLayout mChipsCategoryLayout;
     @BindView(R.id.done)
-    public Button done;
+    public Button mButtonDone;
     @BindView(R.id.search)
-    public EditText search;
+    public EditText mEditSearch;
 
     private BottomSheetBehavior mBottomSheetBehavior;
 
-    ArrayList<String> whenList;
-    ArrayList<String> categoryList;
-    ArrayAdapter<String> categoryAdp;
-    ArrayList<String> categoriesSelected;
-    GridButtonAdapter gridButtonAdp;
+    ArrayList<String> mWhenList;
+    ArrayList<String> mCategoryList;
+    ArrayAdapter<String> mCategoryAdp;
+    ArrayList<String> mCategoriesSelected;
 
     public static Fragment newInstance() {
         Bundle args = new Bundle();
@@ -116,7 +118,7 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
         prepareDoneClick();
         initChips();
         initFilterListener();
-        price_mstb.setValue(0);
+        mTogglePrice.setValue(0);
 
         return root;
     }
@@ -152,60 +154,57 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
     }
 
     private void prepareWhenList(){
-        whenList = new ArrayList<>();
-        whenList.add("Today");
-        whenList.add("Tomorrow");
-        whenList.add("This Week");
-        whenList.add("This Weekend");
-        whenList.add("Next Week");
-        whenList.add("This Month");
-        whenList.add("Next Month");
+        List<String> temp = Arrays.asList(getResources().getStringArray(R.array.when_array));
+        mWhenList = new ArrayList<>(temp);
         ArrayAdapter<String> spinAdp =
-                new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, whenList);
-        when_spin.setAdapter(spinAdp);
+                new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, mWhenList);
+        mSpinWhen.setAdapter(spinAdp);
     }
 
     private void preparePlace(){
         ArrayAdapter<String> placeAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_dropdown_item_1line, PLACES);
-        edit_where.setAdapter(placeAdapter);
+        mEditWhere.setAdapter(placeAdapter);
     }
 
     private void prepareCategories(){
-        List<String> temp = Arrays.asList(CATEGORIES);
-        categoryList = new ArrayList<>();
-        categoryList.addAll(temp);
-        categoryAdp = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_dropdown_item_1line, categoryList);
-        category_spin.setAdapter(categoryAdp);
-        categoriesSelected = new ArrayList<>();
+        List<String> temp = Arrays.asList(
+                getResources().getStringArray(R.array.categories_array));
+        mCategoryList = new ArrayList<>(temp);
+        mCategoryAdp = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_dropdown_item_1line, mCategoryList);
+        mCategoriesSelected = new ArrayList<>();
+        mSpinCategory.setAdapter(mCategoryAdp);
+        mSpinCategory.setSelection(0, false); // Set this so initial selection does not trigger listener
 
-//        category_spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                categoriesSelected.add(categoriesSelected.size(),categoryList.get(i));
-//                categoryList.remove(i);
-//                categoryAdp.notifyDataSetChanged();
-//                gridButtonAdp.notifyDataSetChanged();
-//                chips_list_category.setOnItemClickListener((adapterView1, view1, i1, l1) -> {
-//                    categoryList.add(categoryList.size(),categoriesSelected.get(i1));
-//                    categoryAdp.notifyDataSetChanged();
-//                    categoriesSelected.remove(i1);
-//                    gridButtonAdp.notifyDataSetChanged();
-//
-//                });
-//
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//            }
-//        });
+        mSpinCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String category = mCategoryList.get(i);
+                if (!mCategoriesSelected.contains(category) && i != 0) {
+                    mCategoriesSelected.add(category);
+
+                    // Create category chip
+                    ChipView chip = ChipUtils.createRemovableChip(category);
+                    // Set up to remove chip when clicked
+                    chip.setOnClickListener( chipView -> {
+                        ChipView clickedChip = (ChipView) chipView;
+                        mChipsCategoryLayout.removeView(clickedChip);
+                        mCategoriesSelected.remove(clickedChip.getChipText());
+                    });
+                    mChipsCategoryLayout.addView(chip);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     private void prepareDoneClick(){
-        done.setOnClickListener(view -> {
+        mButtonDone.setOnClickListener(view -> {
             searchDBandSendEvents();
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
@@ -213,12 +212,12 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
 
     private void searchDBandSendEvents(){
         Filter filter = new Filter();
-        filter.setQuery(search.getText().toString());
-        filter.setWhenDate((String)(when_spin.getSelectedItem()));
-        filter.setFree(price_mstb.getValue() == 1); // 1 == true == FREE, 0 == false == Any
-        filter.setVenueQuery(edit_where.getText().toString());
-        if(categoriesSelected.size()!=0)
-            filter.setCategories(categoriesSelected.toString());
+        filter.setQuery(mEditSearch.getText().toString());
+        filter.setWhenDate((String)(mSpinWhen.getSelectedItem()));
+        filter.setFree(mTogglePrice.getValue() == 1); // 1 == true == FREE, 0 == false == Any
+        filter.setVenueQuery(mEditWhere.getText().toString());
+        if(mCategoriesSelected.size()!=0)
+            filter.setCategories(mCategoriesSelected.toString());
         else
             filter.setCategories("default");
 
@@ -248,10 +247,10 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
     private void initFilterListener() {
         mMapsViewModel.getFilter().observe(this, filter -> {
             if (filter != null) {
-                search.setText(filter.getQuery());
-                when_spin.setSelection(whenList.indexOf(filter.getWhenDate()));
-                edit_where.setText(filter.getVenueQuery());
-                price_mstb.setValue( (filter.isFree()) ? 1 : 0 );
+                mEditSearch.setText(filter.getQuery());
+                mSpinWhen.setSelection(mWhenList.indexOf(filter.getWhenDate()));
+                mEditWhere.setText(filter.getVenueQuery());
+                mTogglePrice.setValue( (filter.isFree()) ? 1 : 0 );
                 // Edit category chips
             }
         });

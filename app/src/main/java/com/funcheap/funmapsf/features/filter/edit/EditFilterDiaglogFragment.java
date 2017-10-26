@@ -185,7 +185,7 @@ public class EditFilterDiaglogFragment extends BottomSheetDialogFragment {
         // Complete filter
         mMapsViewModel.setFilter(filter);
 
-        //Todo: search the db with all the chosen parameters
+        //Todo: mEditSearch the db with all the chosen parameters
     }
 
     private void prepareSelectedFragment(){
