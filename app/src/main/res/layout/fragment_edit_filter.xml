@@ -43,7 +43,8 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_standard">
 
             <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
             <LinearLayout
@@ -55,10 +56,8 @@
                 android:id="@+id/search"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/edit_item_background"
                 android:gravity="center_vertical"
                 android:hint="@string/search"
-                android:padding="@dimen/image_size"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -96,7 +95,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_where"
-                android:hint="@string/address"
+                android:hint="@string/city"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_where" />
