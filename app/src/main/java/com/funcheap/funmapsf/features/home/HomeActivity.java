@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.funcheap.funmapsf.R;
+import com.funcheap.funmapsf.commons.database.MyDatabase;
 import com.funcheap.funmapsf.commons.interfaces.OnBackClickCallback;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
@@ -41,6 +42,7 @@ public class HomeActivity extends AppCompatActivity implements
 
     public MapsViewModel mMapsModel;
     public ListFilterViewModel mListFiltersViewModel;
+    private MyDatabase db;
 
     private HomeFragment mHomeFragment = (HomeFragment) HomeFragment.newInstance();
     private ListFiltersFragment mListFiltersFragment = (ListFiltersFragment) ListFiltersFragment.newInstance();
@@ -58,6 +60,9 @@ public class HomeActivity extends AppCompatActivity implements
         checkNotification();
         initBottomNav();
         loadFragments();
+
+        db = new MyDatabase(this);
+        db.getDB();
     }
 
     /**
