@@ -113,8 +113,8 @@
                             android:paddingLeft="@dimen/padding_small"/>
 
                         <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_below="@+id/tvEventType"
                             android:id="@+id/llEventCategories"
                             android:orientation="horizontal"
@@ -129,27 +129,8 @@
                                 android:textSize="@dimen/small_text"
                                 android:id="@+id/tvEventPopularity"
                                 android:textStyle="bold"
-                                android:text="@{events.cost}"
-                                android:layout_weight="1"/>
+                                android:text="@{events.categories}" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/pill_filled"
-                                android:textAllCaps="true"
-                                android:textColor="@android:color/black"
-                                android:textSize="@dimen/small_text"
-                                android:id="@+id/tvEventCost"
-                                android:text="@{events.cost}"
-                                android:textStyle="bold"
-                                android:layout_weight="1"
-                                />
-
-                            <View
-                                android:layout_width="@dimen/padding_large"
-                                android:layout_height="wrap_content"
-                                android:paddingLeft="@dimen/padding_small"
-                                android:layout_weight="3"/>
                         </LinearLayout>
 
 
