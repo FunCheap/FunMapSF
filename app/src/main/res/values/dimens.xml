@@ -10,6 +10,7 @@
     <dimen name="image_tiny">24dp</dimen>
     <dimen name="image_medium">36dp</dimen>
     <dimen name="image_large">48dp</dimen>
+    <dimen name="image_small">48dp</dimen>
 
     <dimen name="margin_tiny">2dp</dimen>
     <dimen name="margin_small">4dp</dimen>

@@ -4,16 +4,16 @@ import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.funcheap.funmapsf.R;
@@ -27,6 +27,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.funcheap.funmapsf.R.id.ivItemImg;
+
 /**
  * Created by Jayson on 10/13/2017.
  * <p>
@@ -35,16 +37,16 @@ import butterknife.ButterKnife;
 
 public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
 
-    private static final String EVENT_EXTRA = "event_extra";
-    private final String TAG = this.getClass().getSimpleName();
-
     private LayoutInflater mInflater;
+    private Events mEvent;
     private Context mContext;
     private ListBaseViewModel mListBaseViewModel;
+    private static final String EVENT_EXTRA = "event_extra";
 
     public EventDelegateAdapter(Activity activity) {
         this.mInflater = activity.getLayoutInflater();
-        this.mContext = activity.getApplicationContext();
+    //    this.mContext = activity.getApplicationContext();
+        this.mContext = activity;
         mListBaseViewModel = ViewModelProviders.of((FragmentActivity) activity).get(ListBaseViewModel.class);
     }
 
@@ -70,46 +72,41 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
             @NonNull List<Object> payloads) {
 
         EventViewHolder viewHolder = (EventViewHolder) holder;
-       final Events event = items.get(position);
+        mEvent = items.get(position);
 
         viewHolder.title.setText(items.get(position).getTitle());
         viewHolder.dateTime.setText(items.get(position).getStartDate());
         viewHolder.price.setText(items.get(position).getCost());
         viewHolder.venue.setText(items.get(position).getVenue().getVenueAddress());
 
-        // Setup bookmark
-        final Drawable bookmark = mContext.getDrawable(R.drawable.ic_bookmark);
-        final Drawable bookmarkOutline = mContext.getDrawable(R.drawable.ic_bookmark_outline);
-        if (event.isBookmarked()) {
-            viewHolder.imgBookmark.setImageDrawable(bookmark);
-        } else {
-            viewHolder.imgBookmark.setImageDrawable(bookmarkOutline);
-        }
-
         viewHolder.imgBookmark.setOnClickListener( view -> {
+            Events event = items.get(position);
             event.setBookmark(!event.isBookmarked());
             event.save();
 
             if (event.isBookmarked()) {
-                Log.d(TAG, "onBindViewHolder: EventID bookmarked - " + event.getEventId());
-                viewHolder.imgBookmark.setImageDrawable(bookmark);
+                Toast.makeText(mContext, "Event bookmarked!", Toast.LENGTH_LONG).show();
             } else {
-                Log.d(TAG, "onBindViewHolder: EventID un-bookmarked - " + event.getEventId());
-                viewHolder.imgBookmark.setImageDrawable(bookmarkOutline);
+                Toast.makeText(mContext, "Event un-bookmarked!", Toast.LENGTH_LONG).show();
             }
+
+            // TODO Visually change icon to show bookmarked or un-bookmarked
         });
 
         // Load Image
-        Glide.with(mContext).load(event.getThumbnail())
-                .into(viewHolder.ivItemImg);
+        Glide.with(mContext).load(mEvent.getThumbnail())
+                .into(viewHolder.ivItemImage);
+
 
         holder.itemView.setOnClickListener(myView -> {
-            if (event != null)
+            if (mEvent != null)
             {
                 Intent intent = new Intent(mContext, DetailActivity.class);
                 intent.putExtra(EVENT_EXTRA, items.get(position));
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mContext.startActivity(intent);
+                ActivityOptionsCompat options = ActivityOptionsCompat.
+                        makeSceneTransitionAnimation((Activity) mContext, viewHolder.imgView, "profile");
+                mContext.startActivity(intent, options.toBundle());
             }
         });
     }
@@ -129,12 +126,15 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
         public TextView venue;
         @BindView(R.id.img_bookmark)
         public ImageView imgBookmark;
-        @BindView(R.id.ivItemImg)
-        public ImageView ivItemImg;
+        @BindView(ivItemImg)
+        public ImageView ivItemImage;
+        public View imgView;
 
         public EventViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            imgView = itemView.findViewById(R.id.ivItemImg);
         }
     }
 
