@@ -4,16 +4,17 @@ import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.funcheap.funmapsf.R;
@@ -38,14 +39,13 @@ import static com.funcheap.funmapsf.R.id.ivItemImg;
 public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
 
     private LayoutInflater mInflater;
-    private Events mEvent;
     private Context mContext;
     private ListBaseViewModel mListBaseViewModel;
+    private final String TAG = this.getClass().getSimpleName();
     private static final String EVENT_EXTRA = "event_extra";
 
     public EventDelegateAdapter(Activity activity) {
         this.mInflater = activity.getLayoutInflater();
-    //    this.mContext = activity.getApplicationContext();
         this.mContext = activity;
         mListBaseViewModel = ViewModelProviders.of((FragmentActivity) activity).get(ListBaseViewModel.class);
     }
@@ -72,34 +72,42 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
             @NonNull List<Object> payloads) {
 
         EventViewHolder viewHolder = (EventViewHolder) holder;
-        mEvent = items.get(position);
+        final Events event = items.get(position);
 
         viewHolder.title.setText(items.get(position).getTitle());
         viewHolder.dateTime.setText(items.get(position).getStartDate());
         viewHolder.price.setText(items.get(position).getCost());
         viewHolder.venue.setText(items.get(position).getVenue().getVenueAddress());
 
+        // Setup bookmark
+        final Drawable bookmark = mContext.getDrawable(R.drawable.ic_bookmark);
+        final Drawable bookmarkOutline = mContext.getDrawable(R.drawable.ic_bookmark_outline);
+        if (event.isBookmarked()) {
+            viewHolder.imgBookmark.setImageDrawable(bookmark);
+        } else {
+            viewHolder.imgBookmark.setImageDrawable(bookmarkOutline);
+        }
+
         viewHolder.imgBookmark.setOnClickListener( view -> {
-            Events event = items.get(position);
             event.setBookmark(!event.isBookmarked());
             event.save();
 
             if (event.isBookmarked()) {
-                Toast.makeText(mContext, "Event bookmarked!", Toast.LENGTH_LONG).show();
+                Log.d(TAG, "onBindViewHolder: EventID bookmarked - " + event.getEventId());
+                viewHolder.imgBookmark.setImageDrawable(bookmark);
             } else {
-                Toast.makeText(mContext, "Event un-bookmarked!", Toast.LENGTH_LONG).show();
+                Log.d(TAG, "onBindViewHolder: EventID un-bookmarked - " + event.getEventId());
+                viewHolder.imgBookmark.setImageDrawable(bookmarkOutline);
             }
-
-            // TODO Visually change icon to show bookmarked or un-bookmarked
         });
 
         // Load Image
-        Glide.with(mContext).load(mEvent.getThumbnail())
+        Glide.with(mContext).load(event.getThumbnail())
                 .into(viewHolder.ivItemImage);
 
 
         holder.itemView.setOnClickListener(myView -> {
-            if (mEvent != null)
+            if (event != null)
             {
                 Intent intent = new Intent(mContext, DetailActivity.class);
                 intent.putExtra(EVENT_EXTRA, items.get(position));
