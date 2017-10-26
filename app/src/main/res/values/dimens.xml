@@ -17,6 +17,7 @@
     <dimen name="margin_medium">8dp</dimen>
     <dimen name="margin_large">16dp</dimen>
     <dimen name="margin_xlarge">24dp</dimen>
+    <dimen name="margin_standard">16dp</dimen>
 
     <dimen name="tab_indicator_height">2dp</dimen>
 

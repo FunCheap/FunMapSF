@@ -12,7 +12,7 @@
     <!-- Filters Screen -->
     <string name="when">WHEN</string>
     <string name="where">WHERE</string>
-    <string name="address">Address</string>
+    <string name="city">City</string>
     <string name="price">PRICE</string>
     <string name="categories">CATEGORIES</string>
     <string name="done">APPLY</string>
@@ -33,6 +33,7 @@
     </string-array>
 
     <string-array name="categories_array">
+        <item>Select Categories</item>
         <item>Top Pick</item>
         <item>Annual Event</item>
         <item>Art &amp; Museums</item>

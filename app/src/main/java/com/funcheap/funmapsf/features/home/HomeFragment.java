@@ -3,6 +3,7 @@ package com.funcheap.funmapsf.features.home;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -17,9 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.funcheap.funmapsf.R;
@@ -27,9 +26,9 @@ import com.funcheap.funmapsf.commons.interfaces.OnBackClickCallback;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.commons.utils.ChipUtils;
 import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
-import com.funcheap.funmapsf.features.filter.edit.GridButtonAdapter;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
 import com.vpaliy.chips_lover.ChipView;
+import com.vpaliy.chips_lover.ChipsLayout;
 
 import org.honorato.multistatetogglebutton.MultiStateToggleButton;
 
@@ -60,38 +59,40 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
 
     private MapsViewModel mMapsViewModel;
 
+    // Home Fragment
     @BindView(R.id.pager_container_home)
     public ViewPager mHomePager;
     @BindView(R.id.tabs_home)
     public TabLayout mTabLayout;
     @BindView(R.id.fab_save_filter)
     public FloatingActionButton mFabSaveFilter;
+
+    // Bottom Sheet
     @BindView(R.id.filter_bottom_sheet)
-    public RelativeLayout mFilterSheet;
+    public ConstraintLayout mFilterSheet;
     @BindView(R.id.filter_chips)
     public LinearLayout mChipsFilterLayout;
     @BindView(R.id.when_spin)
-    public Spinner when_spin;
+    public Spinner mSpinWhen;
     @BindView(R.id.edit_where)
-    public AutoCompleteTextView edit_where;
+    public AutoCompleteTextView mEditWhere;
     @BindView(R.id.price_mstb)
-    public MultiStateToggleButton price_mstb;
+    public MultiStateToggleButton mTogglePrice;
     @BindView(R.id.category_spin)
-    Spinner category_spin;
-    @BindView(R.id.button_list)
-    public GridView grid_button_list;
+    Spinner mSpinCategory;
+    @BindView(R.id.category_chips)
+    public ChipsLayout mChipsCategoryLayout;
     @BindView(R.id.done)
-    public Button done;
+    public Button mButtonDone;
     @BindView(R.id.search)
-    public EditText search;
+    public EditText mEditSearch;
 
     private BottomSheetBehavior mBottomSheetBehavior;
 
-    ArrayList<String> whenList;
-    ArrayList<String> categoryList;
-    ArrayAdapter<String> categoryAdp;
-    ArrayList<String> categoriesSelected;
-    GridButtonAdapter gridButtonAdp;
+    ArrayList<String> mWhenList;
+    ArrayList<String> mCategoryList;
+    ArrayAdapter<String> mCategoryAdp;
+    ArrayList<String> mCategoriesSelected;
 
     public static Fragment newInstance() {
         Bundle args = new Bundle();
@@ -115,7 +116,9 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
         preparePlace();
         prepareCategories();
         prepareDoneClick();
-        price_mstb.setValue(0);
+        initFilterChips();
+        initFilterListener();
+        mTogglePrice.setValue(0);
 
         return root;
     }
@@ -148,56 +151,49 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
         mChipsFilterLayout.setOnClickListener( view -> {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         });
-
-        initChips();
     }
 
     private void prepareWhenList(){
-        whenList = new ArrayList<>();
-        whenList.add("Today");
-        whenList.add("Tomorrow");
-        whenList.add("This Week");
-        whenList.add("This Weekend");
-        whenList.add("Next Week");
-        whenList.add("This Month");
-        whenList.add("Next Month");
+        List<String> temp = Arrays.asList(getResources().getStringArray(R.array.when_array));
+        mWhenList = new ArrayList<>(temp);
         ArrayAdapter<String> spinAdp =
-                new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, whenList);
-        when_spin.setAdapter(spinAdp);
+                new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, mWhenList);
+        mSpinWhen.setAdapter(spinAdp);
     }
 
     private void preparePlace(){
         ArrayAdapter<String> placeAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_dropdown_item_1line, PLACES);
-        edit_where.setAdapter(placeAdapter);
+        mEditWhere.setAdapter(placeAdapter);
     }
 
     private void prepareCategories(){
-        List<String> temp = Arrays.asList(CATEGORIES);
-        categoryList = new ArrayList<>();
-        categoryList.addAll(temp);
-        categoryAdp = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_dropdown_item_1line, categoryList);
-        category_spin.setAdapter(categoryAdp);
-        categoriesSelected = new ArrayList<>();
-        gridButtonAdp = new GridButtonAdapter(getContext(), categoriesSelected);
-        grid_button_list.setAdapter(gridButtonAdp);
+        List<String> temp = Arrays.asList(
+                getResources().getStringArray(R.array.categories_array));
+        mCategoryList = new ArrayList<>(temp);
+        mCategoryAdp = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_dropdown_item_1line, mCategoryList);
+        mCategoriesSelected = new ArrayList<>();
+        mSpinCategory.setAdapter(mCategoryAdp);
+        mSpinCategory.setSelection(0, false); // Set this so initial selection does not trigger listener
 
-        category_spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mSpinCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                categoriesSelected.add(categoriesSelected.size(),categoryList.get(i));
-                categoryList.remove(i);
-                categoryAdp.notifyDataSetChanged();
-                gridButtonAdp.notifyDataSetChanged();
-                grid_button_list.setOnItemClickListener((adapterView1, view1, i1, l1) -> {
-                    categoryList.add(categoryList.size(),categoriesSelected.get(i1));
-                    categoryAdp.notifyDataSetChanged();
-                    categoriesSelected.remove(i1);
-                    gridButtonAdp.notifyDataSetChanged();
+                String category = mCategoryList.get(i);
+                if (!mCategoriesSelected.contains(category) && i != 0) {
+                    mCategoriesSelected.add(category);
 
-                });
-
+                    // Create category chip
+                    ChipView chip = ChipUtils.createRemovableChip(category);
+                    // Set up to remove chip when clicked
+                    chip.setOnClickListener( chipView -> {
+                        ChipView clickedChip = (ChipView) chipView;
+                        mChipsCategoryLayout.removeView(clickedChip);
+                        mCategoriesSelected.remove(clickedChip.getChipText());
+                    });
+                    mChipsCategoryLayout.addView(chip);
+                }
             }
 
             @Override
@@ -208,7 +204,7 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
     }
 
     private void prepareDoneClick(){
-        done.setOnClickListener(view -> {
+        mButtonDone.setOnClickListener(view -> {
             searchDBandSendEvents();
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         });
@@ -216,12 +212,12 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
 
     private void searchDBandSendEvents(){
         Filter filter = new Filter();
-        filter.setQuery(search.getText().toString());
-        filter.setWhenDate((String)(when_spin.getSelectedItem()));
-        filter.setFree(price_mstb.getValue() == 1); // 1 == true == FREE, 0 == false == Any
-        filter.setVenueQuery(edit_where.getText().toString());
-        if(categoriesSelected.size()!=0)
-            filter.setCategories(categoriesSelected.toString());
+        filter.setQuery(mEditSearch.getText().toString());
+        filter.setWhenDate((String)(mSpinWhen.getSelectedItem()));
+        filter.setFree(mTogglePrice.getValue() == 1); // 1 == true == FREE, 0 == false == Any
+        filter.setVenueQuery(mEditWhere.getText().toString());
+        if(mCategoriesSelected.size()!=0)
+            filter.setCategories(mCategoriesSelected.toString());
         else
             filter.setCategories("default");
 
@@ -232,8 +228,8 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
     /**
      * Create chips whenever filter is updated and display them in the mChipsFilterLayout
      */
-    private void initChips() {
-        mMapsViewModel.getFilter().observe(this, (filter -> {
+    private void initFilterChips() {
+        mMapsViewModel.getFilter().observe(this, filter -> {
             mChipsFilterLayout.removeAllViews();
             filter = mMapsViewModel.getFilter().getValue();
             List<ChipView> chipList = ChipUtils.chipsFromFilter(filter);
@@ -242,6 +238,36 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
                 mChipsFilterLayout.addView(chipView);
                 ((ViewGroup.MarginLayoutParams) chipView.getLayoutParams()).setMarginEnd(20);
             }
-        }));
+        });
+    }
+
+    /**
+     * Update filter settings whenever a filter is selected from the saved filters screen.
+     */
+    private void initFilterListener() {
+        mMapsViewModel.getFilter().observe(this, filter -> {
+            if (filter != null) {
+                mEditSearch.setText(filter.getQuery());
+                mSpinWhen.setSelection(mWhenList.indexOf(filter.getWhenDate()));
+                mEditWhere.setText(filter.getVenueQuery());
+                mTogglePrice.setValue( (filter.isFree()) ? 1 : 0 );
+
+                // Edit category chips
+                mCategoriesSelected.clear();
+                mCategoriesSelected.addAll(filter.getCategoriesList());
+                mChipsCategoryLayout.removeAllViews();
+                for (String s : filter.getCategoriesList()) {
+                    // Create category chip
+                    ChipView chip = ChipUtils.createRemovableChip(s);
+                    // Set up to remove chip when clicked
+                    chip.setOnClickListener( chipView -> {
+                        ChipView clickedChip = (ChipView) chipView;
+                        mChipsCategoryLayout.removeView(clickedChip);
+                        mCategoriesSelected.remove(clickedChip.getChipText());
+                    });
+                    mChipsCategoryLayout.addView(chip);
+                }
+            }
+        });
     }
 }
