@@ -10,7 +10,9 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Created by Jayson on 10/19/2017.
@@ -106,6 +108,17 @@ public class Filter extends BaseModel implements Parcelable {
         return categories;
     }
 
+    public List<String> getCategoriesList() {
+        List<String> categoriesList = new ArrayList<>();
+        if(!"default".equals(categories)) {
+            StringTokenizer st = new StringTokenizer(categories.substring(1, categories.length()-1), ",");
+            while (st.hasMoreTokens()) {
+                categoriesList.add(st.nextToken());
+            }
+        }
+        return categoriesList;
+    }
+
     public void setCategories(String categories) {
         this.categories = categories;
     }
@@ -161,12 +174,14 @@ public class Filter extends BaseModel implements Parcelable {
 
         filter.filterName = "Default";
         filter.query = "";
-        filter.whenDate = ""; //Todo set the Today's date
+
+
+        filter.whenDate = "Today"; //Todo set the Today's date
         filter.explicitStartDate = "";
         filter.explicitEndDate = "";
-        filter.free = true;
-        filter.venueQuery = "";
-        filter.categories = ""; ////Todo set the Default Category
+        filter.free = false;
+        filter.venueQuery = ""; // No venue , show all events of todat
+        filter.categories = "default"; // No categories
 
         return filter;
     }

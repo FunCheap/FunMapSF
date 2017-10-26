@@ -6,6 +6,7 @@
     <color name="primary_light">#B3E5FC</color>
     <color name="accent">#FF4081</color>
     <color name="primary_text">#212121</color>
+    <color name="primary_text_inverse">#FFFFFF</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
@@ -18,4 +19,8 @@
     <color name="colorFunMapSF">#FF5722</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGrey">#BDBDBD</color>
+
+    <color name="icon_tint_light">#FFFFFF</color>
+    <color name="icon_tint_gray">#AAB8C2</color>
+
 </resources>

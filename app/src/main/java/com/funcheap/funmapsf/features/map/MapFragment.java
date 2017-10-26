@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
@@ -138,11 +139,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private void initEvents() {
         mMapsViewModel.getEventsData().observe(this, eventsList -> {
             // Add markers from updated eventsList
-            if (!eventsList.isEmpty()) {
-                mClusterManager.clearItems();
-                mClusterManager.addItems(eventsList);
-                mClusterManager.setRenderer(new EventRenderer(mCtx, getMap(), mClusterManager));
-                mClusterManager.cluster();
+            mClusterManager.clearItems();
+            mClusterManager.addItems(eventsList);
+            mClusterManager.setRenderer(new EventRenderer(mCtx, getMap(), mClusterManager));
+            mClusterManager.cluster();
+
+            if (eventsList != null && eventsList.isEmpty()) {
+                Toast.makeText(mCtx, "0 events found!", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -162,6 +165,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         getMap().getUiSettings().setRotateGesturesEnabled(false);
         getMap().getUiSettings().setScrollGesturesEnabled(true);
         getMap().getUiSettings().setTiltGesturesEnabled(false);
+        getMap().setPadding(0, 0, 0, 250);
     }
 
     private GoogleMap getMap() {
