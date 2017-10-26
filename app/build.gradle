@@ -100,6 +100,8 @@ dependencies {
 
     // ChipsLover
     compile 'com.github.vpaliyX:ChipsLover:v1.2'
+
+    compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
 }
 
 
