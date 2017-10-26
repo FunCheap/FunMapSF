@@ -3,6 +3,7 @@ package com.funcheap.funmapsf.features.home;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -12,14 +13,11 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.funcheap.funmapsf.R;
@@ -30,6 +28,7 @@ import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
 import com.funcheap.funmapsf.features.filter.edit.GridButtonAdapter;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
 import com.vpaliy.chips_lover.ChipView;
+import com.vpaliy.chips_lover.ChipsLayout;
 
 import org.honorato.multistatetogglebutton.MultiStateToggleButton;
 
@@ -67,7 +66,7 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
     @BindView(R.id.fab_save_filter)
     public FloatingActionButton mFabSaveFilter;
     @BindView(R.id.filter_bottom_sheet)
-    public RelativeLayout mFilterSheet;
+    public ConstraintLayout mFilterSheet;
     @BindView(R.id.filter_chips)
     public LinearLayout mChipsFilterLayout;
     @BindView(R.id.when_spin)
@@ -78,8 +77,8 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
     public MultiStateToggleButton price_mstb;
     @BindView(R.id.category_spin)
     Spinner category_spin;
-    @BindView(R.id.button_list)
-    public GridView grid_button_list;
+    @BindView(R.id.category_chips)
+    public ChipsLayout chips_list_category;
     @BindView(R.id.done)
     public Button done;
     @BindView(R.id.search)
@@ -115,6 +114,8 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
         preparePlace();
         prepareCategories();
         prepareDoneClick();
+        initChips();
+        initFilterListener();
         price_mstb.setValue(0);
 
         return root;
@@ -148,8 +149,6 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
         mChipsFilterLayout.setOnClickListener( view -> {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         });
-
-        initChips();
     }
 
     private void prepareWhenList(){
@@ -180,31 +179,29 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
                 android.R.layout.simple_dropdown_item_1line, categoryList);
         category_spin.setAdapter(categoryAdp);
         categoriesSelected = new ArrayList<>();
-        gridButtonAdp = new GridButtonAdapter(getContext(), categoriesSelected);
-        grid_button_list.setAdapter(gridButtonAdp);
 
-        category_spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                categoriesSelected.add(categoriesSelected.size(),categoryList.get(i));
-                categoryList.remove(i);
-                categoryAdp.notifyDataSetChanged();
-                gridButtonAdp.notifyDataSetChanged();
-                grid_button_list.setOnItemClickListener((adapterView1, view1, i1, l1) -> {
-                    categoryList.add(categoryList.size(),categoriesSelected.get(i1));
-                    categoryAdp.notifyDataSetChanged();
-                    categoriesSelected.remove(i1);
-                    gridButtonAdp.notifyDataSetChanged();
-
-                });
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+//        category_spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                categoriesSelected.add(categoriesSelected.size(),categoryList.get(i));
+//                categoryList.remove(i);
+//                categoryAdp.notifyDataSetChanged();
+//                gridButtonAdp.notifyDataSetChanged();
+//                chips_list_category.setOnItemClickListener((adapterView1, view1, i1, l1) -> {
+//                    categoryList.add(categoryList.size(),categoriesSelected.get(i1));
+//                    categoryAdp.notifyDataSetChanged();
+//                    categoriesSelected.remove(i1);
+//                    gridButtonAdp.notifyDataSetChanged();
+//
+//                });
+//
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
     }
 
     private void prepareDoneClick(){
@@ -233,7 +230,7 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
      * Create chips whenever filter is updated and display them in the mChipsFilterLayout
      */
     private void initChips() {
-        mMapsViewModel.getFilter().observe(this, (filter -> {
+        mMapsViewModel.getFilter().observe(this, filter -> {
             mChipsFilterLayout.removeAllViews();
             filter = mMapsViewModel.getFilter().getValue();
             List<ChipView> chipList = ChipUtils.chipsFromFilter(filter);
@@ -242,6 +239,21 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
                 mChipsFilterLayout.addView(chipView);
                 ((ViewGroup.MarginLayoutParams) chipView.getLayoutParams()).setMarginEnd(20);
             }
-        }));
+        });
+    }
+
+    /**
+     * Update filter settings whenever a filter is selected from the saved filters screen.
+     */
+    private void initFilterListener() {
+        mMapsViewModel.getFilter().observe(this, filter -> {
+            if (filter != null) {
+                search.setText(filter.getQuery());
+                when_spin.setSelection(whenList.indexOf(filter.getWhenDate()));
+                edit_where.setText(filter.getVenueQuery());
+                price_mstb.setValue( (filter.isFree()) ? 1 : 0 );
+                // Edit category chips
+            }
+        });
     }
 }
