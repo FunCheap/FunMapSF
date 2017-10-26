@@ -1,10 +1,14 @@
 package com.funcheap.funmapsf.features.map;
 
+import android.Manifest;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +46,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     private final String TAG = this.getClass().getSimpleName();
     private static final String EVENT_EXTRA = "event_extra";
+    private static final int MY_REQUEST_CODE = 1;
 
     private SupportMapFragment mMapFragment;
     private GoogleMap mMap;
@@ -97,8 +102,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             return;
         }
         mMap = googleMap;
+        if(checkPermission()) {
+            getMap().setMyLocationEnabled(true);
+            getMap().getUiSettings().setMyLocationButtonEnabled(true);
+
+        }
         startDemo();
         initEvents();
+
     }
 
     @Override
@@ -158,6 +169,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mClusterManager.setOnClusterInfoWindowClickListener(this);
         mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
+
+
     }
 
     private void setMapUISettings() {
@@ -166,6 +179,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         getMap().getUiSettings().setScrollGesturesEnabled(true);
         getMap().getUiSettings().setTiltGesturesEnabled(false);
         getMap().setPadding(0, 0, 0, 250);
+
+    }
+    private boolean checkPermission() {
+        if ((ActivityCompat.checkSelfPermission(mCtx, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED )||(ActivityCompat.checkSelfPermission(mCtx, Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED ))
+            return true;
+
+        requestPermissions(new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION}, MY_REQUEST_CODE);
+        return false;
     }
 
     private GoogleMap getMap() {
@@ -179,4 +204,26 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         setMapUISettings();
     }
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == MY_REQUEST_CODE){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                if(checkPermission()) {
+                    getMap().setMyLocationEnabled(true);
+                    getMap().getUiSettings().setMyLocationButtonEnabled(true);
+                }
+                else {
+                    Toast.makeText(mCtx, "Current location is disabled", Toast.LENGTH_LONG).show();
+                    getMap().setMyLocationEnabled(false);
+                    getMap().getUiSettings().setMyLocationButtonEnabled(false);
+                }
+            }
+            else{
+                getMap().setMyLocationEnabled(false);
+                getMap().getUiSettings().setMyLocationButtonEnabled(false);
+                Toast.makeText(mCtx, "Current location is disabled", Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 }
