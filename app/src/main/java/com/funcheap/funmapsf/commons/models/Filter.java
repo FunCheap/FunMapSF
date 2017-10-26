@@ -10,7 +10,9 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 /**
  * Created by Jayson on 10/19/2017.
@@ -104,6 +106,17 @@ public class Filter extends BaseModel implements Parcelable {
 
     public String getCategories() {
         return categories;
+    }
+
+    public List<String> getCategoriesList() {
+        List<String> categoriesList = new ArrayList<>();
+        if(!"default".equals(categories)) {
+            StringTokenizer st = new StringTokenizer(categories.substring(1, categories.length()-1), ",");
+            while (st.hasMoreTokens()) {
+                categoriesList.add(st.nextToken());
+            }
+        }
+        return categoriesList;
     }
 
     public void setCategories(String categories) {

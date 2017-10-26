@@ -88,11 +88,7 @@ public class ChipUtils {
     }
 
     private static List<String> categoryStrings(Filter filter) {
-        ArrayList<String> list = new ArrayList<>();
-        // TODO Parse Categories into Strings
-        list.add("Category 1");
-        list.add("Category 2");
-        return list;
+        return filter.getCategoriesList();
     }
 
 }
