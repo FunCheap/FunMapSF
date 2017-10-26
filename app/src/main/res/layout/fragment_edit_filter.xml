@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/filter_bottom_sheet"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -33,131 +32,118 @@
             android:paddingStart="@dimen/margin_medium" />
     </HorizontalScrollView>
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/done"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filter_chips_scrollview">
+        app:layout_constraintTop_toBottomOf="@+id/filter_chips_scrollview"
+        app:layout_constraintVertical_bias="0">
 
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_standard">
+            android:layout_height="@dimen/list_item_height_medium"
+            android:gravity="center_vertical">
 
-            <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:focusableInTouchMode="true" />
+            <ImageView
+                android:id="@+id/ic_search"
+                style="@style/EditFilterIcon"
+                android:layout_marginEnd="16dp"
+                android:src="@drawable/ic_magnify" />
 
             <EditText
                 android:id="@+id/search"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:hint="@string/search"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:hint="@string/search" />
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_when"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/padding_left"
-                android:text="@string/when"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/search" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_height_medium"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/ic_when"
+                style="@style/EditFilterIcon"
+                android:src="@drawable/ic_calendar_clock" />
 
             <Spinner
                 android:id="@+id/when_spin"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_when"
-                android:padding="@dimen/padding_left"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_when" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_where"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/when_spin"
-                android:text="@string/where"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/when_spin" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_height_medium"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/ic_where"
+                style="@style/EditFilterIcon"
+                android:src="@drawable/ic_map_marker" />
 
             <AutoCompleteTextView
                 android:id="@+id/edit_where"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_where"
-                android:hint="@string/city"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_where" />
+                android:hint="@string/city" />
 
-            <TextView
-                android:id="@+id/tv_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/edit_where"
-                android:text="@string/price"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_where" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_height_medium"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/ic_price"
+                style="@style/EditFilterIcon"
+                android:src="@drawable/ic_currency_usd" />
 
             <org.honorato.multistatetogglebutton.MultiStateToggleButton
                 android:id="@+id/price_mstb"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_price"
                 app:mstbColorNotPressedBackground="@color/mdtp_white"
                 app:mstbColorPressedBackground="@color/light_blue"
                 app:mstbPrimaryColor="@color/light_blue"
                 app:mstbSecondaryColor="@color/mdtp_white"
                 app:values="@array/price_options_array" />
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/padding_left"
-                android:text="@string/categories"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/price_mstb"
-                tools:layout_editor_absoluteX="0dp"
-                tools:layout_editor_absoluteY="0dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_height_medium"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/ic_category"
+                style="@style/EditFilterIcon"
+                android:src="@drawable/ic_ticket" />
 
             <Spinner
                 android:id="@+id/category_spin"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/tv_category"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_category"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="0dp" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
-            <com.vpaliy.chips_lover.ChipsLayout
-                android:id="@+id/category_chips"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/category_spin"
-                app:chipCloseable="true"
-                app:chipEndIconColor="@color/light_gray"
-                app:chip_layout_horizontal_margin="@dimen/margin_small"
-                app:chip_layout_vertical_margin="@dimen/margin_small"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/category_spin"/>
-        </android.support.constraint.ConstraintLayout>
-    </ScrollView>
+        <com.vpaliy.chips_lover.ChipsLayout
+            android:id="@+id/category_chips"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="36dp"
+            app:chip_layout_horizontal_margin="@dimen/margin_small"
+            app:chip_layout_vertical_margin="@dimen/margin_small" />
+    </LinearLayout>
+
 
     <Button
         android:id="@+id/done"

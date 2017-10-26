@@ -10,6 +10,7 @@
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
 
     <!-- Filters Screen -->
+    <string name="what">WHAT</string>
     <string name="when">WHEN</string>
     <string name="where">WHERE</string>
     <string name="city">City</string>
