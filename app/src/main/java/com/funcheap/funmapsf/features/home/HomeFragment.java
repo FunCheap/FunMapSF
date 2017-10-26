@@ -116,7 +116,7 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
         preparePlace();
         prepareCategories();
         prepareDoneClick();
-        initChips();
+        initFilterChips();
         initFilterListener();
         mTogglePrice.setValue(0);
 
@@ -228,7 +228,7 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
     /**
      * Create chips whenever filter is updated and display them in the mChipsFilterLayout
      */
-    private void initChips() {
+    private void initFilterChips() {
         mMapsViewModel.getFilter().observe(this, filter -> {
             mChipsFilterLayout.removeAllViews();
             filter = mMapsViewModel.getFilter().getValue();
@@ -251,7 +251,22 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
                 mSpinWhen.setSelection(mWhenList.indexOf(filter.getWhenDate()));
                 mEditWhere.setText(filter.getVenueQuery());
                 mTogglePrice.setValue( (filter.isFree()) ? 1 : 0 );
+
                 // Edit category chips
+                mCategoriesSelected.clear();
+                mCategoriesSelected.addAll(filter.getCategoriesList());
+                mChipsCategoryLayout.removeAllViews();
+                for (String s : filter.getCategoriesList()) {
+                    // Create category chip
+                    ChipView chip = ChipUtils.createRemovableChip(s);
+                    // Set up to remove chip when clicked
+                    chip.setOnClickListener( chipView -> {
+                        ChipView clickedChip = (ChipView) chipView;
+                        mChipsCategoryLayout.removeView(clickedChip);
+                        mCategoriesSelected.remove(clickedChip.getChipText());
+                    });
+                    mChipsCategoryLayout.addView(chip);
+                }
             }
         });
     }
