@@ -43,7 +43,7 @@
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax"
                     android:src="@drawable/blue_angels"
-                    />
+                    android:transitionName="profile"/>
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
