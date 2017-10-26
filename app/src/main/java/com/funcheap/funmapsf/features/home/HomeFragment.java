@@ -149,7 +149,7 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
         });
 
-        applyChips();
+        initChips();
     }
 
     private void prepareWhenList(){
@@ -220,28 +220,28 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
         filter.setWhenDate((String)(when_spin.getSelectedItem()));
         filter.setFree(price_mstb.getValue() == 1); // 1 == true == FREE, 0 == false == Any
         filter.setVenueQuery(edit_where.getText().toString());
-        filter.setCategories(categoriesSelected.toString());
+        if(categoriesSelected.size()!=0)
+            filter.setCategories(categoriesSelected.toString());
+        else
+            filter.setCategories("default");
 
         // Complete filter
         mMapsViewModel.setFilter(filter);
-
-        applyChips();
-        //Todo: search the db with all the chosen parameters
     }
 
     /**
-     * Create chips for each filter and display them in the mChipsFilterLayout
-     *
-     * TODO Break this out into a reusable component for lists
+     * Create chips whenever filter is updated and display them in the mChipsFilterLayout
      */
-    private void applyChips() {
-        mChipsFilterLayout.removeAllViews();
-        Filter filter = mMapsViewModel.getFilter().getValue();
-        List<ChipView> chipList = ChipUtils.chipsFromFilter(filter);
+    private void initChips() {
+        mMapsViewModel.getFilter().observe(this, (filter -> {
+            mChipsFilterLayout.removeAllViews();
+            filter = mMapsViewModel.getFilter().getValue();
+            List<ChipView> chipList = ChipUtils.chipsFromFilter(filter);
 
-        for (ChipView chipView : chipList) {
-            mChipsFilterLayout.addView(chipView);
-            ((ViewGroup.MarginLayoutParams) chipView.getLayoutParams()).setMarginEnd(20);
-        }
+            for (ChipView chipView : chipList) {
+                mChipsFilterLayout.addView(chipView);
+                ((ViewGroup.MarginLayoutParams) chipView.getLayoutParams()).setMarginEnd(20);
+            }
+        }));
     }
 }

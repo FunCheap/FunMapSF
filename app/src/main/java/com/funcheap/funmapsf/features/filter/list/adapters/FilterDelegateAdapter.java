@@ -73,6 +73,7 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
 
         // Populate Filter Chips Layout
         ChipsLayout chipsLayout = viewHolder.chipsParams;
+        chipsLayout.removeAllViews();
         List<ChipView> chipList = ChipUtils.chipsFromFilter(filter);
 
         for (ChipView chipView : chipList) {
