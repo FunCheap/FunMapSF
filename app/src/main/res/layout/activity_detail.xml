@@ -164,7 +164,7 @@
                                 android:id="@+id/ivDirection"
                                 android:src="@drawable/ic_directions_black"
                                 android:layout_weight="1"
-                                android:onClick="onDirectionsClick"/>
+                                android:onClick="onLinkClick"/>
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -182,15 +182,6 @@
                         </LinearLayout>
                     </RelativeLayout>
                 </android.support.v7.widget.CardView>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/tvEventPermalink"
-                    android:text="@{events.permalink}"
-                    android:paddingTop="@dimen/padding_top"
-                    android:paddingLeft="@dimen/padding_left"
-                    android:linksClickable="true"
-                    android:onClick="onLinkClick"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
