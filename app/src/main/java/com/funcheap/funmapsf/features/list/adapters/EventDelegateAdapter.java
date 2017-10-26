@@ -71,6 +71,8 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
             @NonNull RecyclerView.ViewHolder holder,
             @NonNull List<Object> payloads) {
 
+        holder.itemView.invalidate();
+
         EventViewHolder viewHolder = (EventViewHolder) holder;
         final Events event = items.get(position);
 
@@ -104,7 +106,6 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
         // Load Image
         Glide.with(mContext).load(event.getThumbnail())
                 .into(viewHolder.ivItemImage);
-
 
         holder.itemView.setOnClickListener(myView -> {
             if (event != null)

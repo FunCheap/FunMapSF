@@ -13,22 +13,14 @@
     <!-- Event ListItem Styles -->
     <style name="EventListTitle">
         <item name="android:textAppearance">@android:style/TextAppearance.Material.Title</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:shadowColor">@android:color/black</item>
-        <item name="android:shadowDx">2</item>
-        <item name="android:shadowDy">2</item>
-        <item name="android:shadowRadius">2</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:layout_marginTop">2dp</item>
         <item name="android:layout_marginBottom">2dp</item>
     </style>
 
     <style name="EventListSubtitle">
         <item name="android:textAppearance">@android:style/TextAppearance.Material.Body1</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:shadowColor">@android:color/black</item>
-        <item name="android:shadowDx">2</item>
-        <item name="android:shadowDy">2</item>
-        <item name="android:shadowRadius">2</item>
+        <item name="android:textColor">@color/secondary_text</item>
         <item name="android:layout_marginTop">2dp</item>
         <item name="android:layout_marginBottom">2dp</item>
     </style>

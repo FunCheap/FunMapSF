@@ -1,96 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/margin_small">
-
-    <ImageView
-        android:id="@+id/ivItemImg"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:contentDescription="@string/content_description_event_photo"
-        android:scaleType="centerCrop"
-        tools:src="@drawable/bluegrass"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="H, 3:2"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:transitionName="profile"/>
+    android:layout_margin="@dimen/margin_medium">
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/container_event_info"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/event_list_header"
-        android:padding="@dimen/padding_small"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-
-        <TextView
-            android:id="@+id/text_title"
-            style="@style/EventListTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_small"
-            app:layout_constraintBottom_toTopOf="@+id/text_date_time"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/img_bookmark"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:text="Free Academy of Sciences Week wrapped title" />
-
-        <TextView
-            android:id="@+id/text_date_time"
-            style="@style/EventListSubtitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_small"
-            app:layout_constraintBottom_toTopOf="@+id/text_price"
-            app:layout_constraintLeft_toLeftOf="@id/text_title"
-            app:layout_constraintTop_toBottomOf="@id/text_title"
-            app:layout_constraintRight_toLeftOf="@id/img_bookmark"
-            tools:text="Friday, October 18 - All Day" />
-
-        <TextView
-            android:id="@+id/text_price"
-            style="@style/EventListSubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintLeft_toLeftOf="@id/text_title"
-            app:layout_constraintRight_toRightOf="@id/text_title"
-            app:layout_constraintTop_toBottomOf="@id/text_date_time"
-            tools:text="Free" />
-
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <ImageView
-            android:id="@+id/img_bookmark"
-            android:layout_width="@dimen/image_small"
-            android:layout_height="@dimen/image_small"
-            android:src="@drawable/ic_bookmark"
-            android:tint="@color/icon_tint_light"
+            android:id="@+id/ivItemImg"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@string/content_description_event_photo"
+            android:scaleType="centerCrop"
+            android:transitionName="profile"
+            app:layout_constraintDimensionRatio="H, 16:9"
+            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/bluegrass" />
 
-        <TextView
-            android:id="@+id/text_venue"
-            android:layout_width="wrap_content"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/container_event_info"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/EventListSubtitle"
-            app:layout_constraintRight_toRightOf="@id/img_bookmark"
-            app:layout_constraintTop_toTopOf="@id/text_price"
-            app:layout_constraintBottom_toBottomOf="@id/text_price"
-            app:layout_constraintLeft_toRightOf="@id/text_price"
-            app:layout_constraintHorizontal_bias="1"
-            tools:text="Golden Gate Park"
-            />
+            android:padding="@dimen/padding_small"
+            app:layout_constraintTop_toBottomOf="@id/ivItemImg"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
 
+            <TextView
+                android:id="@+id/text_title"
+                style="@style/EventListTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_small"
+                app:layout_constraintBottom_toTopOf="@+id/text_date_time"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/img_bookmark"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="Free Academy of Sciences Week wrapped title" />
+
+            <TextView
+                android:id="@+id/text_date_time"
+                style="@style/EventListSubtitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_small"
+                app:layout_constraintBottom_toTopOf="@+id/text_price"
+                app:layout_constraintLeft_toLeftOf="@id/text_title"
+                app:layout_constraintRight_toLeftOf="@id/img_bookmark"
+                app:layout_constraintTop_toBottomOf="@id/text_title"
+                tools:text="Friday, October 18 - All Day" />
+
+            <TextView
+                android:id="@+id/text_price"
+                style="@style/EventListSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintLeft_toLeftOf="@id/text_title"
+                app:layout_constraintRight_toRightOf="@id/text_title"
+                app:layout_constraintTop_toBottomOf="@id/text_date_time"
+                tools:text="Free" />
+
+            <ImageView
+                android:id="@+id/img_bookmark"
+                android:layout_width="@dimen/image_small"
+                android:layout_height="@dimen/image_small"
+                android:src="@drawable/ic_bookmark"
+                android:tint="@color/icon_tint_gray"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/text_title" />
+
+            <TextView
+                android:id="@+id/text_venue"
+                style="@style/EventListSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/text_price"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintLeft_toRightOf="@id/text_price"
+                app:layout_constraintRight_toRightOf="@id/img_bookmark"
+                app:layout_constraintTop_toTopOf="@id/text_price"
+                tools:text="Golden Gate Park" />
+
+        </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 
-</android.support.constraint.ConstraintLayout>
+</android.support.v7.widget.CardView>
