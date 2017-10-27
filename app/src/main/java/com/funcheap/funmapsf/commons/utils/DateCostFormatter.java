@@ -1,5 +1,12 @@
 package com.funcheap.funmapsf.commons.utils;
 
+import android.util.Log;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -8,13 +15,15 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import static com.funcheap.funmapsf.R.id.tvEventType;
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by gkudva on 26/10/17.
  */
 
 public class DateCostFormatter {
+
+    private static String TAG = "DateCostFormatter";
 
     public static String formatDate(String date)  {
         String retDate = date;
@@ -67,5 +76,29 @@ public class DateCostFormatter {
         }
 
         return retCost;
+    }
+
+    public static String formatContent(String content)
+    {
+        String retContent = "";
+
+        try
+        {
+            Document doc = Jsoup.parse(content);
+            Elements paragraphs = doc.select("p");
+            for(Element p : paragraphs)
+                retContent += "<br>" + p.text() + "</br>";
+    /*
+            Document doc = Jsoup.parseBodyFragment(content);
+            Element body = doc.body();
+            retContent = "<p>" + body.text() +"</p>";
+         */
+        }
+        catch (Exception ex)
+        {
+            Log.d(TAG, ex.getMessage());
+        }
+
+        return retContent;
     }
 }
