@@ -62,4 +62,9 @@
         <item name="android:layout_marginTop">2dp</item>
         <item name="android:layout_marginBottom">2dp</item>
     </style>
+
+    <style name="AppTheme.WhiteTextAppearance">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
 </resources>
