@@ -45,4 +45,10 @@
     <dimen name="z_bottom_sheet">2dp</dimen>
     <dimen name="bottom_bar_elevation">8dp</dimen>
 
+    <!-- Override BottomNav Dimens -->
+    <!-- Adjust this to change the amount of elevation -->
+    <dimen name="bbn_elevation">8dp</dimen>
+    <!-- This sets the padding to 0 -->
+    <dimen name="bbn_top_shadow_height">0dp</dimen>
+
 </resources>
