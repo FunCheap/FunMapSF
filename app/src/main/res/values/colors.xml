@@ -16,6 +16,11 @@
     <color name="secondary">#14171A</color>
     <color name="light_blue">#29b6f6</color>
 
+    <color name="colorFunMapSF">#FF5722</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorGrey">#BDBDBD</color>
+
     <color name="icon_tint_light">#FFFFFF</color>
     <color name="icon_tint_gray">#AAB8C2</color>
+
 </resources>
