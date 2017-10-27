@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -34,7 +35,12 @@ import butterknife.ButterKnife;
 public class HomeActivity extends AppCompatActivity implements
         SaveFilterDialogFragment.SaveFilterListener {
 
-    private String TAG = this.getClass().getSimpleName();
+    private final String TAG = this.getClass().getSimpleName();
+
+    private final String TAG_MAP_FRAGMENT = "map_fragment";
+    private final String TAG_FILTERS_FRAGMENT = "filters_fragment";
+    private final String TAG_BOOKMARKS_FRAGMENT = "bookmarks_fragment";
+
     private EditFilterDiaglogFragment mSelectedFragment;
 
     @BindView(R.id.bottom_navigation)
@@ -45,8 +51,6 @@ public class HomeActivity extends AppCompatActivity implements
     private MyDatabase db;
 
     private HomeFragment mHomeFragment = (HomeFragment) HomeFragment.newInstance();
-    private ListFiltersFragment mListFiltersFragment = (ListFiltersFragment) ListFiltersFragment.newInstance();
-    private ListBookmarksFragment mListBookmarksFragment = (ListBookmarksFragment) ListBookmarksFragment.newInstance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,15 +85,11 @@ public class HomeActivity extends AppCompatActivity implements
     }
 
     /**
-     * Load all fragments but only show the Home fragment initially
+     * Load Home fragment initially
      */
     private void loadFragments() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.disallowAddToBackStack()
-                .add(R.id.content_frame_home, mListBookmarksFragment, mListBookmarksFragment.getClass().getSimpleName())
-                .hide(mListBookmarksFragment)
-                .add(R.id.content_frame_home, mListFiltersFragment, mListFiltersFragment.getClass().getSimpleName())
-                .hide(mListFiltersFragment)
                 .add(R.id.content_frame_home, mHomeFragment, mHomeFragment.getClass().getSimpleName())
                 .commit();
     }
@@ -99,27 +99,36 @@ public class HomeActivity extends AppCompatActivity implements
          * Programmatically show and hide fragments based on the selection
          */
         mBottomNav.setOnNavigationItemSelectedListener(item -> {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
             switch (item.getItemId()) {
                 case R.id.action_search:
-                    ft.disallowAddToBackStack()
-                            .hide(mListFiltersFragment)
-                            .hide(mListBookmarksFragment)
-                            .show(mHomeFragment)
+                    ft.disallowAddToBackStack();
+                    if (fm.findFragmentByTag(TAG_FILTERS_FRAGMENT) != null) {
+                        ft.remove(getSupportFragmentManager().findFragmentByTag(TAG_FILTERS_FRAGMENT));
+                    }
+                    if (fm.findFragmentByTag(TAG_BOOKMARKS_FRAGMENT) != null) {
+                        ft.remove(getSupportFragmentManager().findFragmentByTag(TAG_BOOKMARKS_FRAGMENT));
+                    }
+                    ft.show(mHomeFragment)
                             .commit();
                     return true;
                 case R.id.action_filters:
                     ft.disallowAddToBackStack()
-                            .hide(mHomeFragment)
-                            .hide(mListBookmarksFragment)
-                            .show(mListFiltersFragment)
+                            .hide(mHomeFragment);
+                    if (fm.findFragmentByTag(TAG_BOOKMARKS_FRAGMENT) != null) {
+                        ft.remove(getSupportFragmentManager().findFragmentByTag(TAG_BOOKMARKS_FRAGMENT));
+                    }
+                    ft.add(R.id.content_frame_home, ListFiltersFragment.newInstance(), TAG_FILTERS_FRAGMENT)
                             .commit();
                     return true;
                 case R.id.action_bookmarks:
                     ft.disallowAddToBackStack()
-                            .hide(mListFiltersFragment)
-                            .hide(mHomeFragment)
-                            .show(mListBookmarksFragment)
+                            .hide(mHomeFragment);
+                    if (fm.findFragmentByTag(TAG_FILTERS_FRAGMENT) != null) {
+                        ft.remove(getSupportFragmentManager().findFragmentByTag(TAG_FILTERS_FRAGMENT));
+                    }
+                    ft.add(R.id.content_frame_home, ListBookmarksFragment.newInstance(), TAG_BOOKMARKS_FRAGMENT)
                             .commit();
                     return true;
                 default:
@@ -152,7 +161,6 @@ public class HomeActivity extends AppCompatActivity implements
         if (filter != null) {
             filter.setFilterName(filterName);
             filter.save();
-            mListFiltersViewModel.addFilter(filter);
         }
     }
 
