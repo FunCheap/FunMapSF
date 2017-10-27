@@ -2,7 +2,10 @@ package com.funcheap.funmapsf.commons.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.LayoutInflater;
+import android.view.View;
 
+import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -19,6 +22,8 @@ public class EventRenderer extends DefaultClusterRenderer<Events> {
     Context mCtx;
     ClusterManager<Events> mClusterManager;
     GoogleMap map;
+    LayoutInflater inflater;
+    View itemView;
 
     public EventRenderer(Context context, GoogleMap map, ClusterManager<Events> clusterManager) {
         super(context, map, clusterManager);
@@ -29,6 +34,10 @@ public class EventRenderer extends DefaultClusterRenderer<Events> {
 
         mIconGenerator = new IconGenerator(context);
         mClusterIconGenerator = new IconGenerator(context);
+        mIconGenerator.setBackground(mCtx.getResources().getDrawable(R.drawable.maps_icon_background));
+        mIconGenerator.setTextAppearance(mCtx,R.style.AppTheme_WhiteTextAppearance);
+        mClusterIconGenerator.setBackground(mCtx.getResources().getDrawable(R.drawable.maps_cluster_background));
+        mClusterIconGenerator.setTextAppearance(mCtx,R.style.AppTheme_WhiteTextAppearance);
 
     }
 
@@ -40,6 +49,10 @@ public class EventRenderer extends DefaultClusterRenderer<Events> {
 
     @Override
     protected void onBeforeClusterRendered(Cluster<Events> cluster, MarkerOptions markerOptions) {
+        inflater = LayoutInflater.from(mCtx);
+        itemView = inflater.inflate(R.layout.cluster_view,null);
+
+        mClusterIconGenerator.setContentView(itemView);
         Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
     }
