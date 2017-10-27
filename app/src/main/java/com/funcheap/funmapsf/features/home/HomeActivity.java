@@ -104,6 +104,7 @@ public class HomeActivity extends AppCompatActivity implements
             switch (item.getItemId()) {
                 case R.id.action_search:
                     ft.disallowAddToBackStack();
+                    ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
                     if (fm.findFragmentByTag(TAG_FILTERS_FRAGMENT) != null) {
                         ft.remove(getSupportFragmentManager().findFragmentByTag(TAG_FILTERS_FRAGMENT));
                     }
@@ -116,6 +117,7 @@ public class HomeActivity extends AppCompatActivity implements
                 case R.id.action_filters:
                     ft.disallowAddToBackStack()
                             .hide(mHomeFragment);
+                    ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
                     if (fm.findFragmentByTag(TAG_BOOKMARKS_FRAGMENT) != null) {
                         ft.remove(getSupportFragmentManager().findFragmentByTag(TAG_BOOKMARKS_FRAGMENT));
                     }
@@ -125,6 +127,7 @@ public class HomeActivity extends AppCompatActivity implements
                 case R.id.action_bookmarks:
                     ft.disallowAddToBackStack()
                             .hide(mHomeFragment);
+                    ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
                     if (fm.findFragmentByTag(TAG_FILTERS_FRAGMENT) != null) {
                         ft.remove(getSupportFragmentManager().findFragmentByTag(TAG_FILTERS_FRAGMENT));
                     }
