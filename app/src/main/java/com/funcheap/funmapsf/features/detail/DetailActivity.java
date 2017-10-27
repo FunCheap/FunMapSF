@@ -15,6 +15,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -35,6 +36,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.text.DateFormat;
 import java.text.DateFormatSymbols;
@@ -77,6 +80,8 @@ public class DetailActivity extends AppCompatActivity {
     TextView tvEventType;
     @BindView(R.id.tvEventDate)
     TextView tvEventDate;
+    @BindView(R.id.tvContent)
+    HtmlTextView tvContent;
 
     private DetailViewModel mDetailViewModel;
     private ActivityDetailBinding mBinding;
@@ -100,7 +105,8 @@ public class DetailActivity extends AppCompatActivity {
 
         tvEventDate.setText(DateCostFormatter.formatDate(mDetailViewModel.getEventData().getValue().getStartDate()));
         tvEventType.setText(DateCostFormatter.formatCost(mDetailViewModel.getEventData().getValue().getCost()));
-
+ //       tvContent.setHtml(mDetailViewModel.getEventData().getValue().getContent());
+        tvContent.setHtml(DateCostFormatter.formatContent(mDetailViewModel.getEventData().getValue().getContent()));
     }
 
     private void initToolbar() {
