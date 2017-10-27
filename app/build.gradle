@@ -100,11 +100,15 @@ dependencies {
 
     // ChipsLover
     compile 'com.github.vpaliyX:ChipsLover:v1.2'
-
-    compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
-
+    
     compile 'org.sufficientlysecure:html-textview:3.5'
     compile files('libs/jsoup-1.10.3.jar')
+
+    // SQLite Asset Helper
+    compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
+
+    // BottomNav
+    compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.1-rc1'
 }
 
 

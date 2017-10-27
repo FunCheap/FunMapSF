@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorWhite"
+    app:bbn_itemColorActive="@color/primary"
+    app:bbn_itemColorInactive="@color/colorGrey"
+    app:bbn_rippleColor="@color/primary_light">
     <item
         android:id="@+id/action_search"
-        android:enabled="true"
         android:icon="@drawable/ic_map"
-        android:title="@string/bottom_nav_search"
-        app:showAsAction="ifRoom" />
+        android:title="@string/bottom_nav_search" />
     <item
         android:id="@+id/action_filters"
-        android:enabled="true"
-        android:icon="@drawable/ic_filter_variant"
-        android:title="@string/bottom_nav_filters"
-        app:showAsAction="ifRoom" />
+        android:icon="@drawable/ic_filter"
+        android:title="@string/bottom_nav_filters" />
     <item
         android:id="@+id/action_bookmarks"
-        android:enabled="true"
         android:icon="@drawable/ic_book_multiple"
-        android:title="@string/bottom_nav_bookmarks"
-        app:showAsAction="ifRoom" />
+        android:title="@string/bottom_nav_bookmarks" />
 </menu>
