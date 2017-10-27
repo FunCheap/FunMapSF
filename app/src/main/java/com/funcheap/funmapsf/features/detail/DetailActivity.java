@@ -4,7 +4,6 @@ import android.app.PendingIntent;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -15,7 +14,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,22 +23,21 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
+import com.funcheap.funmapsf.commons.utils.ChipUtils;
 import com.funcheap.funmapsf.commons.utils.DateCostFormatter;
-import com.funcheap.funmapsf.databinding.ActivityDetailBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.vpaliy.chips_lover.ChipView;
+import com.vpaliy.chips_lover.ChipsLayout;
 
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
-import java.text.DateFormat;
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,8 +47,6 @@ import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.funcheap.funmapsf.commons.utils.DateCostFormatter.formatDate;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -68,29 +63,33 @@ public class DetailActivity extends AppCompatActivity {
 
     private GoogleMap m_map;
 
-    @BindView(R.id.appbar)
+    @BindView(R.id.appbar_detail)
     AppBarLayout appbar;
     @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsing_toolbar;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.ivBackdrop)
-    ImageView ivBackdrop;
-    @BindView(R.id.tvEventType)
-    TextView tvEventType;
+    @BindView(R.id.tvEventName)
+    TextView tvEventName;
+    @BindView(R.id.tvEventAddress)
+    TextView tvEventAddress;
     @BindView(R.id.tvEventDate)
     TextView tvEventDate;
+    @BindView(R.id.tvEventCost)
+    TextView tvEventCost;
+    @BindView(R.id.llEventCategories)
+    ChipsLayout clEventCategories;
+    @BindView(R.id.ivBackdrop)
+    ImageView ivBackdrop;
     @BindView(R.id.tvContent)
     HtmlTextView tvContent;
 
     private DetailViewModel mDetailViewModel;
-    private ActivityDetailBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(
-                this, R.layout.activity_detail);
+        setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
 
         toolbar.setTitle("");
@@ -100,21 +99,6 @@ public class DetailActivity extends AppCompatActivity {
         mDetailViewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
 
         initEvent();
-        initToolbar();
-        initMaps();
-
-        tvEventDate.setText(DateCostFormatter.formatDate(mDetailViewModel.getEventData().getValue().getStartDate()));
-        tvEventType.setText(DateCostFormatter.formatCost(mDetailViewModel.getEventData().getValue().getCost()));
- //       tvContent.setHtml(mDetailViewModel.getEventData().getValue().getContent());
-        tvContent.setHtml(DateCostFormatter.formatContent(mDetailViewModel.getEventData().getValue().getContent()));
-    }
-
-    private void initToolbar() {
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     /**
@@ -128,22 +112,47 @@ public class DetailActivity extends AppCompatActivity {
             // Get event directly
             Events event = getIntent().getExtras().getParcelable(EVENT_EXTRA);
             mDetailViewModel.setEventData(event);
-            mDetailViewModel.getEventData().observe(this, events -> mBinding.setEvents(events));
-            setImage();
+            mDetailViewModel.getEventData().observe(this, this::bindEvent);
         } else if (intent.hasExtra(EVENT_EXTRA_ID)) {
             // Get event by ID
             String id = getIntent().getStringExtra(EVENT_EXTRA_ID);
-            mDetailViewModel.getEventById(id).observe(this, events -> mBinding.setEvents(events));
+            mDetailViewModel.getEventById(id).observe(this, this::bindEvent);
         } else {
             Log.d(TAG, "initEvent: No valid Event data was given!");
         }
     }
 
-    public void setImage()
-    {
+    public void bindEvent(Events event) {
+        initToolbar();
+
+        tvEventName.setText(event.getTitle());
+        tvEventAddress.setText(event.getVenue().getVenueAddress());
         // Load Image
-        Glide.with(this).load(mDetailViewModel.getEventData().getValue().getThumbnail())
+        Glide.with(this).load(event.getThumbnail())
                 .into(ivBackdrop);
+        tvEventDate.setText(DateCostFormatter.formatDate(event.getStartDate()));
+        tvEventCost.setText(DateCostFormatter.formatCost(event.getCost()));
+        //       tvContent.setHtml(event.getContent());
+        tvContent.setHtml(DateCostFormatter.formatContent(event.getContent()));
+
+        initCategories(event);
+        initMaps(event);
+
+    }
+
+    private void initToolbar() {
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    private void initCategories(Events event) {
+        for (String s : event.getCategoriesList()) {
+            ChipView chip = ChipUtils.createSimpleChip(s);
+            clEventCategories.addView(chip);
+        }
     }
 
     public void onCalenderClick(View v) {
@@ -233,39 +242,31 @@ public class DetailActivity extends AppCompatActivity {
         customTabsIntent.launchUrl(this, Uri.parse(mDetailViewModel.getEventData().getValue().getPermalink()));
     }
 
-    public void initMaps()
+    public void initMaps(Events event)
     {
         SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
 
         if (mapFragment != null) {
-            mapFragment.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap map) {
-                    m_map = map;
-                    m_map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                        @Override
-                        public void onInfoWindowClick(Marker marker) {
-                            openLyftApp();
-                        }
-                    });
+            mapFragment.getMapAsync(map -> {
+                m_map = map;
+                m_map.setOnInfoWindowClickListener(marker -> openLyftApp());
 
-                    LatLng point = new LatLng(Double.parseDouble(mDetailViewModel.getEventData().getValue().getVenue().getLatitude()),
-                                              Double.parseDouble( mDetailViewModel.getEventData().getValue().getVenue().getLongitude()));
-                    m_map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 12));
+                LatLng point = new LatLng(Double.parseDouble(event.getVenue().getLatitude()),
+                                          Double.parseDouble( event.getVenue().getLongitude()));
+                m_map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 12));
 
-                    BitmapDescriptor defaultMarker =
-                            BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
-                    // Extract content from alert dialog
-                    String title = mDetailViewModel.getEventData().getValue().getTitle();
-                    String snippet = mDetailViewModel.getEventData().getValue().getVenue().getVenueAddress();
-                    // Creates and adds marker to the map
-                    Marker marker = m_map.addMarker(new MarkerOptions()
-                            .position(point)
-                            .title(title)
-                            .snippet(snippet)
-                            .icon(defaultMarker));
-                    marker.showInfoWindow();
-                }
+                BitmapDescriptor defaultMarker =
+                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
+                // Extract content from alert dialog
+                String title = event.getTitle();
+                String snippet = event.getVenue().getVenueAddress();
+                // Creates and adds marker to the map
+                Marker marker = m_map.addMarker(new MarkerOptions()
+                        .position(point)
+                        .title(title)
+                        .snippet(snippet)
+                        .icon(defaultMarker));
+                marker.showInfoWindow();
             });
         } else {
             Toast.makeText(this, "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
