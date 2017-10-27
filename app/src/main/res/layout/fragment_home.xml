@@ -22,7 +22,7 @@
             app:tabIndicatorHeight="@dimen/tab_indicator_height"
             app:tabMode="fixed"
             app:tabSelectedTextColor="@color/primary_text_inverse"
-            app:tabTextColor="@color/light_gray" />
+            app:tabTextColor="@color/extra_extra_light_gray" />
 
         <android.support.v4.view.ViewPager
             android:id="@+id/pager_container_home"

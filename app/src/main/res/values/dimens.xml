@@ -20,7 +20,7 @@
     <dimen name="margin_xlarge">24dp</dimen>
     <dimen name="margin_standard">16dp</dimen>
 
-    <dimen name="tab_indicator_height">2dp</dimen>
+    <dimen name="tab_indicator_height">3dp</dimen>
 
     <dimen name="largeText">25sp</dimen>
     <dimen name="mediumText">16sp</dimen>
