@@ -447,6 +447,7 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
             list = SQLite.select().from(Events.class).
                     where(Events_Table.title.like("%" + filter.getQuery() + "%")).and(Events_Table.startDate.like("%" + dateRange + "%")).
                     and(filter.isFree()?Events_Table.cost.is("0"):Events_Table.cost.like("%" + "" + "%")).
+                    orderBy(Events_Table.startDate,true).
                     queryList();
             ArrayList<Venue> venueList = new ArrayList<>();
             venueList = (ArrayList<Venue>) SQLite.select().from(Venue.class).queryList();
@@ -487,8 +488,6 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
         List<Events> list;
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         df.setTimeZone(TimeZone.getTimeZone("PDT"));
-        list = SQLite.select().from(Events.class).
-                where(Events_Table.title.like("%" + filter.getQuery() + "%")).queryList();
         String[] dates = DateRange.getStartAndEndDate(dateRange);
         List<Events> eventList = new ArrayList<>();
         ArrayList<Venue> venueList = new ArrayList<>();
@@ -499,6 +498,7 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
 
             list = SQLite.select().from(Events.class).where(Events_Table.title.like("%" + filter.getQuery() + "%")).
                     and(filter.isFree()?Events_Table.cost.is("0"):Events_Table.cost.like("%" + "" + "%")).
+                    orderBy(Events_Table.startDate,true).
                     queryList();
             for(int i=0;i<list.size();i++){
                 Events event = list.get(i);
