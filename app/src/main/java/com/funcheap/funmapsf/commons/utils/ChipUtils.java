@@ -27,16 +27,16 @@ public class ChipUtils {
     public static List<ChipView> chipsFromFilter(Filter filter){
         ArrayList<ChipView> list = new ArrayList<>();
 
-        list.add(createChip(whatString(filter)));
-        list.add(createChip(costString(filter)));
-        list.add(createChip(whereString(filter)));
-        list.add(createChip(whenString(filter)));
-        list.addAll(createChip(categoryStrings(filter)));
+        list.add(createSimpleChip(whatString(filter)));
+        list.add(createSimpleChip(costString(filter)));
+        list.add(createSimpleChip(whereString(filter)));
+        list.add(createSimpleChip(whenString(filter)));
+        list.addAll(createSimpleChip(categoryStrings(filter)));
 
         return list;
     }
 
-    private static ChipView createChip(String string) {
+    public static ChipView createSimpleChip(String string) {
         ChipBuilder cb = ChipBuilder.create(getContext());
         cb.setText(string);
         ChipView chipView = cb.build();
@@ -47,10 +47,21 @@ public class ChipUtils {
         return chipView;
     }
 
-    private static List<ChipView> createChip(List<String> string) {
+    public static ChipView createRemovableChip(String string) {
+        ChipBuilder cb = ChipBuilder.create(getContext());
+        cb.setText(string);
+        ChipView chipView = cb.build();
+        chipView.setClickable(true);
+        chipView.setTextColor(ContextCompat.getColor(getContext(), R.color.primary_text_inverse));
+        chipView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary));
+
+        return chipView;
+    }
+
+    private static List<ChipView> createSimpleChip(List<String> string) {
         List<ChipView> list = new ArrayList<>();
         for (String s : string) {
-            list.add(createChip(s));
+            list.add(createSimpleChip(s));
         }
         return list;
     }

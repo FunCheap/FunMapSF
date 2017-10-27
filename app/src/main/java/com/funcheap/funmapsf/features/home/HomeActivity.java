@@ -129,7 +129,7 @@ public class HomeActivity extends AppCompatActivity implements
             }
         });
 
-        // Select the search button by default
+        // Select the mEditSearch button by default
         mBottomNav.setSelectedItemId(R.id.action_search);
     }
 

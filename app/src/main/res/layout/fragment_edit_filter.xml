@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/filter_bottom_sheet"
     android:layout_width="match_parent"
@@ -12,148 +12,149 @@
 
     <HorizontalScrollView
         android:id="@+id/filter_chips_scrollview"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
         android:clickable="false"
-        android:scrollbarSize="@dimen/margin_tiny">
+        android:scrollbarSize="@dimen/margin_tiny"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:id="@+id/filter_chips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:focusableInTouchMode="true"
             android:clickable="true"
+            android:focusableInTouchMode="true"
             android:orientation="horizontal"
             android:paddingEnd="@dimen/margin_medium"
             android:paddingStart="@dimen/margin_medium" />
     </HorizontalScrollView>
 
-    <!-- Dummy item to prevent AutoCompleteTextView from receiving focus -->
     <LinearLayout
-        android:layout_width="0px"
-        android:layout_height="0px"
-        android:focusable="true"
-        android:focusableInTouchMode="true" />
-
-    <EditText
-        android:id="@+id/search"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/filter_chips_scrollview"
-        android:background="@drawable/edit_item_background"
-        android:gravity="center_vertical"
-        android:hint="@string/search"
-        android:padding="@dimen/image_size" />
+        android:layout_marginEnd="@dimen/margin_standard"
+        android:layout_marginStart="@dimen/margin_standard"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/done"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/filter_chips_scrollview"
+        app:layout_constraintVertical_bias="0">
 
-    <TextView
-        android:id="@+id/tv_when"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/search"
-        android:padding="@dimen/padding_left"
-        android:text="@string/when" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_height_medium"
+            android:gravity="center_vertical">
 
-    <Spinner
-        android:id="@+id/when_spin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_when"
-        android:padding="@dimen/padding_left" />
+            <ImageView
+                android:id="@+id/ic_search"
+                style="@style/EditFilterIcon"
+                android:layout_marginEnd="16dp"
+                android:focusableInTouchMode="true"
+                android:src="@drawable/ic_magnify" />
 
-    <TextView
-        android:id="@+id/tv_where"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/when_spin"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:paddingLeft="@dimen/padding_left"
-        android:text="@string/where" />
+            <EditText
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:hint="@string/search" />
+        </LinearLayout>
 
-    <AutoCompleteTextView
-        android:id="@+id/edit_where"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_where"
-        android:layout_marginTop="@dimen/padding_top"
-        android:hint="@string/address"
-        android:paddingLeft="@dimen/padding_left" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_height_medium"
+            android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/tv_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/edit_where"
-        android:layout_marginBottom="@dimen/padding_top"
-        android:layout_marginTop="@dimen/margin_medium"
-        android:paddingLeft="@dimen/padding_left"
-        android:text="@string/price" />
+            <ImageView
+                android:id="@+id/ic_when"
+                style="@style/EditFilterIcon"
+                android:src="@drawable/ic_calendar_clock" />
 
-    <LinearLayout
-        android:id="@+id/price_layout_mstb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_price"
-        android:layout_marginTop="@dimen/padding_top"
-        android:paddingLeft="@dimen/padding_left">
+            <Spinner
+                android:id="@+id/when_spin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
-        <org.honorato.multistatetogglebutton.MultiStateToggleButton
-            android:id="@+id/price_mstb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tv_price"
-            app:mstbColorNotPressedBackground="@color/mdtp_white"
-            app:mstbColorPressedBackground="@color/light_blue"
-            app:mstbPrimaryColor="@color/light_blue"
-            app:mstbSecondaryColor="@color/mdtp_white"
-            app:values="@array/price_options_array" />
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_height_medium"
+            android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/tv_category"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/price_layout_mstb"
-        android:layout_marginTop="@dimen/padding_left"
-        android:paddingLeft="@dimen/padding_left"
-        android:text="@string/categories" />
+            <ImageView
+                android:id="@+id/ic_where"
+                style="@style/EditFilterIcon"
+                android:src="@drawable/ic_map_marker" />
 
-    <Spinner
-        android:id="@+id/category_spin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_category"
-        android:layout_marginTop="@dimen/padding_top"
-        android:paddingLeft="@dimen/padding_left" />
+            <AutoCompleteTextView
+                android:id="@+id/edit_where"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/city" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_below="@id/category_spin"
-        android:orientation="vertical">
+        </LinearLayout>
 
-        <GridView
-            android:id="@+id/button_list"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_height_medium"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/ic_price"
+                style="@style/EditFilterIcon"
+                android:src="@drawable/ic_currency_usd" />
+
+            <org.honorato.multistatetogglebutton.MultiStateToggleButton
+                android:id="@+id/price_mstb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:mstbColorNotPressedBackground="@color/mdtp_white"
+                app:mstbColorPressedBackground="@color/light_blue"
+                app:mstbPrimaryColor="@color/light_blue"
+                app:mstbSecondaryColor="@color/mdtp_white"
+                app:values="@array/price_options_array" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_item_height_medium"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/ic_category"
+                style="@style/EditFilterIcon"
+                android:src="@drawable/ic_ticket" />
+
+            <Spinner
+                android:id="@+id/category_spin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <com.vpaliy.chips_lover.ChipsLayout
+            android:id="@+id/category_chips"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/category_spin"
-            android:layout_weight="1"
-            android:horizontalSpacing="@dimen/padding_top"
-            android:numColumns="auto_fit"
-            android:paddingLeft="@dimen/padding_left"
-            android:verticalSpacing="@dimen/padding_top" />
-
-
-        <Button
-            android:id="@+id/done"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:background="@color/light_blue"
-            android:text="@string/done"
-            android:textColor="@color/mdtp_white" />
-
+            android:layout_gravity="bottom"
+            android:layout_marginStart="36dp"
+            app:chip_layout_horizontal_margin="@dimen/margin_small"
+            app:chip_layout_vertical_margin="@dimen/margin_small" />
     </LinearLayout>
 
-</RelativeLayout>
+
+    <Button
+        android:id="@+id/done"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/light_blue"
+        android:text="@string/done"
+        android:textColor="@color/mdtp_white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
