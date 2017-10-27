@@ -29,7 +29,7 @@
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="text_margin">16dp</dimen>
 
-    <dimen name="cardview_elevation">10dp</dimen>
+    <dimen name="cardview_elevation">2dp</dimen>
     <dimen name="cardview_corner_radius">3dp</dimen>
 
     <dimen name="padding_top">5dp</dimen>

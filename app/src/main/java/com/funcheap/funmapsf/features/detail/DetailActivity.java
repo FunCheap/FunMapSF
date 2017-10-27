@@ -73,6 +73,8 @@ public class DetailActivity extends AppCompatActivity {
     TextView tvEventName;
     @BindView(R.id.tvEventAddress)
     TextView tvEventAddress;
+    @BindView(R.id.tvMapAddress)
+    TextView tvMapAddress;
     @BindView(R.id.tvEventDate)
     TextView tvEventDate;
     @BindView(R.id.tvEventCost)
@@ -91,10 +93,6 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
-
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDetailViewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
 
@@ -127,17 +125,16 @@ public class DetailActivity extends AppCompatActivity {
 
         tvEventName.setText(event.getTitle());
         tvEventAddress.setText(event.getVenue().getVenueAddress());
+        tvMapAddress.setText(event.getVenue().getVenueAddress());
         // Load Image
         Glide.with(this).load(event.getThumbnail())
                 .into(ivBackdrop);
         tvEventDate.setText(DateCostFormatter.formatDate(event.getStartDate()));
         tvEventCost.setText(DateCostFormatter.formatCost(event.getCost()));
-        //       tvContent.setHtml(event.getContent());
         tvContent.setHtml(DateCostFormatter.formatContent(event.getContent()));
 
         initCategories(event);
         initMaps(event);
-
     }
 
     private void initToolbar() {
@@ -216,8 +213,6 @@ public class DetailActivity extends AppCompatActivity {
                 Toast.makeText(this, "Event un-bookmarked!", Toast.LENGTH_LONG).show();
             }
         }
-
-        // TODO Visually change icon to show bookmarked or un-bookmarked
     }
 
     public void onLinkClick(View v)
