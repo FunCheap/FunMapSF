@@ -1,5 +1,5 @@
 FunMapSF is an event browsing app that takes the curated events from sf.funcheap.com and displays them on a map, allowing users to easily find things to do in the bay area.
-
+User Stories link : https://trello.com/b/0J15yyNi/funmapsf
 ## Required stories:
 
  * Users can view events from sf.funcheap.com on a Google Map view.
