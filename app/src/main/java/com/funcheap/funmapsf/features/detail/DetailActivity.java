@@ -269,18 +269,18 @@ public class DetailActivity extends AppCompatActivity {
         if (mapFragment != null) {
             mapFragment.getMapAsync(map -> {
                 m_map = map;
-                m_map.setOnInfoWindowClickListener(marker -> openLyftApp());
+                m_map.getUiSettings().setAllGesturesEnabled(false);
 
                 LatLng point = new LatLng(Double.parseDouble(mEvent.getVenue().getLatitude()),
                         Double.parseDouble(mEvent.getVenue().getLongitude()));
-                m_map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 12));
+                m_map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15));
 
                 // Creates and adds circle to the map
                 map.addCircle(new CircleOptions()
                         .center(point)
                         .strokeColor(ContextCompat.getColor(this, R.color.primary_light))
                         .fillColor(ContextCompat.getColor(this, R.color.primary))
-                        .radius(300));
+                        .radius(50));
             });
         } else {
             Toast.makeText(this, "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
