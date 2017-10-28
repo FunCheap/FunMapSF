@@ -43,7 +43,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -90,6 +89,8 @@ public class DetailActivity extends AppCompatActivity {
 
     private DetailViewModel mDetailViewModel;
 
+    private Events mEvent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,27 +124,30 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void bindEvent(Events event) {
-        initToolbar(event);
+        // Store our event locally
+        this.mEvent = event;
 
-        tvEventName.setText(event.getTitle());
+        initToolbar();
 
-        tvEventAddress.setText(event.getVenue().getVenueAddress());
-        tvMapAddress.setText(event.getVenue().getVenueAddress());
+        tvEventName.setText(mEvent.getTitle());
+
+        tvEventAddress.setText(mEvent.getVenue().getVenueAddress());
+        tvMapAddress.setText(mEvent.getVenue().getVenueAddress());
 
 
         // Load Image
-        Glide.with(this).load(event.getThumbnail())
+        Glide.with(this).load(mEvent.getThumbnail())
                 .into(ivBackdrop);
-        tvEventDate.setText(DateCostFormatter.formatDate(event.getStartDate()));
-        tvEventCost.setText(DateCostFormatter.formatCost(event.getCost()));
-        tvContent.setHtml(DateCostFormatter.formatContent(event.getContent()));
+        tvEventDate.setText(DateCostFormatter.formatDate(mEvent.getStartDate()));
+        tvEventCost.setText(DateCostFormatter.formatCost(mEvent.getCost()));
+        tvContent.setHtml(DateCostFormatter.formatContent(mEvent.getContent()));
 
-        initBookmark(event);
-        initCategories(event);
-        initMaps(event);
+        initBookmark();
+        initCategories();
+        initMaps();
     }
 
-    private void initToolbar(Events event) {
+    private void initToolbar() {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -161,7 +165,7 @@ public class DetailActivity extends AppCompatActivity {
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-                    collapsing_toolbar.setTitle(event.getTitle());
+                    collapsing_toolbar.setTitle(mEvent.getTitle());
                     isShow = true;
                 } else if (isShow) {
                     collapsing_toolbar.setTitle("");
@@ -171,18 +175,18 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-    private void initCategories(Events event) {
-        for (String s : event.getCategoriesList()) {
+    private void initCategories() {
+        for (String s : mEvent.getCategoriesList()) {
             ChipView chip = ChipUtils.createSimpleChip(s);
             clEventCategories.addView(chip);
         }
     }
 
-    private void initBookmark(Events event) {
+    private void initBookmark() {
         // Setup bookmark
         final Drawable bookmark = this.getDrawable(R.drawable.ic_bookmark);
         final Drawable bookmarkOutline = this.getDrawable(R.drawable.ic_bookmark_outline);
-        if (event.isBookmarked()) {
+        if (mEvent.isBookmarked()) {
             ivBookmark.setImageDrawable(bookmark);
         } else {
             ivBookmark.setImageDrawable(bookmarkOutline);
@@ -190,30 +194,27 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void onCalenderClick(View v) {
-
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
-            sdf.setTimeZone(TimeZone.getTimeZone("PDT"));
-            Date startDate = sdf.parse(mDetailViewModel.getEventData().getValue().getStartDate());
-            Date endDate = sdf.parse(mDetailViewModel.getEventData().getValue().getEndDate());
+            Date startDate = sdf.parse(mEvent.getStartDate());
+            Date endDate = sdf.parse(mEvent.getEndDate());
             Intent intent = new Intent(Intent.ACTION_EDIT);
             intent.setType(EVENT_TYPE);
             intent.putExtra(EVENT_BEGIN_TIME, startDate.getTime());
             intent.putExtra(EVENT_ALL_DAY, false);
             intent.putExtra(EVENT_END_TIME, endDate.getTime());
-            intent.putExtra(EVENT_TITLE, mDetailViewModel.getEventData().getValue().getTitle());
-            intent.putExtra(EVENT_LOCATION, mDetailViewModel.getEventData().getValue().getVenue().getVenueAddress());
+            intent.putExtra(EVENT_TITLE, mEvent.getTitle());
+            intent.putExtra(EVENT_LOCATION, mEvent.getVenue().getVenueAddress());
             startActivity(intent);
         } catch (Exception ex) {
-
         }
     }
 
     public void onDirectionsClick(View v) {
         String uri = "http://maps.google.com/maps?daddr=" +
-                mDetailViewModel.getEventData().getValue().getVenue().getLatitude() +
+                mEvent.getVenue().getLatitude() +
                 "," +
-                mDetailViewModel.getEventData().getValue().getVenue().getLongitude();
+                mEvent.getVenue().getLongitude();
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setPackage("com.google.android.apps.maps");
         startActivity(intent);
@@ -222,28 +223,25 @@ public class DetailActivity extends AppCompatActivity {
     public void onShareClick(View v) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         ArrayList<String> extraList = new ArrayList<String>();
-        extraList.add(mDetailViewModel.getEventData().getValue().getTitle());
-        extraList.add(mDetailViewModel.getEventData().getValue().getStartDate());
-        extraList.add(mDetailViewModel.getEventData().getValue().getPermalink());
+        extraList.add(mEvent.getTitle());
+        extraList.add(mEvent.getStartDate());
+        extraList.add(mEvent.getPermalink());
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, mDetailViewModel.getEventData().getValue().getPermalink());
+        shareIntent.putExtra(Intent.EXTRA_TEXT, mEvent.getPermalink());
         startActivity(Intent.createChooser(shareIntent, "Share link using"));
     }
 
     public void onSaveClick(View v) {
-        Events event = mDetailViewModel.getEventData().getValue();
-        if (event != null) {
-            event.setBookmark(!event.isBookmarked());
-            event.save();
+        mEvent.setBookmark(!mEvent.isBookmarked());
+        mEvent.save();
 
-            // Update Bookmark View
-            final Drawable bookmark = this.getDrawable(R.drawable.ic_bookmark);
-            final Drawable bookmarkOutline = this.getDrawable(R.drawable.ic_bookmark_outline);
-            if (event.isBookmarked()) {
-                ivBookmark.setImageDrawable(bookmark);
-            } else {
-                ivBookmark.setImageDrawable(bookmarkOutline);
-            }
+        // Update Bookmark View
+        final Drawable bookmark = this.getDrawable(R.drawable.ic_bookmark);
+        final Drawable bookmarkOutline = this.getDrawable(R.drawable.ic_bookmark_outline);
+        if (mEvent.isBookmarked()) {
+            ivBookmark.setImageDrawable(bookmark);
+        } else {
+            ivBookmark.setImageDrawable(bookmarkOutline);
         }
     }
 
@@ -253,7 +251,7 @@ public class DetailActivity extends AppCompatActivity {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_share_black);
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, mDetailViewModel.getEventData().getValue().getPermalink());
+        intent.putExtra(Intent.EXTRA_TEXT, mEvent.getPermalink());
         int requestCode = 100;
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
@@ -265,10 +263,10 @@ public class DetailActivity extends AppCompatActivity {
         builder.setToolbarColor(ContextCompat.getColor(this, R.color.primary_dark));
         builder.setActionButton(bitmap, "Share Link", pendingIntent, true);
         CustomTabsIntent customTabsIntent = builder.build();
-        customTabsIntent.launchUrl(this, Uri.parse(mDetailViewModel.getEventData().getValue().getPermalink()));
+        customTabsIntent.launchUrl(this, Uri.parse(mEvent.getPermalink()));
     }
 
-    public void initMaps(Events event) {
+    public void initMaps() {
         SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
 
         if (mapFragment != null) {
@@ -276,15 +274,15 @@ public class DetailActivity extends AppCompatActivity {
                 m_map = map;
                 m_map.setOnInfoWindowClickListener(marker -> openLyftApp());
 
-                LatLng point = new LatLng(Double.parseDouble(event.getVenue().getLatitude()),
-                        Double.parseDouble(event.getVenue().getLongitude()));
+                LatLng point = new LatLng(Double.parseDouble(mEvent.getVenue().getLatitude()),
+                        Double.parseDouble(mEvent.getVenue().getLongitude()));
                 m_map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 12));
 
                 BitmapDescriptor defaultMarker =
                         BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
                 // Extract content from alert dialog
-                String title = event.getTitle();
-                String snippet = event.getVenue().getVenueAddress();
+                String title = mEvent.getTitle();
+                String snippet = mEvent.getVenue().getVenueAddress();
                 // Creates and adds marker to the map
                 Marker marker = m_map.addMarker(new MarkerOptions()
                         .position(point)
