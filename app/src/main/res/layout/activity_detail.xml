@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar_detail"
@@ -69,9 +69,13 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/layout_calendar"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/list_item_height_small"
-                    android:gravity="center_vertical">
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:onClick="onCalenderClick">
 
                     <ImageView
                         android:id="@+id/ivCalender"
@@ -89,9 +93,13 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/layout_address"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/list_item_height_small"
-                    android:gravity="center_vertical">
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:gravity="center_vertical"
+                    android:onClick="onDirectionsClick">
 
                     <ImageView
                         android:id="@+id/ic_where"
@@ -106,14 +114,14 @@
                         tools:text="840 West Orange Ave, South San Francisco, CA" />
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/list_item_height_small"
-                    android:gravity="center_vertical">
+                    android:layout_height="@dimen/list_item_height_small">
 
                     <ImageView
                         android:id="@+id/ic_price"
                         style="@style/EditFilterIcon"
+                        android:layout_centerVertical="true"
                         android:src="@drawable/ic_ticket" />
 
                     <TextView
@@ -121,8 +129,61 @@
                         style="@style/SecondaryText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/ic_price"
                         tools:text="FREE" />
-                </LinearLayout>
+
+                    <FrameLayout
+                        android:id="@+id/layout_bookmark"
+                        android:layout_width="@dimen/image_large"
+                        android:layout_height="@dimen/image_large"
+                        android:layout_alignParentEnd="true"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:onClick="onSaveClick">
+
+                        <ImageView
+                            android:id="@+id/ivBookmark"
+                            style="@style/EditFilterIcon"
+                            android:layout_gravity="center"
+                            android:layout_margin="0dp"
+                            android:src="@drawable/ic_bookmark" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/layout_share"
+                        android:layout_width="@dimen/image_large"
+                        android:layout_height="@dimen/image_large"
+                        android:layout_toLeftOf="@id/layout_bookmark"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:onClick="onShareClick">
+
+                        <ImageView
+                            android:id="@+id/ivShare"
+                            style="@style/EditFilterIcon"
+                            android:layout_gravity="center"
+                            android:layout_margin="0dp"
+                            android:src="@drawable/ic_share_variant" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/layout_link"
+                        android:layout_width="@dimen/image_large"
+                        android:layout_height="@dimen/image_large"
+                        android:layout_toLeftOf="@id/layout_share"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:onClick="onLinkClick">
+
+                        <ImageView
+                            android:id="@+id/ivLink"
+                            style="@style/EditFilterIcon"
+                            android:layout_gravity="center"
+                            android:layout_margin="0dp"
+                            android:src="@drawable/ic_web" />
+                    </FrameLayout>
+                </RelativeLayout>
 
                 <com.vpaliy.chips_lover.ChipsLayout
                     android:id="@+id/llEventCategories"
@@ -141,40 +202,6 @@
                     android:layout_marginBottom="@dimen/margin_large"
                     android:layout_marginTop="@dimen/margin_medium"
                     android:background="@color/light_gray" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/lineDivider"
-                    android:orientation="horizontal"
-                    android:paddingBottom="@dimen/padding_medium"
-                    android:paddingTop="@dimen/padding_medium"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:id="@+id/ivDirection"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:onClick="onLinkClick"
-                        android:src="@drawable/ic_directions_black" />
-
-                    <ImageView
-                        android:id="@+id/ivShare"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:onClick="onShareClick"
-                        android:src="@drawable/ic_share_black" />
-
-                    <ImageView
-                        android:id="@+id/ivBookmark"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:onClick="onSaveClick"
-                        android:src="@drawable/ic_bookmark_border_black" />
-                </LinearLayout>
             </LinearLayout>
 
             <TextView

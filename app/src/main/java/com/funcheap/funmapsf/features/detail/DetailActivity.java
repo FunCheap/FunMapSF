@@ -124,8 +124,12 @@ public class DetailActivity extends AppCompatActivity {
         initToolbar();
 
         tvEventName.setText(event.getTitle());
+
         tvEventAddress.setText(event.getVenue().getVenueAddress());
         tvMapAddress.setText(event.getVenue().getVenueAddress());
+
+
+
         // Load Image
         Glide.with(this).load(event.getThumbnail())
                 .into(ivBackdrop);
@@ -153,7 +157,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void onCalenderClick(View v) {
-        Toast.makeText(getApplicationContext(), "onCalenderClick", Toast.LENGTH_SHORT).show();
 
         try
         {
@@ -178,7 +181,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void onDirectionsClick(View v) {
-        Toast.makeText(getApplicationContext(), "onDirectionsClick", Toast.LENGTH_SHORT).show();
         String uri = "http://maps.google.com/maps?daddr=" +
                 mDetailViewModel.getEventData().getValue().getVenue().getLatitude()+
                 ","+
