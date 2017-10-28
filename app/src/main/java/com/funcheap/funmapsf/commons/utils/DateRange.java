@@ -4,7 +4,6 @@ import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 /**
  * Created by anushree on 10/24/2017.
@@ -19,7 +18,6 @@ public class DateRange {
     public static String getDateRange(String day) {
         StringBuilder dateRange= new StringBuilder();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        df.setTimeZone(TimeZone.getTimeZone("PDT"));
         Calendar calendar = Calendar.getInstance();
 
         if(day.equalsIgnoreCase("Today")){

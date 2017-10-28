@@ -25,10 +25,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.TimeZone;
 
 @Table(database = MyDatabase.class)
 @org.parceler.Parcel(analyze={Events.class})
@@ -487,10 +485,9 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
         String dateRange = DateRange.getDateRange(filter.getWhenDate());
         List<Events> list;
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        df.setTimeZone(TimeZone.getTimeZone("PDT"));
         String[] dates = DateRange.getStartAndEndDate(dateRange);
         List<Events> eventList = new ArrayList<>();
-        ArrayList<Venue> venueList = new ArrayList<>();
+        ArrayList<Venue> venueList;
         venueList = (ArrayList<Venue>) SQLite.select().from(Venue.class).queryList();
         try {
             Date start = df.parse(dates[0]);

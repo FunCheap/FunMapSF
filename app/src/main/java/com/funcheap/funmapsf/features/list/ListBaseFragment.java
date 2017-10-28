@@ -72,7 +72,10 @@ public abstract class ListBaseFragment extends Fragment {
     }
 
     protected void bindData() {
-        mListBaseViewModel.getEventsData().observe(this, this::onEventsChanged);
+        mListBaseViewModel.getEventsData().observe(this, events -> {
+            this.onEventsChanged(events);
+            mEventRecycler.scrollToPosition(0);
+        });
     }
 
     /**
