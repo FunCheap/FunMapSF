@@ -17,6 +17,8 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:contentScrim="@color/primary"
+            app:expandedTitleTextAppearance="@android:color/transparent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
@@ -33,6 +35,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:paddingEnd="16dp"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -209,7 +212,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_standard"
                 android:text="@string/detail_about"
-                android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
+                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
             <org.sufficientlysecure.htmltextview.HtmlTextView
                 android:id="@+id/tvContent"
@@ -217,7 +220,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/margin_standard"
                 android:layout_marginStart="@dimen/margin_standard"
-                android:textAppearance="@android:style/TextAppearance.Material.Body2"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
                 android:textColor="@color/primary_text" />
 
             <android.support.v7.widget.CardView

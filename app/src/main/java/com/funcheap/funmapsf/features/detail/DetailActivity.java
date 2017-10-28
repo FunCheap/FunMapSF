@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.customtabs.CustomTabsIntent;
@@ -40,7 +41,6 @@ import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -79,6 +79,8 @@ public class DetailActivity extends AppCompatActivity {
     TextView tvEventDate;
     @BindView(R.id.tvEventCost)
     TextView tvEventCost;
+    @BindView(R.id.ivBookmark)
+    ImageView ivBookmark;
     @BindView(R.id.llEventCategories)
     ChipsLayout clEventCategories;
     @BindView(R.id.ivBackdrop)
@@ -121,13 +123,12 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void bindEvent(Events event) {
-        initToolbar();
+        initToolbar(event);
 
         tvEventName.setText(event.getTitle());
 
         tvEventAddress.setText(event.getVenue().getVenueAddress());
         tvMapAddress.setText(event.getVenue().getVenueAddress());
-
 
 
         // Load Image
@@ -137,16 +138,37 @@ public class DetailActivity extends AppCompatActivity {
         tvEventCost.setText(DateCostFormatter.formatCost(event.getCost()));
         tvContent.setHtml(DateCostFormatter.formatContent(event.getContent()));
 
+        initBookmark(event);
         initCategories(event);
         initMaps(event);
     }
 
-    private void initToolbar() {
+    private void initToolbar(Events event) {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        // Set title only when appbar is collapsed
+        appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsing_toolbar.setTitle(event.getTitle());
+                    isShow = true;
+                } else if (isShow) {
+                    collapsing_toolbar.setTitle("");
+                    isShow = false;
+                }
+            }
+        });
     }
 
     private void initCategories(Events event) {
@@ -156,43 +178,48 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    private void initBookmark(Events event) {
+        // Setup bookmark
+        final Drawable bookmark = this.getDrawable(R.drawable.ic_bookmark);
+        final Drawable bookmarkOutline = this.getDrawable(R.drawable.ic_bookmark_outline);
+        if (event.isBookmarked()) {
+            ivBookmark.setImageDrawable(bookmark);
+        } else {
+            ivBookmark.setImageDrawable(bookmarkOutline);
+        }
+    }
+
     public void onCalenderClick(View v) {
 
-        try
-        {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
-        sdf.setTimeZone(TimeZone.getTimeZone("PDT"));
-        Date startDate =   sdf.parse(mDetailViewModel.getEventData().getValue().getStartDate());
-        Date endDate =   sdf.parse(mDetailViewModel.getEventData().getValue().getEndDate());
-        Intent intent = new Intent(Intent.ACTION_EDIT);
-        intent.setType(EVENT_TYPE);
-        intent.putExtra(EVENT_BEGIN_TIME, startDate.getTime());
-        intent.putExtra(EVENT_ALL_DAY, false);
-        intent.putExtra(EVENT_END_TIME, endDate.getTime());
-        intent.putExtra(EVENT_TITLE, mDetailViewModel.getEventData().getValue().getTitle());
-        intent.putExtra(EVENT_LOCATION, mDetailViewModel.getEventData().getValue().getVenue().getVenueAddress());
-        startActivity(intent);
-        }
-        catch (Exception ex)
-        {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
+            sdf.setTimeZone(TimeZone.getTimeZone("PDT"));
+            Date startDate = sdf.parse(mDetailViewModel.getEventData().getValue().getStartDate());
+            Date endDate = sdf.parse(mDetailViewModel.getEventData().getValue().getEndDate());
+            Intent intent = new Intent(Intent.ACTION_EDIT);
+            intent.setType(EVENT_TYPE);
+            intent.putExtra(EVENT_BEGIN_TIME, startDate.getTime());
+            intent.putExtra(EVENT_ALL_DAY, false);
+            intent.putExtra(EVENT_END_TIME, endDate.getTime());
+            intent.putExtra(EVENT_TITLE, mDetailViewModel.getEventData().getValue().getTitle());
+            intent.putExtra(EVENT_LOCATION, mDetailViewModel.getEventData().getValue().getVenue().getVenueAddress());
+            startActivity(intent);
+        } catch (Exception ex) {
 
         }
     }
 
     public void onDirectionsClick(View v) {
         String uri = "http://maps.google.com/maps?daddr=" +
-                mDetailViewModel.getEventData().getValue().getVenue().getLatitude()+
-                ","+
-                mDetailViewModel.getEventData().getValue().getVenue().getLongitude()
-                ;
+                mDetailViewModel.getEventData().getValue().getVenue().getLatitude() +
+                "," +
+                mDetailViewModel.getEventData().getValue().getVenue().getLongitude();
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setPackage("com.google.android.apps.maps");
         startActivity(intent);
     }
 
     public void onShareClick(View v) {
-        Toast.makeText(getApplicationContext(), "onShareClick", Toast.LENGTH_SHORT).show();
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         ArrayList<String> extraList = new ArrayList<String>();
         extraList.add(mDetailViewModel.getEventData().getValue().getTitle());
@@ -204,21 +231,23 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void onSaveClick(View v) {
-        Toast.makeText(getApplicationContext(), "onSaveClick", Toast.LENGTH_SHORT).show();
         Events event = mDetailViewModel.getEventData().getValue();
         if (event != null) {
             event.setBookmark(!event.isBookmarked());
             event.save();
+
+            // Update Bookmark View
+            final Drawable bookmark = this.getDrawable(R.drawable.ic_bookmark);
+            final Drawable bookmarkOutline = this.getDrawable(R.drawable.ic_bookmark_outline);
             if (event.isBookmarked()) {
-                Toast.makeText(this, "Event bookmarked!", Toast.LENGTH_LONG).show();
+                ivBookmark.setImageDrawable(bookmark);
             } else {
-                Toast.makeText(this, "Event un-bookmarked!", Toast.LENGTH_LONG).show();
+                ivBookmark.setImageDrawable(bookmarkOutline);
             }
         }
     }
 
-    public void onLinkClick(View v)
-    {
+    public void onLinkClick(View v) {
         Toast.makeText(getApplicationContext(), "onLinkClick", Toast.LENGTH_SHORT).show();
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_share_black);
@@ -239,8 +268,7 @@ public class DetailActivity extends AppCompatActivity {
         customTabsIntent.launchUrl(this, Uri.parse(mDetailViewModel.getEventData().getValue().getPermalink()));
     }
 
-    public void initMaps(Events event)
-    {
+    public void initMaps(Events event) {
         SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
 
         if (mapFragment != null) {
@@ -249,7 +277,7 @@ public class DetailActivity extends AppCompatActivity {
                 m_map.setOnInfoWindowClickListener(marker -> openLyftApp());
 
                 LatLng point = new LatLng(Double.parseDouble(event.getVenue().getLatitude()),
-                                          Double.parseDouble( event.getVenue().getLongitude()));
+                        Double.parseDouble(event.getVenue().getLongitude()));
                 m_map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 12));
 
                 BitmapDescriptor defaultMarker =
