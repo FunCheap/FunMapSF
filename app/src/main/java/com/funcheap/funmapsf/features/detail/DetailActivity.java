@@ -29,11 +29,8 @@ import com.funcheap.funmapsf.commons.utils.DateCostFormatter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.vpaliy.chips_lover.ChipView;
 import com.vpaliy.chips_lover.ChipsLayout;
 
@@ -278,18 +275,12 @@ public class DetailActivity extends AppCompatActivity {
                         Double.parseDouble(mEvent.getVenue().getLongitude()));
                 m_map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 12));
 
-                BitmapDescriptor defaultMarker =
-                        BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
-                // Extract content from alert dialog
-                String title = mEvent.getTitle();
-                String snippet = mEvent.getVenue().getVenueAddress();
-                // Creates and adds marker to the map
-                Marker marker = m_map.addMarker(new MarkerOptions()
-                        .position(point)
-                        .title(title)
-                        .snippet(snippet)
-                        .icon(defaultMarker));
-                marker.showInfoWindow();
+                // Creates and adds circle to the map
+                map.addCircle(new CircleOptions()
+                        .center(point)
+                        .strokeColor(ContextCompat.getColor(this, R.color.primary_light))
+                        .fillColor(ContextCompat.getColor(this, R.color.primary))
+                        .radius(300));
             });
         } else {
             Toast.makeText(this, "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
