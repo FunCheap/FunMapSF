@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,6 +46,7 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
     private ListBaseViewModel mListBaseViewModel;
     private final String TAG = this.getClass().getSimpleName();
     private static final String EVENT_EXTRA = "event_extra";
+    private final static int FADE_DURATION = 1000;// in milliseconds
 
     public EventDelegateAdapter(Activity activity) {
         this.mInflater = activity.getLayoutInflater();
@@ -118,6 +121,15 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
                 mContext.startActivity(intent, options.toBundle());
             }
         });
+
+        // Set the view to fade in
+        setFadeAnimation(viewHolder.itemView);
+    }
+
+    private void setFadeAnimation(View view) {
+        ScaleAnimation anim = new ScaleAnimation(0.0f, 1.0f, 0.0f, 1.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        anim.setDuration(FADE_DURATION);
+        view.startAnimation(anim);
     }
 
     /**
