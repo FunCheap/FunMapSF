@@ -81,4 +81,7 @@
     <string name="login_guest">Continue as guest</string>
     <string name="login_no_account">Don\'t have an account?</string>
     <string name="login_sign_up"><u>Create one now.</u></string>
+
+    <string name="detail_about">About</string>
+
 </resources>

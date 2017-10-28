@@ -4,9 +4,9 @@ import android.app.PendingIntent;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.customtabs.CustomTabsIntent;
@@ -15,7 +15,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,33 +24,25 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
+import com.funcheap.funmapsf.commons.utils.ChipUtils;
 import com.funcheap.funmapsf.commons.utils.DateCostFormatter;
-import com.funcheap.funmapsf.databinding.ActivityDetailBinding;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.vpaliy.chips_lover.ChipView;
+import com.vpaliy.chips_lover.ChipsLayout;
 
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
-import java.text.DateFormat;
-import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.funcheap.funmapsf.commons.utils.DateCostFormatter.formatDate;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -68,53 +59,44 @@ public class DetailActivity extends AppCompatActivity {
 
     private GoogleMap m_map;
 
-    @BindView(R.id.appbar)
+    @BindView(R.id.appbar_detail)
     AppBarLayout appbar;
     @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsing_toolbar;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @BindView(R.id.ivBackdrop)
-    ImageView ivBackdrop;
-    @BindView(R.id.tvEventType)
-    TextView tvEventType;
+    @BindView(R.id.tvEventName)
+    TextView tvEventName;
+    @BindView(R.id.tvEventAddress)
+    TextView tvEventAddress;
+    @BindView(R.id.tvMapAddress)
+    TextView tvMapAddress;
     @BindView(R.id.tvEventDate)
     TextView tvEventDate;
+    @BindView(R.id.tvEventCost)
+    TextView tvEventCost;
+    @BindView(R.id.ivBookmark)
+    ImageView ivBookmark;
+    @BindView(R.id.llEventCategories)
+    ChipsLayout clEventCategories;
+    @BindView(R.id.ivBackdrop)
+    ImageView ivBackdrop;
     @BindView(R.id.tvContent)
     HtmlTextView tvContent;
 
     private DetailViewModel mDetailViewModel;
-    private ActivityDetailBinding mBinding;
+
+    private Events mEvent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBinding = DataBindingUtil.setContentView(
-                this, R.layout.activity_detail);
+        setContentView(R.layout.activity_detail);
         ButterKnife.bind(this);
-
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mDetailViewModel = ViewModelProviders.of(this).get(DetailViewModel.class);
 
         initEvent();
-        initToolbar();
-        initMaps();
-
-        tvEventDate.setText(DateCostFormatter.formatDate(mDetailViewModel.getEventData().getValue().getStartDate()));
-        tvEventType.setText(DateCostFormatter.formatCost(mDetailViewModel.getEventData().getValue().getCost()));
- //       tvContent.setHtml(mDetailViewModel.getEventData().getValue().getContent());
-        tvContent.setHtml(DateCostFormatter.formatContent(mDetailViewModel.getEventData().getValue().getContent()));
-    }
-
-    private void initToolbar() {
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        }
     }
 
     /**
@@ -128,97 +110,145 @@ public class DetailActivity extends AppCompatActivity {
             // Get event directly
             Events event = getIntent().getExtras().getParcelable(EVENT_EXTRA);
             mDetailViewModel.setEventData(event);
-            mDetailViewModel.getEventData().observe(this, events -> mBinding.setEvents(events));
-            setImage();
+            mDetailViewModel.getEventData().observe(this, this::bindEvent);
         } else if (intent.hasExtra(EVENT_EXTRA_ID)) {
             // Get event by ID
             String id = getIntent().getStringExtra(EVENT_EXTRA_ID);
-            mDetailViewModel.getEventById(id).observe(this, events -> mBinding.setEvents(events));
+            mDetailViewModel.getEventById(id).observe(this, this::bindEvent);
         } else {
             Log.d(TAG, "initEvent: No valid Event data was given!");
         }
     }
 
-    public void setImage()
-    {
+    public void bindEvent(Events event) {
+        // Store our event locally
+        this.mEvent = event;
+
+        initToolbar();
+
+        tvEventName.setText(mEvent.getTitle());
+
+        tvEventAddress.setText(mEvent.getVenue().getVenueAddress());
+        tvMapAddress.setText(mEvent.getVenue().getVenueAddress());
+
+
         // Load Image
-        Glide.with(this).load(mDetailViewModel.getEventData().getValue().getThumbnail())
+        Glide.with(this).load(mEvent.getThumbnail())
                 .into(ivBackdrop);
+        tvEventDate.setText(DateCostFormatter.formatDate(mEvent.getStartDate()));
+        tvEventCost.setText(DateCostFormatter.formatCost(mEvent.getCost()));
+        tvContent.setHtml(DateCostFormatter.formatContent(mEvent.getContent()));
+
+        initBookmark();
+        initCategories();
+        initMaps();
+    }
+
+    private void initToolbar() {
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        // Set title only when appbar is collapsed
+        appbar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+                if (scrollRange == -1) {
+                    scrollRange = appBarLayout.getTotalScrollRange();
+                }
+                if (scrollRange + verticalOffset == 0) {
+                    collapsing_toolbar.setTitle(mEvent.getTitle());
+                    isShow = true;
+                } else if (isShow) {
+                    collapsing_toolbar.setTitle("");
+                    isShow = false;
+                }
+            }
+        });
+    }
+
+    private void initCategories() {
+        for (String s : mEvent.getCategoriesList()) {
+            ChipView chip = ChipUtils.createSimpleChip(s);
+            clEventCategories.addView(chip);
+        }
+    }
+
+    private void initBookmark() {
+        // Setup bookmark
+        final Drawable bookmark = this.getDrawable(R.drawable.ic_bookmark);
+        final Drawable bookmarkOutline = this.getDrawable(R.drawable.ic_bookmark_outline);
+        if (mEvent.isBookmarked()) {
+            ivBookmark.setImageDrawable(bookmark);
+        } else {
+            ivBookmark.setImageDrawable(bookmarkOutline);
+        }
     }
 
     public void onCalenderClick(View v) {
-        Toast.makeText(getApplicationContext(), "onCalenderClick", Toast.LENGTH_SHORT).show();
-
-        try
-        {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
-        sdf.setTimeZone(TimeZone.getTimeZone("PDT"));
-        Date startDate =   sdf.parse(mDetailViewModel.getEventData().getValue().getStartDate());
-        Date endDate =   sdf.parse(mDetailViewModel.getEventData().getValue().getEndDate());
-        Intent intent = new Intent(Intent.ACTION_EDIT);
-        intent.setType(EVENT_TYPE);
-        intent.putExtra(EVENT_BEGIN_TIME, startDate.getTime());
-        intent.putExtra(EVENT_ALL_DAY, false);
-        intent.putExtra(EVENT_END_TIME, endDate.getTime());
-        intent.putExtra(EVENT_TITLE, mDetailViewModel.getEventData().getValue().getTitle());
-        intent.putExtra(EVENT_LOCATION, mDetailViewModel.getEventData().getValue().getVenue().getVenueAddress());
-        startActivity(intent);
-        }
-        catch (Exception ex)
-        {
-
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
+            Date startDate = sdf.parse(mEvent.getStartDate());
+            Date endDate = sdf.parse(mEvent.getEndDate());
+            Intent intent = new Intent(Intent.ACTION_EDIT);
+            intent.setType(EVENT_TYPE);
+            intent.putExtra(EVENT_BEGIN_TIME, startDate.getTime());
+            intent.putExtra(EVENT_ALL_DAY, false);
+            intent.putExtra(EVENT_END_TIME, endDate.getTime());
+            intent.putExtra(EVENT_TITLE, mEvent.getTitle());
+            intent.putExtra(EVENT_LOCATION, mEvent.getVenue().getVenueAddress());
+            startActivity(intent);
+        } catch (Exception ex) {
         }
     }
 
     public void onDirectionsClick(View v) {
-        Toast.makeText(getApplicationContext(), "onDirectionsClick", Toast.LENGTH_SHORT).show();
         String uri = "http://maps.google.com/maps?daddr=" +
-                mDetailViewModel.getEventData().getValue().getVenue().getLatitude()+
-                ","+
-                mDetailViewModel.getEventData().getValue().getVenue().getLongitude()
-                ;
+                mEvent.getVenue().getLatitude() +
+                "," +
+                mEvent.getVenue().getLongitude();
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
         intent.setPackage("com.google.android.apps.maps");
         startActivity(intent);
     }
 
     public void onShareClick(View v) {
-        Toast.makeText(getApplicationContext(), "onShareClick", Toast.LENGTH_SHORT).show();
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         ArrayList<String> extraList = new ArrayList<String>();
-        extraList.add(mDetailViewModel.getEventData().getValue().getTitle());
-        extraList.add(mDetailViewModel.getEventData().getValue().getStartDate());
-        extraList.add(mDetailViewModel.getEventData().getValue().getPermalink());
+        extraList.add(mEvent.getTitle());
+        extraList.add(mEvent.getStartDate());
+        extraList.add(mEvent.getPermalink());
         shareIntent.setType("text/plain");
-        shareIntent.putExtra(Intent.EXTRA_TEXT, mDetailViewModel.getEventData().getValue().getPermalink());
+        shareIntent.putExtra(Intent.EXTRA_TEXT, mEvent.getPermalink());
         startActivity(Intent.createChooser(shareIntent, "Share link using"));
     }
 
     public void onSaveClick(View v) {
-        Toast.makeText(getApplicationContext(), "onSaveClick", Toast.LENGTH_SHORT).show();
-        Events event = mDetailViewModel.getEventData().getValue();
-        if (event != null) {
-            event.setBookmark(!event.isBookmarked());
-            event.save();
-            if (event.isBookmarked()) {
-                Toast.makeText(this, "Event bookmarked!", Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(this, "Event un-bookmarked!", Toast.LENGTH_LONG).show();
-            }
-        }
+        mEvent.setBookmark(!mEvent.isBookmarked());
+        mEvent.save();
 
-        // TODO Visually change icon to show bookmarked or un-bookmarked
+        // Update Bookmark View
+        final Drawable bookmark = this.getDrawable(R.drawable.ic_bookmark);
+        final Drawable bookmarkOutline = this.getDrawable(R.drawable.ic_bookmark_outline);
+        if (mEvent.isBookmarked()) {
+            ivBookmark.setImageDrawable(bookmark);
+        } else {
+            ivBookmark.setImageDrawable(bookmarkOutline);
+        }
     }
 
-    public void onLinkClick(View v)
-    {
+    public void onLinkClick(View v) {
         Toast.makeText(getApplicationContext(), "onLinkClick", Toast.LENGTH_SHORT).show();
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_share_black);
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_TEXT, mDetailViewModel.getEventData().getValue().getPermalink());
+        intent.putExtra(Intent.EXTRA_TEXT, mEvent.getPermalink());
         int requestCode = 100;
 
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
@@ -230,42 +260,27 @@ public class DetailActivity extends AppCompatActivity {
         builder.setToolbarColor(ContextCompat.getColor(this, R.color.primary_dark));
         builder.setActionButton(bitmap, "Share Link", pendingIntent, true);
         CustomTabsIntent customTabsIntent = builder.build();
-        customTabsIntent.launchUrl(this, Uri.parse(mDetailViewModel.getEventData().getValue().getPermalink()));
+        customTabsIntent.launchUrl(this, Uri.parse(mEvent.getPermalink()));
     }
 
-    public void initMaps()
-    {
+    public void initMaps() {
         SupportMapFragment mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
 
         if (mapFragment != null) {
-            mapFragment.getMapAsync(new OnMapReadyCallback() {
-                @Override
-                public void onMapReady(GoogleMap map) {
-                    m_map = map;
-                    m_map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-                        @Override
-                        public void onInfoWindowClick(Marker marker) {
-                            openLyftApp();
-                        }
-                    });
+            mapFragment.getMapAsync(map -> {
+                m_map = map;
+                m_map.getUiSettings().setAllGesturesEnabled(false);
 
-                    LatLng point = new LatLng(Double.parseDouble(mDetailViewModel.getEventData().getValue().getVenue().getLatitude()),
-                                              Double.parseDouble( mDetailViewModel.getEventData().getValue().getVenue().getLongitude()));
-                    m_map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 12));
+                LatLng point = new LatLng(Double.parseDouble(mEvent.getVenue().getLatitude()),
+                        Double.parseDouble(mEvent.getVenue().getLongitude()));
+                m_map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15));
 
-                    BitmapDescriptor defaultMarker =
-                            BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED);
-                    // Extract content from alert dialog
-                    String title = mDetailViewModel.getEventData().getValue().getTitle();
-                    String snippet = mDetailViewModel.getEventData().getValue().getVenue().getVenueAddress();
-                    // Creates and adds marker to the map
-                    Marker marker = m_map.addMarker(new MarkerOptions()
-                            .position(point)
-                            .title(title)
-                            .snippet(snippet)
-                            .icon(defaultMarker));
-                    marker.showInfoWindow();
-                }
+                // Creates and adds circle to the map
+                map.addCircle(new CircleOptions()
+                        .center(point)
+                        .strokeColor(ContextCompat.getColor(this, R.color.primary_light))
+                        .fillColor(ContextCompat.getColor(this, R.color.primary))
+                        .radius(50));
             });
         } else {
             Toast.makeText(this, "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
