@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.commons.utils.DateCostFormatter;
@@ -44,6 +46,7 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
     private ListBaseViewModel mListBaseViewModel;
     private final String TAG = this.getClass().getSimpleName();
     private static final String EVENT_EXTRA = "event_extra";
+    private int lastPosition = 0;
 
     public EventDelegateAdapter(Activity activity) {
         this.mInflater = activity.getLayoutInflater();
@@ -118,8 +121,30 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
                 mContext.startActivity(intent, options.toBundle());
             }
         });
-    }
 
+        lastPosition = position -1;
+ //       setAnimation(holder);
+        animate(holder);
+    }
+/*
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.push_left_in);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
+*/
+
+    private void animate(RecyclerView.ViewHolder holder)
+    {
+        YoYo.with(Techniques.BounceInUp)
+                .duration(200)
+                .playOn(holder.itemView);
+    }
     /**
      * ViewHolder to store references to the Layout Views for use when binding
      */

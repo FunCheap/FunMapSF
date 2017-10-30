@@ -109,6 +109,8 @@ dependencies {
 
     // BottomNav
     compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.1-rc1'
+
+    compile 'com.daimajia.androidanimations:library:2.3@aar'
 }
 
 
