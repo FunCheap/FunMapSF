@@ -142,7 +142,7 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
     private void animate(RecyclerView.ViewHolder holder)
     {
         YoYo.with(Techniques.BounceInUp)
-                .duration(200)
+                .duration(2000)
                 .playOn(holder.itemView);
     }
     /**
