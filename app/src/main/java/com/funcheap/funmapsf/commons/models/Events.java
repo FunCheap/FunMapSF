@@ -29,9 +29,8 @@ import java.util.Date;
 import java.util.List;
 
 @Table(database = MyDatabase.class)
-@org.parceler.Parcel(analyze={Events.class})
-public class Events extends BaseModel implements Parcelable,ClusterItem
-{
+@org.parceler.Parcel(analyze = {Events.class})
+public class Events extends BaseModel implements Parcelable, ClusterItem {
     private static final String TAG = "Events";
 
     @PrimaryKey
@@ -144,6 +143,7 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
     public LatLng getPosition() {
         return position;
     }
+
     public long getId() {
         return id;
     }
@@ -326,10 +326,10 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
     }
 
 
-    public static ArrayList<Events> fromJSON(JSONArray response, Context context) throws JSONException{
+    public static ArrayList<Events> fromJSON(JSONArray response, Context context) throws JSONException {
         ArrayList<Events> eventList = new ArrayList<>();
 
-        for(int i =0;i<response.length();i++){
+        for (int i = 0; i < response.length(); i++) {
             JSONObject object = response.getJSONObject(i);
             Events event = new Events();
             event.id = object.getLong("id");
@@ -341,20 +341,20 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
             event.publishDate = object.getString("publishDate");
             event.modifiedDate = object.getString("modifiedDate");
             event.author = object.getString("author");
-            event.startDate= object.getString("startDate");
-            event.endDate= object.getString("endDate");
-            event.cost= object.getString("cost");
-            event.costDetails= object.getString("costDetails");
-            event.bartStation= object.getString("bartStation");
+            event.startDate = object.getString("startDate");
+            event.endDate = object.getString("endDate");
+            event.cost = object.getString("cost");
+            event.costDetails = object.getString("costDetails");
+            event.bartStation = object.getString("bartStation");
             event.venue = Venue.fromJSON(object.getJSONObject("venue"));
-            event.thumbnail= object.getString("thumbnail");
+            event.thumbnail = object.getString("thumbnail");
             event.categories = getCategoryString(object.getJSONArray("categories"));
             event.tags = null;
-            LatLng sfo = new LatLng(37.7749,-122.4194); // setting default values with SFO latlng
+            LatLng sfo = new LatLng(37.7749, -122.4194); // setting default values with SFO latlng
             event.position = sfo;
             event.categoriesList = new ArrayList<>();
             event.tagsList = new ArrayList<>();
-            event.bookmark =false;
+            event.bookmark = false;
             event.save();
             eventList.add(event);
         }
@@ -362,12 +362,12 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
         return eventList;
     }
 
-    public static String getCategoryString(JSONArray array) throws JSONException{
+    public static String getCategoryString(JSONArray array) throws JSONException {
         StringBuilder categoryList = new StringBuilder();
         int len = array.length();
-        for(int i = 0;i<len;i++){
+        for (int i = 0; i < len; i++) {
             categoryList.append(array.getString(i));
-            if(len>1 && i<len-1){
+            if (len > 1 && i < len - 1) {
                 categoryList.append(",");
             }
         }
@@ -375,113 +375,126 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
         return categoryList.toString();
     }
 
-    public static ArrayList<Events> eventsDBQuery(){
+    public static ArrayList<Events> eventsDBQuery() {
         ArrayList<Events> list = new ArrayList<>();
         ArrayList<Venue> venueList = new ArrayList<>();
 
         list = (ArrayList<Events>) SQLite.select().from(Events.class).queryList();
         venueList = (ArrayList<Venue>) SQLite.select().from(Venue.class).queryList();
 
-        for(int i=0;i<list.size();i++){
+        for (int i = 0; i < list.size(); i++) {
             Events event = list.get(i);
             Venue venue = venueList.get(i);
             event.venue = venue;
-            event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()),Double.parseDouble(event.venue.getLongitude())));
+            event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()), Double.parseDouble(event.venue.getLongitude())));
             event.categoriesList = new ArrayList<String>(Arrays.asList(event.getCategories().split(",")));
             event.tagsList = new ArrayList<>();
 
             //Removing and Inserting the event after filling position, categoriesList, tagsList
             list.remove(i);
-            list.add(i,event);
+            list.add(i, event);
         }
 
         return list;
 
     }
 
-    public static Events getEventById(String eventId){
-        return SQLite
+    public static Events getEventById(String eventId) {
+        Events event = SQLite
                 .select()
                 .from(Events.class)
                 .where(Events_Table.eventId.eq(eventId))
                 .querySingle();
+
+        int id = (int) event.getId();
+
+        Venue venue = SQLite.select().from(Venue.class).where(Venue_Table.id.eq(id)).querySingle();
+
+        event.setVenue(venue);
+        event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()), Double.parseDouble(event.venue.getLongitude())));
+        event.categoriesList = new ArrayList<>(Arrays.asList(event.getCategories().split(",")));
+        event.tagsList = new ArrayList<>();
+
+        return event;
     }
 
     public static ArrayList<Events> bookmarkedEventsDBQuery() {
         ArrayList<Events> list;
         ArrayList<Venue> venueList;
 
-        list = (ArrayList<Events>) SQLite.select().from(Events.class).where(Events_Table.bookmark.eq(true)).queryList();
+        list = (ArrayList<Events>) SQLite.
+                select()
+                .from(Events.class)
+                .where(Events_Table.bookmark.eq(true))
+                .orderBy(Events_Table.startDate, true)
+                .queryList();
         venueList = (ArrayList<Venue>) SQLite.select().from(Venue.class).queryList();
 
-        for(int i=0;i<list.size();i++){
+        for (int i = 0; i < list.size(); i++) {
             Events event = list.get(i);
             Venue venue = venueList.get(i);
             event.venue = venue;
-            event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()),Double.parseDouble(event.venue.getLongitude())));
+            event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()), Double.parseDouble(event.venue.getLongitude())));
             event.categoriesList = new ArrayList<String>(Arrays.asList(event.getCategories().split(",")));
             event.tagsList = new ArrayList<>();
 
             //Removing and Inserting the event after filling position, categoriesList, tagsList
             list.remove(i);
-            list.add(i,event);
+            list.add(i, event);
         }
 
         return list;
     }
 
 
-	public static List<Events> getFilteredEvents(Filter filter){
+    public static List<Events> getFilteredEvents(Filter filter) {
 
         String dateRange = DateRange.getDateRange(filter.getWhenDate());
         List<Events> list;
         List<Events> eventsList = new ArrayList<>();
-        if(filter.whenDate.equalsIgnoreCase("Today")||filter.whenDate.equalsIgnoreCase("Tomorrow")){
+        if (filter.whenDate.equalsIgnoreCase("Today") || filter.whenDate.equalsIgnoreCase("Tomorrow")) {
 
             String temp = filter.getCategories();
-            temp = temp.replace("[","").replace("]","");
+            temp = temp.replace("[", "").replace("]", "");
             List<String> filterCategories = Arrays.asList(temp.split(","));
-            Log.i(TAG,""+filter.getCategories());
+            Log.i(TAG, "" + filter.getCategories());
             list = SQLite.select().from(Events.class).
                     where(Events_Table.title.like("%" + filter.getQuery() + "%")).and(Events_Table.startDate.like("%" + dateRange + "%")).
-                    and(filter.isFree()?Events_Table.cost.is("0"):Events_Table.cost.like("%" + "" + "%")).
-                    orderBy(Events_Table.startDate,true).
+                    and(filter.isFree() ? Events_Table.cost.is("0") : Events_Table.cost.like("%" + "" + "%")).
+                    orderBy(Events_Table.startDate, true).
                     queryList();
             ArrayList<Venue> venueList = new ArrayList<>();
             venueList = (ArrayList<Venue>) SQLite.select().from(Venue.class).queryList();
 
-            for(int i=0;i<list.size();i++){
+            for (int i = 0; i < list.size(); i++) {
                 Events event = list.get(i);
-                Venue venue = venueList.get((int)event.getId() - 1);
+                Venue venue = venueList.get((int) event.getId() - 1);
                 event.venue = venue;
-                event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()),Double.parseDouble(event.venue.getLongitude())));
+                event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()), Double.parseDouble(event.venue.getLongitude())));
                 event.categoriesList = new ArrayList<String>(Arrays.asList(event.getCategories().split(",")));
                 event.tagsList = new ArrayList<>();
 
                 //Removing and Inserting the event after filling position, categoriesList, tagsList
                 list.remove(i);
-                list.add(i,event);
-                if((event.venue.getVenueAddress().contains(filter.getVenueQuery())) &&
-                        ((event.categoriesList.containsAll(filterCategories))||(filterCategories.contains("default"))))
+                list.add(i, event);
+                if ((event.venue.getVenueAddress().contains(filter.getVenueQuery())) &&
+                        ((event.categoriesList.containsAll(filterCategories)) || (filterCategories.contains("default"))))
                     eventsList.add(event);
             }
 
             return eventsList;
-        }
-
-
-        else
+        } else
             return getEventsinDateRange(filter);
 
 
     }
 
 
-    private static List<Events> getEventsinDateRange(Filter filter){
+    private static List<Events> getEventsinDateRange(Filter filter) {
         String temp = filter.getCategories();
-        temp = temp.replace("[","").replace("]","");
+        temp = temp.replace("[", "").replace("]", "");
         List<String> filterCategories = Arrays.asList(temp.split(","));
-        Log.i(TAG,""+filter.getCategories());
+        Log.i(TAG, "" + filter.getCategories());
         String dateRange = DateRange.getDateRange(filter.getWhenDate());
         List<Events> list;
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -494,28 +507,28 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
             Date end = df.parse(dates[1]);
 
             list = SQLite.select().from(Events.class).where(Events_Table.title.like("%" + filter.getQuery() + "%")).
-                    and(filter.isFree()?Events_Table.cost.is("0"):Events_Table.cost.like("%" + "" + "%")).
-                    orderBy(Events_Table.startDate,true).
+                    and(filter.isFree() ? Events_Table.cost.is("0") : Events_Table.cost.like("%" + "" + "%")).
+                    orderBy(Events_Table.startDate, true).
                     queryList();
-            for(int i=0;i<list.size();i++){
+            for (int i = 0; i < list.size(); i++) {
                 Events event = list.get(i);
-                Venue venue = venueList.get((int)event.getId() - 1);
+                Venue venue = venueList.get((int) event.getId() - 1);
                 event.venue = venue;
-                event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()),Double.parseDouble(event.venue.getLongitude())));
+                event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()), Double.parseDouble(event.venue.getLongitude())));
                 event.categoriesList = new ArrayList<String>(Arrays.asList(event.getCategories().split(",")));
                 event.tagsList = new ArrayList<>();
 
                 //Removing and Inserting the event after filling position, categoriesList, tagsList
                 list.remove(i);
-                list.add(i,event);
+                list.add(i, event);
             }
 
-            for(int i=0;i<list.size();i++){
+            for (int i = 0; i < list.size(); i++) {
                 Events event = list.get(i);
                 Date date = df.parse(event.getStartDate());
-                if(!start.after(date) &&!end.before(date)&&
-                        event.venue.getVenueAddress().contains(filter.getVenueQuery())&&
-                        ((event.categoriesList.containsAll(filterCategories))||(filterCategories.contains("default")))) {
+                if (!start.after(date) && !end.before(date) &&
+                        event.venue.getVenueAddress().contains(filter.getVenueQuery()) &&
+                        ((event.categoriesList.containsAll(filterCategories)) || (filterCategories.contains("default")))) {
                     eventList.add(event);
                 }
             }
@@ -523,7 +536,7 @@ public class Events extends BaseModel implements Parcelable,ClusterItem
             e.printStackTrace();
         }
 
-        Log.i(TAG," size "+eventList.size());
+        Log.i(TAG, " size " + eventList.size());
         return eventList;
     }
 }

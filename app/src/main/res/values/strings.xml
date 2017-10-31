@@ -62,7 +62,7 @@
     <string name="cancel">CANCEL</string>
     <string name="search">Search</string>
 
-    <string name="default_notification_channel_id">some_channel_id</string>
+    <string name="default_notification_channel_id">event_updates</string>
     <string name="title_activity_login">Sign in</string>
 
     <!-- Strings related to login -->
