@@ -36,15 +36,19 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        displaySplashScreen();
+
+    }
+
+    private void displaySplashScreen(){
+        DisplaySplashTask task = new DisplaySplashTask();
+        task.execute();
     }
 
 
     public void onLogin(View view) {
-        btnGuest.setVisibility(View.GONE);
-        btnGoogle.setVisibility(View.GONE);
-        btnFB.setVisibility(View.GONE);
-        DisplaySplashTask task = new DisplaySplashTask();
-        task.execute();
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        startActivity(intent);
 
     }
 
@@ -52,6 +56,9 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+            btnGuest.setVisibility(View.GONE);
+            btnGoogle.setVisibility(View.GONE);
+            btnFB.setVisibility(View.GONE);
             splash_screen.setVisibility(View.VISIBLE);
         }
 
@@ -72,8 +79,10 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            startActivity(intent);
+            btnGuest.setVisibility(View.VISIBLE);
+            btnGoogle.setVisibility(View.VISIBLE);
+            btnFB.setVisibility(View.VISIBLE);
+            splash_screen.setVisibility(View.GONE);
 
         }
     }
