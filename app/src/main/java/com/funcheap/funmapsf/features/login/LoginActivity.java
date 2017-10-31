@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
             //some heavy processing resulting in a Data String
             for (int i = 0; i < 2; i++) {
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(800);
                 } catch (InterruptedException e) {
                     Thread.interrupted();
                 }

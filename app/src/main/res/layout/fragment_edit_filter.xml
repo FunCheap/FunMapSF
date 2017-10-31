@@ -14,9 +14,9 @@
         android:id="@+id/filter_chips_scrollview"
         android:layout_width="0dp"
         android:layout_height="56dp"
+        android:background="@color/extra_extra_light_gray"
         android:clickable="false"
         android:scrollbarSize="@dimen/margin_tiny"
-        android:background="@color/extra_extra_light_gray"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -142,6 +142,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_marginStart="36dp"
+            android:animateLayoutChanges="true"
             app:chip_layout_horizontal_margin="@dimen/margin_small"
             app:chip_layout_vertical_margin="@dimen/margin_small" />
     </LinearLayout>
