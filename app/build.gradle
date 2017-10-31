@@ -92,6 +92,7 @@ dependencies {
     // Firebase
     compile "com.google.firebase:firebase-core:11.0.4"
     compile "com.google.firebase:firebase-messaging:11.0.4"
+
     // Multi-state Toogle button
     compile 'org.honorato.multistatetogglebutton:multistatetogglebutton:0.2.2'
 
@@ -110,8 +111,8 @@ dependencies {
     // BottomNav
     compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.1-rc1'
 
-    // Login Buttons
-    compile 'in.championswimmer:Android-SocialButtons:1.4.3'
+    // Google Sign In Button
+    compile 'com.shobhitpuri.custombuttons:google-signin:1.0.0'
 
 }
 
