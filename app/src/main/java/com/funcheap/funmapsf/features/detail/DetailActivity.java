@@ -243,8 +243,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void onLinkClick(View v) {
-        Toast.makeText(getApplicationContext(), "onLinkClick", Toast.LENGTH_SHORT).show();
-
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_share_black);
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
