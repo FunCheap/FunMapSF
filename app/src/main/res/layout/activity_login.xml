@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_login_user"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/funmapsf_blur_bkground"
+    android:background="@color/primary"
     tools:context="com.funcheap.funmapsf.features.login.LoginActivity">
 
-    <TextView
+    <ImageView
         android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
-        android:fontFamily=""
-        android:text="@string/app_name"
-        android:textColor="@color/colorFunMapSF"
-        android:textSize="50sp"
-        android:textStyle="bold" />
+        android:src="@drawable/funcheaplogo"
+        android:text="@string/app_name" />
 
     <Button
         android:id="@+id/btnFB"
@@ -26,41 +23,33 @@
         android:layout_below="@+id/tvWelcome"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:background="@drawable/fb_login"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:text=""
-        android:onClick="onLogin"/>
+        android:onClick="onLogin"
+        android:text="Follow on Twitter"/>
 
     <Button
         android:id="@+id/btnGoogle"
-        android:layout_width="250dp"
-        android:layout_height="50dp"
-        android:background="@drawable/google_btn"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:layout_below="@+id/btnFB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignStart="@+id/btnFB"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:onClick="onLogin"/>
+        android:layout_below="@+id/btnFB"
+        android:layout_centerHorizontal="true"
+        android:drawableLeft="@drawable/btn_google_signin_light_normal_xxxhdpi"
+        android:onClick="onLogin" />
 
     <Button
         android:id="@+id/btnGuestLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/colorWhite"
+        android:layout_marginBottom="20dp"
         android:background="@color/colorGrey"
         android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="onLogin"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="@string/login_guest"
-        android:onClick="onLogin"/>
+        android:textColor="@color/colorWhite" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -84,19 +73,21 @@
             android:layout_height="wrap_content"
             android:text="@string/login_sign_up" />
     </LinearLayout>
+
     <LinearLayout
-        android:layout_width="match_parent"
         android:id="@+id/splash_layout"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         android:layout_centerInParent="true"
-        android:background="@android:color/holo_blue_light">
+        android:background="@android:color/holo_blue_light"
+        android:visibility="gone">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="200dp"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:src="@drawable/funcheaplogo"
-            android:layout_centerInParent="true"/>
+            android:src="@drawable/funcheaplogo" />
 
     </LinearLayout>
 

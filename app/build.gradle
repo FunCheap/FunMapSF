@@ -109,6 +109,10 @@ dependencies {
 
     // BottomNav
     compile 'it.sephiroth.android.library.bottomnavigation:bottom-navigation:2.0.1-rc1'
+
+    // Login Buttons
+    compile 'in.championswimmer:Android-SocialButtons:1.4.3'
+
 }
 
 
