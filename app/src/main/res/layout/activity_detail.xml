@@ -149,7 +149,8 @@
                             style="@style/EditFilterIcon"
                             android:layout_gravity="center"
                             android:layout_margin="0dp"
-                            android:src="@drawable/ic_bookmark" />
+                            android:src="@drawable/ic_bookmark"
+                            android:tint="@color/icon_tint_blue"/>
                     </FrameLayout>
 
                     <FrameLayout
