@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.commons.utils.DateCostFormatter;
@@ -104,6 +105,7 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
 
         // Load Image
         Glide.with(mContext).load(event.getThumbnail())
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(viewHolder.ivItemImage);
 
 
