@@ -4,17 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="@dimen/padding_medium"
-    android:layout_marginStart="@dimen/margin_medium"
     android:layout_marginEnd="@dimen/margin_medium"
-    android:layout_marginTop="@dimen/margin_medium">
+    android:layout_marginStart="@dimen/margin_medium"
+    android:layout_marginTop="@dimen/margin_medium"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_medium">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/padding_medium">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/text_title"
@@ -22,27 +21,42 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_standard"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/img_delete_filter"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Weekend Planning" />
 
-        <com.vpaliy.chips_lover.ChipsLayout
-            android:id="@+id/chip_params"
-            style="@style/FilterListSubtitle"
+        <FrameLayout
+            android:id="@+id/filter_frame"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_medium"
-            android:layout_marginTop="@dimen/margin_medium"
-            app:chip_layout_horizontal_margin="@dimen/margin_small"
-            app:chip_layout_vertical_margin="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_standard"
+            android:background="@color/extra_extra_light_gray"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@id/img_delete_filter"
-            app:layout_constraintTop_toBottomOf="@id/text_title" />
+            app:layout_constraintTop_toBottomOf="@+id/text_title"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="49dp">
+
+            <com.vpaliy.chips_lover.ChipsLayout
+                android:id="@+id/chip_params"
+                style="@style/FilterListSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/margin_standard"
+                app:chip_layout_horizontal_margin="@dimen/margin_small"
+                app:chip_layout_vertical_margin="@dimen/margin_small" />
+        </FrameLayout>
+
 
         <ImageView
             android:id="@+id/img_delete_filter"
-            android:layout_width="@dimen/image_tiny"
-            android:layout_height="@dimen/image_tiny"
+            android:layout_width="@dimen/image_small"
+            android:layout_height="@dimen/image_small"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="@dimen/margin_standard"
+            android:layout_marginTop="@dimen/margin_standard"
             android:src="@drawable/ic_delete"
             android:tint="@color/icon_tint_gray"
             app:layout_constraintRight_toRightOf="parent"

@@ -1,11 +1,13 @@
 package com.funcheap.funmapsf.commons.services;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -88,6 +90,13 @@ public class FunMapFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        /* Create or update. */
+            NotificationChannel channel = new NotificationChannel(getString(R.string.default_notification_channel_id),
+                    "Event Updates",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            notificationManager.createNotificationChannel(channel);
+        }
         notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
     }
 }
