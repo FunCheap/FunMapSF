@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,8 +30,12 @@ import com.funcheap.funmapsf.commons.utils.DateCostFormatter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.vpaliy.chips_lover.ChipView;
 import com.vpaliy.chips_lover.ChipsLayout;
 
@@ -172,6 +177,16 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void initCategories() {
         for (String s : mEvent.getCategoriesList()) {
             ChipView chip = ChipUtils.createSimpleChip(s);
@@ -243,6 +258,8 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void onLinkClick(View v) {
+        Toast.makeText(getApplicationContext(), "onLinkClick", Toast.LENGTH_SHORT).show();
+
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_share_black);
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/plain");
@@ -274,7 +291,7 @@ public class DetailActivity extends AppCompatActivity {
                 m_map.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 15));
 
                 // Creates and adds circle to the map
-                map.addCircle(new CircleOptions()
+                m_map.addCircle(new CircleOptions()
                         .center(point)
                         .strokeColor(ContextCompat.getColor(this, R.color.primary_light))
                         .fillColor(ContextCompat.getColor(this, R.color.primary))
