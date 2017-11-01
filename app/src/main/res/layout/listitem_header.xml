@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/light_gray"
+    android:layout_margin="@dimen/margin_large">
+            <TextView
+                android:id="@+id/header_date_time"
+                android:textColor="@android:color/black"
+                android:layout_width="match_parent"
+                android:textSize="@dimen/largeText"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/margin_small"
+                tools:text="Today" />
+
+</android.support.v7.widget.CardView>

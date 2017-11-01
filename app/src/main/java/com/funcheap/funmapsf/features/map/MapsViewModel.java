@@ -25,14 +25,26 @@ public class MapsViewModel extends ViewModel {
     private final String TAG = this.getClass().getSimpleName();
 
     private EventsRepoSingleton mEventsRepo;
+    MutableLiveData<Boolean> mIsLoading = new MutableLiveData<>();
 
     private MutableLiveData<Filter> mCurrentFilter = new MutableLiveData<>();
     // Holds the events to show on the map
     private LiveData<List<Events>> mEventsLiveData = Transformations.switchMap(mCurrentFilter,
-            (filter) -> mEventsRepo.getFilteredEvents(filter));
+            (filter) -> {
+                mIsLoading.setValue(true);
+                return mEventsRepo.getFilteredEvents(filter);
+            });
 
     public MapsViewModel() {
         mEventsRepo = EventsRepoSingleton.getEventsRepo();
+    }
+
+    public LiveData<Boolean> isLoading() {
+        return mIsLoading;
+    }
+
+    public void setLoading(boolean value){
+        ((MutableLiveData)mIsLoading).setValue(value);
     }
 
     /**
@@ -43,6 +55,8 @@ public class MapsViewModel extends ViewModel {
      */
     public LiveData<List<Events>> getEventsData() {
         // init filter if it doesn't exist
+
+        mIsLoading.setValue(true);
         getFilter();
         return mEventsLiveData;
     }
