@@ -18,6 +18,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.commons.utils.DateCostFormatter;
@@ -126,6 +128,15 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
                 mContext.startActivity(intent, options.toBundle());
             }
         });
+
+        animate(holder);
+    }
+
+    private void animate(RecyclerView.ViewHolder holder)
+    {
+        YoYo.with(Techniques.FadeIn)
+                .duration(500)
+                .playOn(holder.itemView);
     }
 
     /**
