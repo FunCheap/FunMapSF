@@ -71,9 +71,11 @@ public class EventAdapter extends RecyclerView.Adapter {
 
     private void insertHeaders() {
         // add headers here
-        Events event = new Events();
-        event.setHeader(mEvents.get(0).getStartDate());
-        mEvents.add(0,event);
+        if(mEvents.size()>0) {
+            Events event = new Events();
+            event.setHeader(mEvents.get(0).getStartDate());
+            mEvents.add(0, event);
+        }
         for(int i=2;i<mEvents.size();i++){
             if(!(DateRange.getonlyDatefromStartDate(mEvents.get(i).getStartDate()).equals(
                     DateRange.getonlyDatefromStartDate(mEvents.get(i-1).getStartDate())))){
