@@ -135,7 +135,7 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
     private void animate(RecyclerView.ViewHolder holder)
     {
         YoYo.with(Techniques.FadeIn)
-                .duration(2000)
+                .duration(500)
                 .playOn(holder.itemView);
     }
 
