@@ -63,8 +63,7 @@
             android:label="@string/title_activity_maps">
         </activity>
         <activity
-            android:name=".features.detail.DetailActivity"
-            android:parentActivityName=".features.home.HomeActivity" />
+            android:name=".features.detail.DetailActivity"/>
         <activity android:name=".features.list.cluster.ListClusterActivity" />
         <activity
             android:name=".features.login.LoginActivity"
