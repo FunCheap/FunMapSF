@@ -200,8 +200,11 @@ public class DetailActivity extends AppCompatActivity {
         final Drawable bookmarkOutline = this.getDrawable(R.drawable.ic_bookmark_outline);
         if (mEvent.isBookmarked()) {
             ivBookmark.setImageDrawable(bookmark);
+            ivBookmark.setColorFilter(this.getResources().getColor(R.color.light_blue));
+
         } else {
             ivBookmark.setImageDrawable(bookmarkOutline);
+            ivBookmark.setColorFilter(this.getResources().getColor(R.color.icon_tint_gray));
         }
     }
 
@@ -252,8 +255,10 @@ public class DetailActivity extends AppCompatActivity {
         final Drawable bookmarkOutline = this.getDrawable(R.drawable.ic_bookmark_outline);
         if (mEvent.isBookmarked()) {
             ivBookmark.setImageDrawable(bookmark);
+            ivBookmark.setColorFilter(this.getResources().getColor(R.color.light_blue));
         } else {
             ivBookmark.setImageDrawable(bookmarkOutline);
+            ivBookmark.setColorFilter(this.getResources().getColor(R.color.icon_tint_gray));
         }
     }
 

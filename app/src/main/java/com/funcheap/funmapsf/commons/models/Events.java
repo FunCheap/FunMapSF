@@ -77,6 +77,9 @@ public class Events extends BaseModel implements Parcelable, ClusterItem {
     LatLng position;
     List<String> categoriesList = null;
     List<String> tagsList = null;
+    String header = null;
+
+
 
     public final static Parcelable.Creator<Events> CREATOR = new Creator<Events>() {
         @SuppressWarnings({
@@ -115,6 +118,7 @@ public class Events extends BaseModel implements Parcelable, ClusterItem {
         this.categoriesList = in.readArrayList(String.class.getClassLoader());
         this.tagsList = in.readArrayList(String.class.getClassLoader());
         this.bookmark = in.readByte() != 0;
+        this.header = ((String) in.readValue((String.class.getClassLoader())));
     }
 
     public Events() {
@@ -296,6 +300,14 @@ public class Events extends BaseModel implements Parcelable, ClusterItem {
         this.tagsList = tagsList;
     }
 
+    public String getHeader() {
+        return header;
+    }
+
+    public void setHeader(String header) {
+        this.header = header;
+    }
+
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(id);
         dest.writeValue(eventId);
@@ -319,6 +331,7 @@ public class Events extends BaseModel implements Parcelable, ClusterItem {
         dest.writeList(categoriesList);
         dest.writeList(tagsList);
         dest.writeByte((byte) (bookmark ? 1 : 0));
+        dest.writeValue(header);
     }
 
     public int describeContents() {

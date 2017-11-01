@@ -1,10 +1,12 @@
 package com.funcheap.funmapsf.features.map;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -53,6 +55,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private MapsViewModel mMapsViewModel;
     private ClusterManager<Events> mClusterManager;
     private Context mCtx;
+    ProgressDialog dialog;
 
     public static MapFragment newInstance() {
         Bundle args = new Bundle();
@@ -72,7 +75,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_maps, container, false);
-
+        dialog = new ProgressDialog(mCtx);
         return view;
     }
 
@@ -150,6 +153,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private void initEvents() {
         mMapsViewModel.getEventsData().observe(this, eventsList -> {
             // Add markers from updated eventsList
+            mMapsViewModel.setLoading(false);
+
             mClusterManager.clearItems();
             mClusterManager.addItems(eventsList);
             mClusterManager.setRenderer(new EventRenderer(mCtx, getMap(), mClusterManager));
@@ -159,6 +164,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 Toast.makeText(mCtx, "0 events found!", Toast.LENGTH_LONG).show();
             }
         });
+        mMapsViewModel.isLoading().observe(this, isLoading -> processLoadingStatus(isLoading));
+    }
+
+    private void processLoadingStatus(boolean isLoading) {
+        if(isLoading) {
+            dialog.show();
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+            dialog.setContentView(R.layout.progress_dialog);
+            dialog.setCancelable(false);
+            dialog.setCanceledOnTouchOutside(false);
+        }
+        else
+            dialog.dismiss();
     }
 
     private void setListeners() {

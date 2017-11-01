@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.TimeZone;
 
 /**
  * Created by anushree on 10/24/2017.
@@ -26,7 +27,7 @@ public class DateRange {
         }
 
         else if(day.equalsIgnoreCase("Tomorrow")){
-            calendar.roll(Calendar.DATE,1);
+            calendar.add(Calendar.DATE,1);
             dateRange.append(df.format(calendar.getTime()));
             Log.i(TAG,"Tomorrow : "+dateRange);
         }
@@ -85,5 +86,11 @@ public class DateRange {
 
     public static String[] getStartAndEndDate(String DateRange){
         return DateRange.split("to");
+    }
+
+    public static String getonlyDatefromStartDate(String startDate){
+
+        return startDate.substring(0,10);
+
     }
 }

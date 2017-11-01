@@ -56,7 +56,9 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
     protected boolean isForViewType(@NonNull List<Events> items, int position) {
         // Return true since we only have one Event type for now
         // Eventually we can assign this to return true only for "Top Pick" events or something
-        return true;
+        if(items.get(position).getHeader()==null)
+            return true;
+        return false;
     }
 
     @NonNull
@@ -86,8 +88,10 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
         final Drawable bookmarkOutline = mContext.getDrawable(R.drawable.ic_bookmark_outline);
         if (event.isBookmarked()) {
             viewHolder.imgBookmark.setImageDrawable(bookmark);
+            viewHolder.imgBookmark.setColorFilter(mContext.getResources().getColor(R.color.light_blue));
         } else {
             viewHolder.imgBookmark.setImageDrawable(bookmarkOutline);
+            viewHolder.imgBookmark.setColorFilter(mContext.getResources().getColor(R.color.icon_tint_gray));
         }
 
         viewHolder.imgBookmark.setOnClickListener( view -> {
@@ -97,9 +101,11 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
             if (event.isBookmarked()) {
                 Log.d(TAG, "onBindViewHolder: EventID bookmarked - " + event.getEventId());
                 viewHolder.imgBookmark.setImageDrawable(bookmark);
+                viewHolder.imgBookmark.setColorFilter(mContext.getResources().getColor(R.color.light_blue));
             } else {
                 Log.d(TAG, "onBindViewHolder: EventID un-bookmarked - " + event.getEventId());
                 viewHolder.imgBookmark.setImageDrawable(bookmarkOutline);
+                viewHolder.imgBookmark.setColorFilter(mContext.getResources().getColor(R.color.icon_tint_gray));
             }
         });
 
