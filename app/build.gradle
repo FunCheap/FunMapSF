@@ -114,6 +114,9 @@ dependencies {
     // Google Sign In Button
     compile 'com.shobhitpuri.custombuttons:google-signin:1.0.0'
 
+    //RV Animations
+    compile 'com.daimajia.androidanimations:library:2.3@aar'
+
 }
 
 
