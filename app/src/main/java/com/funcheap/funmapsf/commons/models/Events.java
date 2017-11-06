@@ -445,7 +445,7 @@ public class Events extends BaseModel implements Parcelable, ClusterItem {
 
         for (int i = 0; i < list.size(); i++) {
             Events event = list.get(i);
-            Venue venue = venueList.get(i);
+            Venue venue = venueList.get((int)(event.getId()-1));
             event.venue = venue;
             event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()), Double.parseDouble(event.venue.getLongitude())));
             event.categoriesList = new ArrayList<String>(Arrays.asList(event.getCategories().split(",")));
