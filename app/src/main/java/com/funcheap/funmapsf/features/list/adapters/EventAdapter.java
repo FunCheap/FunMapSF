@@ -77,12 +77,13 @@ public class EventAdapter extends RecyclerView.Adapter {
             mEvents.add(0, event);
         }
         for(int i=2;i<mEvents.size();i++){
-            if(!(DateRange.getonlyDatefromStartDate(mEvents.get(i).getStartDate()).equals(
-                    DateRange.getonlyDatefromStartDate(mEvents.get(i-1).getStartDate())))){
+            String currentDate = DateRange.getonlyDatefromStartDate(mEvents.get(i).getStartDate());
+            String prevDate = DateRange.getonlyDatefromStartDate(mEvents.get(i-1).getStartDate());
+            if (!currentDate.equals(prevDate)) {
                 Events event1 = new Events();
                 event1.setHeader(mEvents.get(i).getStartDate());
                 mEvents.add(i,event1);
-                i++; // increment i, so we can skip this event since it is already checked for startDate
+                i++;
             }
         }
 
