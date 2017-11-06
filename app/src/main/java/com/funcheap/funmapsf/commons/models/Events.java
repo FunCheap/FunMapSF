@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 @Table(database = MyDatabase.class)
@@ -78,7 +79,6 @@ public class Events extends BaseModel implements Parcelable, ClusterItem {
     List<String> categoriesList = null;
     List<String> tagsList = null;
     String header = null;
-
 
 
     public final static Parcelable.Creator<Events> CREATOR = new Creator<Events>() {
@@ -445,10 +445,9 @@ public class Events extends BaseModel implements Parcelable, ClusterItem {
 
         for (int i = 0; i < list.size(); i++) {
             Events event = list.get(i);
-            Venue venue = venueList.get((int)(event.getId()-1));
-            event.venue = venue;
+            event.venue = venueList.get((int) (event.getId() - 1));
             event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()), Double.parseDouble(event.venue.getLongitude())));
-            event.categoriesList = new ArrayList<String>(Arrays.asList(event.getCategories().split(",")));
+            event.categoriesList = new ArrayList<>(Arrays.asList(event.getCategories().split(",")));
             event.tagsList = new ArrayList<>();
 
             //Removing and Inserting the event after filling position, categoriesList, tagsList
@@ -462,95 +461,86 @@ public class Events extends BaseModel implements Parcelable, ClusterItem {
 
     public static List<Events> getFilteredEvents(Filter filter) {
 
+        List<Events> eventsList;
+
         String dateRange = DateRange.getDateRange(filter.getWhenDate());
-        List<Events> list;
-        List<Events> eventsList = new ArrayList<>();
+
         if (filter.whenDate.equalsIgnoreCase("Today") || filter.whenDate.equalsIgnoreCase("Tomorrow")) {
+            // Query with specific start date
+            eventsList = SQLite.select().from(Events.class)
+                    .where(Events_Table.title.like("%" + filter.getQuery() + "%"))
+                    .and(Events_Table.startDate.like("%" + dateRange + "%"))
+                    .and(filter.isFree() ? Events_Table.cost.is("0") : Events_Table.cost.like("%" + "" + "%"))
+                    .orderBy(Events_Table.startDate, true)
+                    .queryList();
+        } else {
+            // Query all dates and filter dates later
+            eventsList = SQLite.select().from(Events.class)
+                    .where(Events_Table.title.like("%" + filter.getQuery() + "%"))
+                    .and(filter.isFree() ? Events_Table.cost.is("0") : Events_Table.cost.like("%" + "" + "%"))
+                    .orderBy(Events_Table.startDate, true)
+                    .queryList();
+        }
 
-            String temp = filter.getCategories();
-            temp = temp.replace("[", "").replace("]", "");
-            List<String> filterCategories = Arrays.asList(temp.split(","));
-            Log.i(TAG, "" + filter.getCategories());
-            list = SQLite.select().from(Events.class).
-                    where(Events_Table.title.like("%" + filter.getQuery() + "%")).and(Events_Table.startDate.like("%" + dateRange + "%")).
-                    and(filter.isFree() ? Events_Table.cost.is("0") : Events_Table.cost.like("%" + "" + "%")).
-                    orderBy(Events_Table.startDate, true).
-                    queryList();
-            ArrayList<Venue> venueList = new ArrayList<>();
-            venueList = (ArrayList<Venue>) SQLite.select().from(Venue.class).queryList();
-
-            for (int i = 0; i < list.size(); i++) {
-                Events event = list.get(i);
-                Venue venue = venueList.get((int) event.getId() - 1);
-                event.venue = venue;
-                event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()), Double.parseDouble(event.venue.getLongitude())));
-                event.categoriesList = new ArrayList<String>(Arrays.asList(event.getCategories().split(",")));
-                event.tagsList = new ArrayList<>();
-
-                //Removing and Inserting the event after filling position, categoriesList, tagsList
-                list.remove(i);
-                list.add(i, event);
-                if ((event.venue.getVenueAddress().contains(filter.getVenueQuery())) &&
-                        ((event.categoriesList.containsAll(filterCategories)) || (filterCategories.contains("default"))))
-                    eventsList.add(event);
-            }
-
-            return eventsList;
-        } else
-            return getEventsinDateRange(filter);
-
-
-    }
-
-
-    private static List<Events> getEventsinDateRange(Filter filter) {
+        // Get categories as list
         String temp = filter.getCategories();
         temp = temp.replace("[", "").replace("]", "");
         List<String> filterCategories = Arrays.asList(temp.split(","));
         Log.i(TAG, "" + filter.getCategories());
-        String dateRange = DateRange.getDateRange(filter.getWhenDate());
-        List<Events> list;
+
+        // Get all venues as list
+        ArrayList<Venue> venueList = (ArrayList<Venue>) SQLite.select().from(Venue.class).queryList();
+
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-        String[] dates = DateRange.getStartAndEndDate(dateRange);
-        List<Events> eventList = new ArrayList<>();
-        ArrayList<Venue> venueList;
-        venueList = (ArrayList<Venue>) SQLite.select().from(Venue.class).queryList();
-        try {
-            Date start = df.parse(dates[0]);
-            Date end = df.parse(dates[1]);
 
-            list = SQLite.select().from(Events.class).where(Events_Table.title.like("%" + filter.getQuery() + "%")).
-                    and(filter.isFree() ? Events_Table.cost.is("0") : Events_Table.cost.like("%" + "" + "%")).
-                    orderBy(Events_Table.startDate, true).
-                    queryList();
-            for (int i = 0; i < list.size(); i++) {
-                Events event = list.get(i);
-                Venue venue = venueList.get((int) event.getId() - 1);
-                event.venue = venue;
-                event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()), Double.parseDouble(event.venue.getLongitude())));
-                event.categoriesList = new ArrayList<String>(Arrays.asList(event.getCategories().split(",")));
-                event.tagsList = new ArrayList<>();
+        /*
+         * This loop will remove events that don't match venue, category, and date range filters
+         * while also attaching venue objects. This is intended to run in one pass.
+         */
+        Iterator it = eventsList.iterator();
+        while (it.hasNext()) {
 
-                //Removing and Inserting the event after filling position, categoriesList, tagsList
-                list.remove(i);
-                list.add(i, event);
-            }
+            Events event = (Events) it.next();
 
-            for (int i = 0; i < list.size(); i++) {
-                Events event = list.get(i);
-                Date date = df.parse(event.getStartDate());
-                if (!start.after(date) && !end.before(date) &&
-                        event.venue.getVenueAddress().contains(filter.getVenueQuery()) &&
-                        ((event.categoriesList.containsAll(filterCategories)) || (filterCategories.contains("default")))) {
-                    eventList.add(event);
+            // Remove dates out of range
+            if (!filter.whenDate.equalsIgnoreCase("Today") && !filter.whenDate.equalsIgnoreCase("Tomorrow")) {
+                String[] dates = DateRange.getStartAndEndDate(dateRange);
+
+                try {
+                    Date date = df.parse(event.getStartDate());
+                    Date start = df.parse(dates[0]);
+                    Date end = df.parse(dates[1]);
+
+                    if (start.after(date) || end.before(date)) {
+                        // Remove the event and process it no further.
+                        it.remove();
+                        continue;
+                    }
+                } catch (ParseException e) {
+                    System.out.println(e.toString());
                 }
             }
-        } catch (ParseException e) {
-            e.printStackTrace();
+
+            // Retrieve corresponding venue
+            Venue venue = venueList.get((int) event.getId() - 1);
+            event.venue = venue;
+            event.setPosition(new LatLng(Double.parseDouble(event.venue.getLatitude()), Double.parseDouble(event.venue.getLongitude())));
+            event.categoriesList = new ArrayList<>(Arrays.asList(event.getCategories().split(",")));
+            event.tagsList = new ArrayList<>(); // Don't know why this is here
+
+            // Remove non-matching venues
+            if (!event.venue.getVenueAddress().contains(filter.getVenueQuery())) {
+                it.remove();
+                continue;
+            }
+
+            // Remove if categories don't match
+            if (!event.categoriesList.containsAll(filterCategories) && !(filterCategories.contains("default"))) {
+                it.remove();
+            }
         }
 
-        Log.i(TAG, " size " + eventList.size());
-        return eventList;
+        return eventsList;
     }
 }
 
