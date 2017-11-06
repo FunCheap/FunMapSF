@@ -42,8 +42,6 @@ public class HomeActivity extends AppCompatActivity implements
     private final String TAG_FILTERS_FRAGMENT = "filters_fragment";
     private final String TAG_BOOKMARKS_FRAGMENT = "bookmarks_fragment";
 
-    private EditFilterDiaglogFragment mSelectedFragment;
-
     @BindView(R.id.bottom_navigation)
     public BottomNavigation mBottomNav;
 
@@ -155,7 +153,7 @@ public class HomeActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         OnBackClickCallback homeFragment = (HomeFragment) getSupportFragmentManager()
-                .findFragmentByTag(HomeFragment.class.getSimpleName());
+                .findFragmentByTag(TAG_MAP_FRAGMENT);
         if (homeFragment != null) {
             if (!homeFragment.onBackClick()) {
                 // Selected fragment did not consume the back press event.
