@@ -195,9 +195,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_medium"
                     android:layout_marginTop="@dimen/margin_medium"
-                    android:orientation="horizontal"
-                    app:chip_layout_horizontal_margin="@dimen/margin_small"
-                    app:chip_layout_vertical_margin="@dimen/margin_small" />
+                    android:orientation="horizontal"/>
 
                 <View
                     android:id="@+id/lineDivider"

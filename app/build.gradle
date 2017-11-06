@@ -1,9 +1,8 @@
 apply plugin: 'com.android.application'
-apply plugin: "me.tatarka.retrolambda"
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.1"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.funcheap.funmapsf"
         minSdkVersion 21
@@ -30,7 +29,7 @@ android {
 }
 
 def support_version = "26.1.0"
-def and_arch_versrion = "1.0.0-beta2"
+def and_arch_version = "1.0.0-rc1"
 def glide_version = "4.1.1"
 def butterknife_version = "8.8.1"
 def dbflow_version = "4.1.1"
@@ -49,8 +48,9 @@ dependencies {
     compile "com.android.support:design:${support_version}"
 
     // Android Architecture
-    compile "android.arch.lifecycle:extensions:${and_arch_versrion}"
-    compile "android.arch.lifecycle:compiler:${and_arch_versrion}"
+    compile "android.arch.lifecycle:extensions:${and_arch_version}"
+    compile "android.arch.lifecycle:compiler:${and_arch_version}"
+    annotationProcessor "android.arch.lifecycle:compiler:${and_arch_version}"
 
     // Glide
     compile "com.github.bumptech.glide:glide:${glide_version}"
@@ -97,7 +97,7 @@ dependencies {
     compile 'org.honorato.multistatetogglebutton:multistatetogglebutton:0.2.2'
 
     // Chrome Custom Tabs
-    compile 'com.android.support:customtabs:25.2.0'
+    compile "com.android.support:customtabs:${support_version}"
 
     // ChipsLover
     compile 'com.github.vpaliyX:ChipsLover:v1.2'
