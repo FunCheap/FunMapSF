@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/margin_medium">
+    android:layout_marginStart="@dimen/margin_medium"
+    android:layout_marginEnd="@dimen/margin_medium"
+    android:layout_marginBottom="@dimen/margin_medium">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -26,7 +28,7 @@
             android:id="@+id/container_event_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="@dimen/padding_small"
+            android:padding="@dimen/padding_medium"
             app:layout_constraintTop_toBottomOf="@id/ivItemImg"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

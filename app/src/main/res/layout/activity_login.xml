@@ -50,7 +50,7 @@
         android:layout_marginBottom="@dimen/margin_standard"
         android:background="?android:attr/selectableItemBackground"
         android:onClick="onLogin"
-        android:padding="@dimen/padding_small"
+        android:padding="@dimen/padding_medium"
         android:text="@string/login_guest"
         android:textColor="@color/colorWhite"
         app:layout_constraintBottom_toBottomOf="parent"
