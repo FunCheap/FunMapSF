@@ -27,7 +27,7 @@
                 android:layout_height="225dp"
                 android:background="@color/extra_extra_light_gray"
                 android:scaleType="centerCrop"
-                android:src="@drawable/blue_angels"
+                tools:src="@drawable/blue_angels"
                 android:transitionName="profile"
                 app:layout_collapseMode="parallax" />
 
