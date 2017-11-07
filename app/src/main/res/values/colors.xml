@@ -5,9 +5,9 @@
     <color name="primary_dark">#0288D1</color>
     <color name="primary_light">#B3E5FC</color>
     <color name="accent">#FF4081</color>
-    <color name="primary_text">#212121</color>
+    <color name="primary_text">#DE000000</color>
     <color name="primary_text_inverse">#FFFFFF</color>
-    <color name="secondary_text">#757575</color>
+    <color name="secondary_text">#8A000000</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
 
@@ -21,7 +21,11 @@
     <color name="colorGrey">#BDBDBD</color>
 
     <color name="icon_tint_light">#FFFFFF</color>
-    <color name="icon_tint_gray">#AAB8C2</color>
+    <color name="icon_tint_gray">#8AFFFFFF</color>
+    <color name="icon_tint_disabled">#61FFFFFF</color>
     <color name="icon_tint_blue">#64b5f6</color>
+
+    <color name="chips_background">#E0E0E0</color>
+    <color name="chips_text">#DE000000</color>
 
 </resources>
