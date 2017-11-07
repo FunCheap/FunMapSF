@@ -141,10 +141,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginStart="36dp"
-            android:animateLayoutChanges="true"
-            app:chip_layout_horizontal_margin="@dimen/margin_small"
-            app:chip_layout_vertical_margin="@dimen/margin_small" />
+            android:layout_marginStart="36dp" />
     </LinearLayout>
 
 

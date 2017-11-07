@@ -30,12 +30,8 @@ import com.funcheap.funmapsf.commons.utils.DateCostFormatter;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.vpaliy.chips_lover.ChipView;
 import com.vpaliy.chips_lover.ChipsLayout;
 
@@ -263,7 +259,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     public void onLinkClick(View v) {
-        Toast.makeText(getApplicationContext(), "onLinkClick", Toast.LENGTH_SHORT).show();
 
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_share_black);
         Intent intent = new Intent(Intent.ACTION_SEND);
