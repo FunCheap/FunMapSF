@@ -37,6 +37,11 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         displaySplashScreen();
 
+        // Skip login to speed up testing
+        if (!getResources().getBoolean(R.bool.showLogin)) {
+            onLogin(btnGoogle);
+        }
+
     }
 
     private void displaySplashScreen() {
