@@ -35,16 +35,20 @@
             android:layout_marginTop="@dimen/margin_standard"
             android:background="@color/extra_extra_light_gray"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_title"
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="49dp">
 
-            <com.vpaliy.chips_lover.ChipsLayout
+            <org.apmem.tools.layouts.FlowLayout
                 android:id="@+id/chip_params"
                 style="@style/FilterListSubtitle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="@dimen/margin_standard" />
+                android:layout_marginTop="@dimen/margin_standard"
+                android:layout_marginStart="@dimen/margin_standard"
+                android:layout_marginEnd="@dimen/margin_standard"
+                android:layout_marginBottom="@dimen/margin_medium"/>
         </FrameLayout>
 
 

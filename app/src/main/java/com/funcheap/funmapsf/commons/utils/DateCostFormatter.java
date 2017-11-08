@@ -13,9 +13,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by gkudva on 26/10/17.
@@ -28,8 +25,7 @@ public class DateCostFormatter {
     public static String formatDate(String date)  {
         String retDate = date;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
-            sdf.setTimeZone(TimeZone.getTimeZone("PDT"));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             Date mDate =   sdf.parse(date);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(mDate);
@@ -39,7 +35,6 @@ public class DateCostFormatter {
             yesterday.add(Calendar.DATE, -1);
             tomorrow.add(Calendar.DATE, +1);
             DateFormat timeFormatter = new SimpleDateFormat("hh:mma");
-            timeFormatter.setTimeZone(TimeZone.getTimeZone("PDT"));
 
             if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) && calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
                 retDate =  "Today, "+ getMonth(today.get(Calendar.MONTH)+1)+" "+ today.get(Calendar.DATE)+" - " + timeFormatter.format(mDate);
@@ -62,8 +57,7 @@ public class DateCostFormatter {
     public static String formatDatefromDate(String date)  {
         String retDate = date;
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.ENGLISH);
-            sdf.setTimeZone(TimeZone.getTimeZone("PDT"));
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             Date mDate =   sdf.parse(date);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(mDate);

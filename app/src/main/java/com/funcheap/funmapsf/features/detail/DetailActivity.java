@@ -18,6 +18,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,8 +34,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.vpaliy.chips_lover.ChipView;
-import com.vpaliy.chips_lover.ChipsLayout;
 
+import org.apmem.tools.layouts.FlowLayout;
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
 import java.text.SimpleDateFormat;
@@ -79,7 +80,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.ivBookmark)
     ImageView ivBookmark;
     @BindView(R.id.llEventCategories)
-    ChipsLayout clEventCategories;
+    FlowLayout clEventCategories;
     @BindView(R.id.ivBackdrop)
     ImageView ivBackdrop;
     @BindView(R.id.tvContent)
@@ -187,6 +188,8 @@ public class DetailActivity extends AppCompatActivity {
         for (String s : mEvent.getCategoriesList()) {
             ChipView chip = ChipUtils.createSimpleChip(s);
             clEventCategories.addView(chip);
+            ((ViewGroup.MarginLayoutParams) chip.getLayoutParams())
+                    .setMargins(0, 0, 20, 20);
         }
     }
 

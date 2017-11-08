@@ -10,6 +10,7 @@
     <dimen name="padding_medium">8dp</dimen>
     <dimen name="padding_large">16dp</dimen>
     <dimen name="padding_xlarge">24dp</dimen>
+    <dimen name="padding_detail_bottom">100dp</dimen>
 
     <dimen name="image_tiny">20dp</dimen>
     <dimen name="image_small">24dp</dimen>
