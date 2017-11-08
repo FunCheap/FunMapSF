@@ -4,6 +4,7 @@
     <color name="primary">#03A9F4</color>
     <color name="primary_dark">#0288D1</color>
     <color name="primary_light">#B3E5FC</color>
+    <color name="toolbar_blue">#06518B</color>
     <color name="accent">#FF4081</color>
     <color name="primary_text">#DE000000</color>
     <color name="primary_text_inverse">#FFFFFF</color>
