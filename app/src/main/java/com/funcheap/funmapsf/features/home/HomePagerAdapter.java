@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
+import android.util.SparseArray;
+import android.view.ViewGroup;
 
 import com.funcheap.funmapsf.features.list.home.ListHomeFragment;
 import com.funcheap.funmapsf.features.map.MapFragment;
@@ -16,6 +18,8 @@ import com.funcheap.funmapsf.features.map.MapFragment;
  */
 
 public class HomePagerAdapter extends FragmentPagerAdapter {
+
+    SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
     private final String TAG = this.getClass().getSimpleName();
     private final int PAGE_COUNT = 2;
@@ -49,5 +53,23 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         return mTabTitles[position];
+    }
+
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        Fragment fragment = (Fragment) super.instantiateItem(container, position);
+        registeredFragments.put(position, fragment);
+        return fragment;
+    }
+
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        registeredFragments.remove(position);
+        super.destroyItem(container, position, object);
+    }
+
+    public Fragment getRegisteredFragment(int position) {
+        return registeredFragments.get(position);
     }
 }

@@ -1,6 +1,8 @@
 package com.funcheap.funmapsf.features.home;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -26,6 +28,7 @@ import com.funcheap.funmapsf.commons.interfaces.OnBackClickCallback;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.commons.utils.ChipUtils;
 import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
+import com.funcheap.funmapsf.features.list.home.ListHomeFragment;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
 import com.vpaliy.chips_lover.ChipView;
 import com.vpaliy.chips_lover.ChipsLayout;
@@ -57,6 +60,9 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
             "Eating & Drinking","Fairs & Festivals","Free Stuff","Fun & Games","Live Music","Movies","Shopping & Fashion"
     };
 
+    private static final int REQUEST_CODE = 1;
+    private static final String EVENT_POSITION = "event_position";
+    private static final String EVENT_BOOKMARK = "event_bookmark";
     private MapsViewModel mMapsViewModel;
 
     // Home Fragment
@@ -269,5 +275,18 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
                 }
             }
         });
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode ==  REQUEST_CODE){
+            if(resultCode == Activity.RESULT_OK){
+                if(mHomePager.getCurrentItem()==1) {
+                    ((ListHomeFragment) ((HomePagerAdapter) mHomePager.getAdapter()).getRegisteredFragment(1)).
+                            modifyAdapter(data.getExtras().getInt(EVENT_POSITION), data.getExtras().getBoolean(EVENT_BOOKMARK));
+                }
+            }
+        }
     }
 }

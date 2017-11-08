@@ -47,6 +47,8 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
     private ListBaseViewModel mListBaseViewModel;
     private final String TAG = this.getClass().getSimpleName();
     private static final String EVENT_EXTRA = "event_extra";
+    private static final String EVENT_POSITION = "event_position";
+    private static final int REQUEST_CODE = 1;
 
     public EventDelegateAdapter(Activity activity) {
         this.mInflater = activity.getLayoutInflater();
@@ -122,10 +124,10 @@ public class EventDelegateAdapter extends AdapterDelegate<List<Events>> {
             {
                 Intent intent = new Intent(mContext, DetailActivity.class);
                 intent.putExtra(EVENT_EXTRA, items.get(position));
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra(EVENT_POSITION, position);
                 ActivityOptionsCompat options = ActivityOptionsCompat.
                         makeSceneTransitionAnimation((Activity) mContext, viewHolder.imgView, "profile");
-                mContext.startActivity(intent, options.toBundle());
+                ((Activity) mContext).startActivityForResult(intent, REQUEST_CODE ,options.toBundle());
             }
         });
 

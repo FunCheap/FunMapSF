@@ -41,6 +41,7 @@ public class HomeActivity extends AppCompatActivity implements
     private final String TAG_MAP_FRAGMENT = "map_fragment";
     private final String TAG_FILTERS_FRAGMENT = "filters_fragment";
     private final String TAG_BOOKMARKS_FRAGMENT = "bookmarks_fragment";
+    private static final int REQUEST_CODE = 1;
 
     @BindView(R.id.bottom_navigation)
     public BottomNavigation mBottomNav;
@@ -81,6 +82,16 @@ public class HomeActivity extends AppCompatActivity implements
             startActivity(intent);
         }
 
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode ==  REQUEST_CODE){
+            if(resultCode == RESULT_OK){
+                mHomeFragment.onActivityResult(REQUEST_CODE,RESULT_OK,data);
+            }
+        }
     }
 
     /**

@@ -78,6 +78,17 @@ public abstract class ListBaseFragment extends Fragment {
         });
     }
 
+    public void modifyAdapter(int position, boolean isBookmarked){
+        ((EventAdapter) mEventRecycler.getAdapter()).updateEventBookmark(position,isBookmarked);
+    }
+
+
+    public void modifyBookmarks(int position, boolean isBookmarked){
+        ((EventAdapter) mEventRecycler.getAdapter()).removeEventBookmark(position,isBookmarked);
+    }
+
+
+
     /**
      * This runs each time a change is detected in the list of Events.
      * @param eventsList the new list of Events.
