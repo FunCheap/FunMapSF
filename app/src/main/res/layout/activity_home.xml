@@ -5,26 +5,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <Toolbar
-        android:id="@+id/toolbar_main"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/height_toolbar"
-        android:background="@color/toolbar_blue">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="true"
-            android:src="@drawable/funcheaplogo" />
-
-    </Toolbar>
-
     <FrameLayout
         android:id="@+id/content_frame_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_navigation"
-        android:layout_below="@id/toolbar_main"/>
+        android:layout_above="@+id/bottom_navigation"/>
 
     <it.sephiroth.android.library.bottomnavigation.BottomNavigation
         android:id="@+id/bottom_navigation"
