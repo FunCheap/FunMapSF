@@ -143,7 +143,7 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-        <com.vpaliy.chips_lover.ChipsLayout
+        <org.apmem.tools.layouts.FlowLayout
             android:id="@+id/category_chips"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

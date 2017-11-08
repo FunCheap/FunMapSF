@@ -31,8 +31,8 @@ import com.funcheap.funmapsf.commons.utils.ChipUtils;
 import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
 import com.vpaliy.chips_lover.ChipView;
-import com.vpaliy.chips_lover.ChipsLayout;
 
+import org.apmem.tools.layouts.FlowLayout;
 import org.honorato.multistatetogglebutton.MultiStateToggleButton;
 
 import java.util.ArrayList;
@@ -80,7 +80,7 @@ public class HomeFragment extends Fragment
     @BindView(R.id.category_spin)
     Spinner mSpinCategory;
     @BindView(R.id.category_chips)
-    public ChipsLayout mChipsCategoryLayout;
+    public FlowLayout mChipsCategoryLayout;
     @BindView(R.id.query)
     public EditText mEditQuery;
 
@@ -237,6 +237,8 @@ public class HomeFragment extends Fragment
                         mCategoriesSelected.remove(clickedChip.getChipText());
                     });
                     mChipsCategoryLayout.addView(chip);
+                    ((ViewGroup.MarginLayoutParams) chip.getLayoutParams())
+                            .setMargins(0, 0, 20, 20);
                 }
             }
 
@@ -303,6 +305,9 @@ public class HomeFragment extends Fragment
                         mCategoriesSelected.remove(clickedChip.getChipText());
                     });
                     mChipsCategoryLayout.addView(chip);
+
+                    ((ViewGroup.MarginLayoutParams) chip.getLayoutParams())
+                            .setMargins(0, 0, 20, 20);
                 }
             }
         });

@@ -190,7 +190,7 @@
                     </FrameLayout>
                 </RelativeLayout>
 
-                <com.vpaliy.chips_lover.ChipsLayout
+                <org.apmem.tools.layouts.FlowLayout
                     android:id="@+id/llEventCategories"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
