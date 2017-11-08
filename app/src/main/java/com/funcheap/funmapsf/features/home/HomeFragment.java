@@ -231,8 +231,8 @@ public class HomeFragment extends Fragment
                     // Create category chip
                     ChipView chip = ChipUtils.createRemovableChip(category);
                     // Set up to remove chip when clicked
-                    chip.setOnClickListener( chipView -> {
-                        ChipView clickedChip = (ChipView) chipView;
+                    chip.setEndIconEventClick( endView -> {
+                        ChipView clickedChip = (ChipView) endView.getParent();
                         mChipsCategoryLayout.removeView(clickedChip);
                         mCategoriesSelected.remove(clickedChip.getChipText());
                     });
