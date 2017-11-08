@@ -1,7 +1,11 @@
 package com.funcheap.funmapsf.features.home;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
@@ -16,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -46,15 +49,13 @@ import butterknife.ButterKnife;
  * well as the filter settings and SaveFiler FAB
  */
 
-public class HomeFragment extends Fragment implements OnBackClickCallback {
+public class HomeFragment extends Fragment
+        implements OnBackClickCallback {
+
+    public static final int SAVE_REQUEST_CODE = 1;
 
     private static final String[] PLACES = new String[] {
             "San Francisco", "EastBay", "NorthBay", "Peninsula", "SouthBay"
-    };
-
-    private static final String[] CATEGORIES = new String[] {  // This can be fetched from database and dynamically filled
-            "Top Pick", "Annual Event", "Art & Museums", "Charity & Volunteering", "Club / DJ", "Comedy",
-            "Eating & Drinking","Fairs & Festivals","Free Stuff","Fun & Games","Live Music","Movies","Shopping & Fashion"
     };
 
     private MapsViewModel mMapsViewModel;
@@ -64,8 +65,6 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
     public ViewPager mHomePager;
     @BindView(R.id.tabs_home)
     public TabLayout mTabLayout;
-    @BindView(R.id.fab_save_filter)
-    public FloatingActionButton mFabSaveFilter;
 
     // Bottom Sheet
     @BindView(R.id.filter_bottom_sheet)
@@ -82,10 +81,15 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
     Spinner mSpinCategory;
     @BindView(R.id.category_chips)
     public ChipsLayout mChipsCategoryLayout;
-    @BindView(R.id.done)
-    public Button mButtonDone;
-    @BindView(R.id.search)
-    public EditText mEditSearch;
+    @BindView(R.id.query)
+    public EditText mEditQuery;
+
+    @BindView(R.id.fab_search)
+    public FloatingActionButton mFabSearch;
+    @BindView(R.id.fab_save)
+    public FloatingActionButton mFabSave;
+    @BindView(R.id.fab_apply)
+    public FloatingActionButton mFabApply;
 
     private BottomSheetBehavior mBottomSheetBehavior;
 
@@ -112,10 +116,10 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
 
         initHomePager();
         initBottomSheet();
+        initFabs();
         prepareWhenList();
         preparePlace();
         prepareCategories();
-        prepareDoneClick();
         initFilterChips();
         initFilterListener();
         mTogglePrice.setValue(0);
@@ -133,24 +137,64 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
         }
     }
 
+    // On FAB Click the filter is saved with filter name
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == SaveFilterDialogFragment.RESULT_SAVE) {
+            String filterName = data.getStringExtra(SaveFilterDialogFragment.EXTRA_FILTER_NAME);
+
+            Filter filter = mMapsViewModel.getFilter().getValue();
+            if (filter != null) {
+                filter.setFilterName(filterName);
+                filter.save();
+            }
+
+            searchDBandSendEvents();
+
+            // Delay bottom sheet collapse so keyboard has time to collapse first.
+            Handler handler = new Handler(Looper.getMainLooper());
+            final Runnable r = () -> mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            handler.postDelayed(r, 300);
+        }
+    }
+
     private void initHomePager() {
         mHomePager.setAdapter(new HomePagerAdapter(getChildFragmentManager(), getContext()));
         mTabLayout.setupWithViewPager(mHomePager);
-        mFabSaveFilter.setOnClickListener(
+    }
+
+    private void initFabs() {
+        mFabSearch.setOnClickListener(
+                view -> mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
+        );
+
+        mFabSave.setOnClickListener(
                 view -> {
-                    FragmentManager fm = getChildFragmentManager();
                     SaveFilterDialogFragment saveFilter = SaveFilterDialogFragment.newInstance();
+                    saveFilter.setTargetFragment(this, SAVE_REQUEST_CODE);
+
+                    FragmentManager fm;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        fm = getFragmentManager();
+                    } else {
+                        fm = getChildFragmentManager();
+                    }
                     saveFilter.show(fm, "save_flter");
                 });
+
+        mFabApply.setOnClickListener(view -> {
+            searchDBandSendEvents();
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        });
     }
 
     private void initBottomSheet() {
         mBottomSheetBehavior = BottomSheetBehavior.from(mFilterSheet);
         mBottomSheetBehavior.setHideable(false);
 
-        mChipsFilterLayout.setOnClickListener( view -> {
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-        });
+        mChipsFilterLayout.setOnClickListener(
+                view -> mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
     }
 
     private void prepareWhenList(){
@@ -203,16 +247,9 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
         });
     }
 
-    private void prepareDoneClick(){
-        mButtonDone.setOnClickListener(view -> {
-            searchDBandSendEvents();
-            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-        });
-    }
-
     private void searchDBandSendEvents(){
         Filter filter = new Filter();
-        filter.setQuery(mEditSearch.getText().toString());
+        filter.setQuery(mEditQuery.getText().toString());
         filter.setWhenDate((String)(mSpinWhen.getSelectedItem()));
         filter.setFree(mTogglePrice.getValue() == 1); // 1 == true == FREE, 0 == false == Any
         filter.setVenueQuery(mEditWhere.getText().toString());
@@ -247,7 +284,7 @@ public class HomeFragment extends Fragment implements OnBackClickCallback {
     private void initFilterListener() {
         mMapsViewModel.getFilter().observe(this, filter -> {
             if (filter != null) {
-                mEditSearch.setText(filter.getQuery());
+                mEditQuery.setText(filter.getQuery());
                 mSpinWhen.setSelection(mWhenList.indexOf(filter.getWhenDate()));
                 mEditWhere.setText(filter.getVenueQuery());
                 mTogglePrice.setValue( (filter.isFree()) ? 1 : 0 );

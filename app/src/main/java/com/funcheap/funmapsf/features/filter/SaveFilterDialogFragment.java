@@ -1,22 +1,18 @@
 package com.funcheap.funmapsf.features.filter;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.funcheap.funmapsf.R;
-import org.honorato.multistatetogglebutton.MultiStateToggleButton;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,9 +25,9 @@ import butterknife.ButterKnife;
 
 public class SaveFilterDialogFragment extends DialogFragment {
 
-    public interface SaveFilterListener{
-        public void saveFilter(String filterName);
-    }
+    public static final String EXTRA_FILTER_NAME = "filter_name";
+    public static final int RESULT_SAVE = 1;
+    public static final int REAULT_CANCEL = 0;
 
     private static final String TAG = "SaveFilterDialogFragment";
 
@@ -62,17 +58,15 @@ public class SaveFilterDialogFragment extends DialogFragment {
 
     private void prepareSaveClick(){
 
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!edit_filter_name.getText().toString().isEmpty()) {
-                    SaveFilterListener listener = (SaveFilterListener) getActivity();
-                    listener.saveFilter(edit_filter_name.getText().toString());
-                    dismiss();
-                }
-                else{
-                    Toast.makeText((getActivity().getApplicationContext()), "Cannot Save ! Filter name is empty", Toast.LENGTH_SHORT).show();
-                }
+        save.setOnClickListener(view -> {
+            if(!edit_filter_name.getText().toString().isEmpty()) {
+                Intent intent = new Intent();
+                intent.putExtra(EXTRA_FILTER_NAME, edit_filter_name.getText().toString());
+                getTargetFragment().onActivityResult(getTargetRequestCode(), 1, intent);
+                dismiss();
+            }
+            else{
+                Toast.makeText((getActivity().getApplicationContext()), "Cannot Save ! Filter name is empty", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -80,11 +74,9 @@ public class SaveFilterDialogFragment extends DialogFragment {
 
     private void prepareCancelClick(){
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
+        cancel.setOnClickListener(view -> {
+            getTargetFragment().onActivityResult(getTargetRequestCode(), 0, null);
+            dismiss();
         });
     }
 }

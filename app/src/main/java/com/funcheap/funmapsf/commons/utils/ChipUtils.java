@@ -41,8 +41,8 @@ public class ChipUtils {
         cb.setText(string);
         ChipView chipView = cb.build();
         chipView.setClickable(false);
-        chipView.setTextColor(ContextCompat.getColor(getContext(), R.color.primary_text_inverse));
-        chipView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary));
+        chipView.setTextColor(ContextCompat.getColor(getContext(), R.color.chips_text));
+        chipView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.chips_background));
 
         return chipView;
     }
@@ -52,8 +52,8 @@ public class ChipUtils {
         cb.setText(string);
         ChipView chipView = cb.build();
         chipView.setClickable(true);
-        chipView.setTextColor(ContextCompat.getColor(getContext(), R.color.primary_text_inverse));
-        chipView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary));
+        chipView.setTextColor(ContextCompat.getColor(getContext(), R.color.chips_text));
+        chipView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.chips_background));
 
         return chipView;
     }

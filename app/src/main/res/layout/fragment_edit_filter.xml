@@ -14,7 +14,7 @@
         android:id="@+id/filter_chips_scrollview"
         android:layout_width="0dp"
         android:layout_height="56dp"
-        android:background="@color/extra_extra_light_gray"
+        android:background="@color/colorWhite"
         android:clickable="false"
         android:scrollbarSize="@dimen/margin_tiny"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -34,12 +34,19 @@
     </HorizontalScrollView>
 
     <LinearLayout
+        android:id="@+id/horizontal_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"
+        app:layout_constraintTop_toBottomOf="@id/filter_chips_scrollview" />
+
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_standard"
         android:layout_marginStart="@dimen/margin_standard"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/done"
+        app:layout_constraintBottom_toTopOf="@+id/fab_save"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/filter_chips_scrollview"
@@ -58,7 +65,7 @@
                 android:src="@drawable/ic_magnify" />
 
             <EditText
-                android:id="@+id/search"
+                android:id="@+id/query"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -144,16 +151,29 @@
             android:layout_marginStart="36dp" />
     </LinearLayout>
 
-
-    <Button
-        android:id="@+id/done"
-        android:layout_width="0dp"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_save"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/light_blue"
-        android:text="@string/done"
-        android:textColor="@color/mdtp_white"
+        android:layout_marginBottom="@dimen/margin_standard"
+        android:src="@drawable/ic_content_save"
+        android:tint="@color/accent"
+        app:backgroundTint="@color/colorWhite"
+        app:elevation="6dp"
+        app:layout_constraintBottom_toTopOf="@id/fab_apply"
+        app:layout_constraintLeft_toLeftOf="@id/fab_apply"
+        app:layout_constraintRight_toRightOf="@id/fab_apply" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_apply"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_standard"
+        android:layout_marginEnd="@dimen/margin_fab"
+        android:src="@drawable/ic_check"
+        android:tint="@color/icon_tint_light"
+        app:elevation="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

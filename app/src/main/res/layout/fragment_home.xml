@@ -36,11 +36,11 @@
     </android.support.constraint.ConstraintLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_save_filter"
+        android:id="@+id/fab_search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_fab"
-        android:src="@drawable/ic_plus"
+        android:src="@drawable/ic_magnify"
         android:tint="@color/icon_tint_light"
         app:elevation="6dp"
         app:layout_anchor="@+id/filter_bottom_sheet"
