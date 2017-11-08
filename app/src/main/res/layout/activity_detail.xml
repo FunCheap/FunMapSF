@@ -51,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layoutAnimation="@anim/detail_activity_enter"
+            android:paddingBottom="@dimen/padding_detail_bottom"
             android:orientation="vertical">
 
             <TextView
