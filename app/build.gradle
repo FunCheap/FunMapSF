@@ -120,6 +120,10 @@ dependencies {
     //RV Animations
     compile 'com.daimajia.androidanimations:library:2.3@aar'
 
+    //Facebook integration
+    compile 'com.facebook.android:facebook-android-sdk:4.0.0'
+
+
 }
 
 
