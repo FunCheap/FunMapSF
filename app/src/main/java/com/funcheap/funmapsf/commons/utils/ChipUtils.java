@@ -57,7 +57,7 @@ public class ChipUtils {
         cb.setText(string);
         cb.setCloseable(false);
         cb.setEndIconDrawable(getContext().getResources().getDrawable(R.drawable.ic_close));
-        cb.setEndIconColor(getContext().getResources().getColor(R.color.primary_darker));
+        cb.setEndIconColor(getContext().getResources().getColor(R.color.chips_close));
         ChipView chipView = cb.build();
         chipView.setClickable(true);
         chipView.setTextColor(ContextCompat.getColor(getContext(), R.color.chips_text));
