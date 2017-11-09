@@ -192,7 +192,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void setMapUISettings() {
-        getMap().getUiSettings().setZoomControlsEnabled(true);
+        getMap().getUiSettings().setZoomControlsEnabled(false);
         getMap().getUiSettings().setRotateGesturesEnabled(false);
         getMap().getUiSettings().setScrollGesturesEnabled(true);
         getMap().getUiSettings().setTiltGesturesEnabled(false);

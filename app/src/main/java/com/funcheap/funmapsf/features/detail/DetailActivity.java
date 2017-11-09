@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -85,6 +86,8 @@ public class DetailActivity extends AppCompatActivity {
     ImageView ivBackdrop;
     @BindView(R.id.tvContent)
     HtmlTextView tvContent;
+    @BindView(R.id.map_card)
+    ConstraintLayout mapLayout;
 
     private DetailViewModel mDetailViewModel;
 
@@ -299,6 +302,8 @@ public class DetailActivity extends AppCompatActivity {
                         .strokeColor(ContextCompat.getColor(this, R.color.primary_light))
                         .fillColor(ContextCompat.getColor(this, R.color.primary))
                         .radius(50));
+
+                m_map.setOnMapClickListener(latLng -> onDirectionsClick(null));
             });
         } else {
             Toast.makeText(this, "Error - Map Fragment was null!!", Toast.LENGTH_SHORT).show();
