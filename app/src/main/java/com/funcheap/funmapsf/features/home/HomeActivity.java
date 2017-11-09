@@ -8,7 +8,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.database.MyDatabase;
@@ -41,6 +44,8 @@ public class HomeActivity extends AppCompatActivity {
 
     @BindView(R.id.bottom_navigation)
     public BottomNavigation mBottomNav;
+    @BindView(R.id.toolbar_main)
+    public Toolbar mToolbar;
 
     public MapsViewModel mMapsModel;
     public ListFilterViewModel mListFiltersViewModel;
@@ -57,12 +62,45 @@ public class HomeActivity extends AppCompatActivity {
         mMapsModel = ViewModelProviders.of(this).get(MapsViewModel.class);
         mListFiltersViewModel = ViewModelProviders.of(this).get(ListFilterViewModel.class);
 
+        initToolbar();
         checkNotification();
         initBottomNav();
         loadFragments();
 
         db = new MyDatabase(this);
         db.getDB();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.home_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle presses on the action bar items
+        switch (item.getItemId()) {
+            case R.id.action_filters:
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.addToBackStack(null)
+                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                        .add(R.id.content_frame_home, ListFiltersFragment.newInstance(), TAG_FILTERS_FRAGMENT)
+                        .commit();
+                return true;
+            case R.id.action_switch_view:
+//                showProfileView();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void initToolbar() {
+        this.setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("");
+        // TODO Tint toolbar icons
     }
 
     /**
@@ -165,7 +203,8 @@ public class HomeActivity extends AppCompatActivity {
      * @param filter new filter to use
      */
     public void setFilter(Filter filter) {
+        // TODO This is showing the bottomsheet for some reason.
+        getSupportFragmentManager().popBackStack();
         mMapsModel.setFilter(filter);
-        mBottomNav.setSelectedIndex(0, true);
     }
 }

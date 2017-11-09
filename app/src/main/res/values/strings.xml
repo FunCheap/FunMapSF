@@ -87,4 +87,9 @@
     <string name="facebook_app_id">305967693253372</string>
     <string name="fb_login_protocol_scheme">fb305967693253372</string>
 
+    <!-- Toolbar -->
+    <string name="menu_saved_filters">Saved Filters</string>
+    <string name="menu_switch_view">Switch View</string>
+    <string name="menu_map_view">Map View</string>
+
 </resources>
