@@ -60,8 +60,8 @@ public class EditFilterDiaglogFragment extends BottomSheetDialogFragment {
     MultiStateToggleButton price_mstb;
     @BindView(R.id.category_spin) Spinner category_spin;
     @BindView(R.id.category_chips) GridView grid_button_list;
-    @BindView(R.id.done) Button done;
-    @BindView(R.id.search) EditText search;
+    @BindView(R.id.fab_save) Button done;
+    @BindView(R.id.query) EditText search;
     ArrayList<String> whenList;
     Context mCtx;
 
@@ -185,7 +185,7 @@ public class EditFilterDiaglogFragment extends BottomSheetDialogFragment {
         // Complete filter
         mMapsViewModel.setFilter(filter);
 
-        //Todo: mEditSearch the db with all the chosen parameters
+        //Todo: mEditQuery the db with all the chosen parameters
     }
 
     private void prepareSelectedFragment(){

@@ -101,7 +101,10 @@ dependencies {
 
     // ChipsLover
     compile 'com.github.vpaliyX:ChipsLover:v1.2'
-    
+
+    // FlowLayout
+    compile 'org.apmem.tools:layouts:1.10@aar'
+
     compile 'org.sufficientlysecure:html-textview:3.5'
     compile files('libs/jsoup-1.10.3.jar')
 

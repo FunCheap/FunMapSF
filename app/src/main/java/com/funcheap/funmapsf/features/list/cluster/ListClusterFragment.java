@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.funcheap.funmapsf.commons.models.Events;
 import com.funcheap.funmapsf.features.list.ListBaseFragment;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -45,6 +46,9 @@ public class ListClusterFragment extends ListBaseFragment {
         // Get passed cluster and hand it to our ViewModel
         Intent intent = getActivity().getIntent();
         List<Events> eventsList = intent.getParcelableArrayListExtra(EVENT_LIST_EXTRA);
+
+        Collections.sort(eventsList,
+                (event1, event2) -> event1.getStartDate().compareTo(event2.getStartDate()));
 
         MutableLiveData<List<Events>> mutableLiveData = new MutableLiveData<>();
         mutableLiveData.setValue(eventsList);

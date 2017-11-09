@@ -19,7 +19,8 @@ import com.funcheap.funmapsf.features.filter.list.ListFilterViewModel;
 import com.funcheap.funmapsf.features.home.HomeActivity;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.vpaliy.chips_lover.ChipView;
-import com.vpaliy.chips_lover.ChipsLayout;
+
+import org.apmem.tools.layouts.FlowLayout;
 
 import java.util.List;
 
@@ -72,12 +73,14 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
         viewHolder.txtTitle.setText(filter.getFilterName());
 
         // Populate Filter Chips Layout
-        ChipsLayout chipsLayout = viewHolder.chipsParams;
+        FlowLayout chipsLayout = viewHolder.chipsParams;
         chipsLayout.removeAllViews();
         List<ChipView> chipList = ChipUtils.chipsFromFilter(filter);
 
         for (ChipView chipView : chipList) {
             chipsLayout.addView(chipView);
+            ((ViewGroup.MarginLayoutParams) chipView.getLayoutParams())
+                    .setMargins(0, 0, 20, 20);
         }
 
         // Set the filter when it's clicked
@@ -99,7 +102,7 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
         @BindView(R.id.text_title)
         public TextView txtTitle;
         @BindView(R.id.chip_params)
-        public ChipsLayout chipsParams;
+        public FlowLayout chipsParams;
         @BindView(R.id.img_delete_filter)
         public ImageView btnDelete;
 

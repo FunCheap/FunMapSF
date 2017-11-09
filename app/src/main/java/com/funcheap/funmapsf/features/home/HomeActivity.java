@@ -15,8 +15,6 @@ import com.funcheap.funmapsf.commons.database.MyDatabase;
 import com.funcheap.funmapsf.commons.interfaces.OnBackClickCallback;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
-import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
-import com.funcheap.funmapsf.features.filter.edit.EditFilterDiaglogFragment;
 import com.funcheap.funmapsf.features.filter.list.ListFilterViewModel;
 import com.funcheap.funmapsf.features.filter.list.ListFiltersFragment;
 import com.funcheap.funmapsf.features.list.bookmarks.ListBookmarksFragment;
@@ -33,8 +31,7 @@ import it.sephiroth.android.library.bottomnavigation.BottomNavigation;
  * loads different fragments within the content container.
  */
 
-public class HomeActivity extends AppCompatActivity implements
-        SaveFilterDialogFragment.SaveFilterListener {
+public class HomeActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getSimpleName();
 
@@ -170,16 +167,6 @@ public class HomeActivity extends AppCompatActivity implements
                 // Selected fragment did not consume the back press event.
                 super.onBackPressed();
             }
-        }
-    }
-
-    // On FAB Click the filter is saved with filter name
-    @Override
-    public void saveFilter(String filterName) {
-        Filter filter = mMapsModel.getFilter().getValue();
-        if (filter != null) {
-            filter.setFilterName(filterName);
-            filter.save();
         }
     }
 

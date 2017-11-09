@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_medium"
-    app:cardBackgroundColor="@color/primary">
+    app:cardBackgroundColor="@color/primary"
+    app:cardCornerRadius="0dp">
 
     <TextView
         android:id="@+id/header_date_time"

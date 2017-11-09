@@ -41,8 +41,8 @@ public class ChipUtils {
         cb.setText(string);
         ChipView chipView = cb.build();
         chipView.setClickable(false);
-        chipView.setTextColor(ContextCompat.getColor(getContext(), R.color.primary_text_inverse));
-        chipView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary));
+        chipView.setTextColor(ContextCompat.getColor(getContext(), R.color.chips_text));
+        chipView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.chips_background));
 
         return chipView;
     }
@@ -50,10 +50,13 @@ public class ChipUtils {
     public static ChipView createRemovableChip(String string) {
         ChipBuilder cb = ChipBuilder.create(getContext());
         cb.setText(string);
+        cb.setCloseable(false);
+        cb.setEndIconDrawable(getContext().getResources().getDrawable(R.drawable.ic_close));
+        cb.setEndIconColor(getContext().getResources().getColor(R.color.primary_darker));
         ChipView chipView = cb.build();
         chipView.setClickable(true);
-        chipView.setTextColor(ContextCompat.getColor(getContext(), R.color.primary_text_inverse));
-        chipView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary));
+        chipView.setTextColor(ContextCompat.getColor(getContext(), R.color.chips_text));
+        chipView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.chips_background));
 
         return chipView;
     }
