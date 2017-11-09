@@ -27,11 +27,16 @@ public class ChipUtils {
     public static List<ChipView> chipsFromFilter(Filter filter){
         ArrayList<ChipView> list = new ArrayList<>();
 
-        list.add(createSimpleChip(whatString(filter)));
-        list.add(createSimpleChip(costString(filter)));
-        list.add(createSimpleChip(whereString(filter)));
-        list.add(createSimpleChip(whenString(filter)));
-        list.addAll(createSimpleChip(categoryStrings(filter)));
+        if (!"".equals(whatString(filter)))
+            list.add(createSimpleChip(whatString(filter)));
+        if (!"".equals(whenString(filter)))
+            list.add(createSimpleChip(whenString(filter)));
+        if (!"".equals(whereString(filter)))
+            list.add(createSimpleChip(whereString(filter)));
+        if (!"".equals(costString(filter)))
+            list.add(createSimpleChip(costString(filter)));
+        if (!categoryStrings(filter).isEmpty())
+            list.addAll(createSimpleChip(categoryStrings(filter)));
 
         return list;
     }
@@ -71,9 +76,9 @@ public class ChipUtils {
 
     private static String whatString(Filter filter) {
         if ("".equals(filter.getQuery())) {
-            return "Any Event";
+            return "";
         } else {
-            return filter.getQuery();
+            return "\"" + filter.getQuery() + "\"";
         }
     }
 
@@ -81,21 +86,21 @@ public class ChipUtils {
         if (filter.isFree()) {
             return "Free";
         } else {
-            return "Any Price";
+            return "";
         }
     }
 
     private static String whereString(Filter filter) {
         if ("".equals(filter.getVenueQuery())) {
-            return "Anywhere";
+            return "";
         } else {
-            return filter.getVenueQuery();
+            return "In " + filter.getVenueQuery();
         }
     }
 
     private static String whenString(Filter filter) {
         if ("".equals(filter.getWhenDate())){
-            return "Any Time";
+            return "";
         } else {
             return filter.getWhenDate();
         }
