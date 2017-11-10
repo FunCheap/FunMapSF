@@ -2,8 +2,11 @@ package com.funcheap.funmapsf.commons.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.graphics.drawable.BitmapDrawable;
 
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Events;
@@ -43,8 +46,12 @@ public class EventRenderer extends DefaultClusterRenderer<Events> {
 
     @Override
     protected void onBeforeClusterItemRendered(Events event, MarkerOptions markerOptions) {
-        Bitmap icon = mIconGenerator.makeIcon("1");
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(event.getTitle());
+        Drawable drawable = mCtx.getResources().getDrawable(R.drawable.maps_icon_background);
+        Bitmap marker = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(),Bitmap.Config.ARGB_8888 );
+        Canvas canvas = new Canvas(marker);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(marker)).title(event.getTitle());
     }
 
     @Override
