@@ -108,18 +108,13 @@ public class DateCostFormatter {
     public static String formatContent(String content)
     {
         String retContent = "";
-
         try
         {
             Document doc = Jsoup.parse(content);
             Elements paragraphs = doc.select("p");
             for(Element p : paragraphs)
-                retContent += "<br>" + p.text() + "</br>";
-    /*
-            Document doc = Jsoup.parseBodyFragment(content);
-            Element body = doc.body();
-            retContent = "<p>" + body.text() +"</p>";
-         */
+                if (!p.text().isEmpty())
+                    retContent += "<br>" + p.text() + "</br>";
         }
         catch (Exception ex)
         {
