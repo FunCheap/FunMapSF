@@ -10,10 +10,9 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -29,6 +29,8 @@ import com.funcheap.funmapsf.commons.interfaces.OnBackClickCallback;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.commons.utils.ChipUtils;
 import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
+import com.funcheap.funmapsf.features.list.home.ListHomeFragment;
+import com.funcheap.funmapsf.features.map.MapFragment;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
 import com.vpaliy.chips_lover.ChipView;
 
@@ -59,13 +61,14 @@ public class HomeFragment extends Fragment
             "Palo Alto", "Fremont", "San Jose", "Santa Clara", "Livermore", "Dublin", "Burlingame", "San Carlos"
     };
 
+    private static final String TAG_MAP_FRAGMENT = "map_fragment";
+    private static final String TAG_LIST_FRAGMENT = "list_fragment";
+
     private MapsViewModel mMapsViewModel;
 
-    // Home Fragment
-    @BindView(R.id.pager_container_home)
-    public ViewPager mHomePager;
-    @BindView(R.id.tabs_home)
-    public TabLayout mTabLayout;
+    // Fragment Container
+    @BindView(R.id.content_frame_home_fragment)
+    public FrameLayout mHomeContainer;
 
     // Bottom Sheet
     @BindView(R.id.filter_bottom_sheet)
@@ -92,6 +95,9 @@ public class HomeFragment extends Fragment
     @BindView(R.id.fab_apply)
     public FloatingActionButton mFabApply;
 
+    MapFragment mMapFragment;
+    ListHomeFragment mListHomeFragment;
+
     private BottomSheetBehavior mBottomSheetBehavior;
 
     ArrayList<String> mWhenList;
@@ -115,7 +121,7 @@ public class HomeFragment extends Fragment
 
         mMapsViewModel = ViewModelProviders.of(getActivity()).get(MapsViewModel.class);
 
-        initHomePager();
+        initHomeContainer();
         initBottomSheet();
         initFabs();
         prepareWhenList();
@@ -126,6 +132,48 @@ public class HomeFragment extends Fragment
         mTogglePrice.setValue(0);
 
         return root;
+    }
+
+    private void initHomeContainer() {
+
+        mMapFragment = MapFragment.newInstance();
+        mListHomeFragment = ListHomeFragment.newInstance();
+
+        // Load initial fragment
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.disallowAddToBackStack()
+                .add(R.id.content_frame_home_fragment, mMapFragment, TAG_MAP_FRAGMENT)
+                .add(R.id.content_frame_home_fragment, mListHomeFragment, TAG_LIST_FRAGMENT)
+                .hide(mListHomeFragment)
+                .commit();
+
+        mMapsViewModel.getListMode().observe(this, isListMode -> {
+            FragmentTransaction transaction = fm.beginTransaction();
+
+            if (!isListMode) { // Show Map
+                if (mMapFragment.isAdded()) {
+                    transaction.show(mMapFragment);
+                } else {
+                    transaction.add(R.id.content_frame_home_fragment, mMapFragment, TAG_MAP_FRAGMENT);
+                }
+
+                if (mListHomeFragment.isAdded())
+                    transaction.hide(mListHomeFragment);
+            } else { // Show List
+                if (mListHomeFragment.isAdded()) {
+                    transaction.show(mListHomeFragment);
+                } else {
+                    transaction.add(R.id.content_frame_home_fragment, mListHomeFragment, TAG_LIST_FRAGMENT);
+                }
+
+                if (mMapFragment.isAdded()) {
+                    transaction.hide(mMapFragment);
+                }
+            }
+
+            transaction.commit();
+        });
     }
 
     @Override
@@ -158,11 +206,6 @@ public class HomeFragment extends Fragment
             final Runnable r = () -> mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             handler.postDelayed(r, 300);
         }
-    }
-
-    private void initHomePager() {
-        mHomePager.setAdapter(new HomePagerAdapter(getChildFragmentManager(), getContext()));
-        mTabLayout.setupWithViewPager(mHomePager);
     }
 
     private void initFabs() {
@@ -198,7 +241,7 @@ public class HomeFragment extends Fragment
                 view -> mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
     }
 
-    private void prepareWhenList(){
+    private void prepareWhenList() {
         List<String> temp = Arrays.asList(getResources().getStringArray(R.array.when_array));
         mWhenList = new ArrayList<>(temp);
         ArrayAdapter<String> spinAdp =
@@ -206,13 +249,13 @@ public class HomeFragment extends Fragment
         mSpinWhen.setAdapter(spinAdp);
     }
 
-    private void preparePlace(){
+    private void preparePlace() {
         ArrayAdapter<String> placeAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_dropdown_item_1line, PLACES);
         mEditWhere.setAdapter(placeAdapter);
     }
 
-    private void prepareCategories(){
+    private void prepareCategories() {
         List<String> temp = Arrays.asList(
                 getResources().getStringArray(R.array.categories_array));
         mCategoryList = new ArrayList<>(temp);
@@ -232,7 +275,7 @@ public class HomeFragment extends Fragment
                     // Create category chip
                     ChipView chip = ChipUtils.createRemovableChip(category);
                     // Set up to remove chip when clicked
-                    chip.setEndIconEventClick( endView -> {
+                    chip.setEndIconEventClick(endView -> {
                         ChipView clickedChip = (ChipView) endView.getParent();
                         mChipsCategoryLayout.removeView(clickedChip);
                         mCategoriesSelected.remove(clickedChip.getChipText());
@@ -250,13 +293,13 @@ public class HomeFragment extends Fragment
         });
     }
 
-    private void searchDBandSendEvents(){
+    private void searchDBandSendEvents() {
         Filter filter = new Filter();
         filter.setQuery(mEditQuery.getText().toString());
-        filter.setWhenDate((String)(mSpinWhen.getSelectedItem()));
+        filter.setWhenDate((String) (mSpinWhen.getSelectedItem()));
         filter.setFree(mTogglePrice.getValue() == 1); // 1 == true == FREE, 0 == false == Any
         filter.setVenueQuery(mEditWhere.getText().toString());
-        if(mCategoriesSelected.size()!=0)
+        if (mCategoriesSelected.size() != 0)
             filter.setCategories(mCategoriesSelected.toString());
         else
             filter.setCategories("default");
@@ -290,7 +333,7 @@ public class HomeFragment extends Fragment
                 mEditQuery.setText(filter.getQuery());
                 mSpinWhen.setSelection(mWhenList.indexOf(filter.getWhenDate()));
                 mEditWhere.setText(filter.getVenueQuery());
-                mTogglePrice.setValue( (filter.isFree()) ? 1 : 0 );
+                mTogglePrice.setValue((filter.isFree()) ? 1 : 0);
 
                 // Edit category chips
                 mCategoriesSelected.clear();
@@ -300,7 +343,7 @@ public class HomeFragment extends Fragment
                     // Create category chip
                     ChipView chip = ChipUtils.createRemovableChip(s);
                     // Set up to remove chip when clicked
-                    chip.setOnClickListener( chipView -> {
+                    chip.setOnClickListener(chipView -> {
                         ChipView clickedChip = (ChipView) chipView;
                         mChipsCategoryLayout.removeView(clickedChip);
                         mCategoriesSelected.remove(clickedChip.getChipText());

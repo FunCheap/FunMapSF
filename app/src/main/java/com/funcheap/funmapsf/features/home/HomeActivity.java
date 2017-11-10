@@ -47,7 +47,7 @@ public class HomeActivity extends AppCompatActivity {
     @BindView(R.id.toolbar_main)
     public Toolbar mToolbar;
 
-    public MapsViewModel mMapsModel;
+    public MapsViewModel mMapViewModel;
     public ListFilterViewModel mListFiltersViewModel;
     private MyDatabase db;
 
@@ -59,7 +59,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
-        mMapsModel = ViewModelProviders.of(this).get(MapsViewModel.class);
+        mMapViewModel = ViewModelProviders.of(this).get(MapsViewModel.class);
         mListFiltersViewModel = ViewModelProviders.of(this).get(ListFilterViewModel.class);
 
         initToolbar();
@@ -90,7 +90,7 @@ public class HomeActivity extends AppCompatActivity {
                         .commit();
                 return true;
             case R.id.action_switch_view:
-//                showProfileView();
+                mMapViewModel.toggleListMode();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -205,6 +205,6 @@ public class HomeActivity extends AppCompatActivity {
     public void setFilter(Filter filter) {
         // TODO This is showing the bottomsheet for some reason.
         getSupportFragmentManager().popBackStack();
-        mMapsModel.setFilter(filter);
+        mMapViewModel.setFilter(filter);
     }
 }

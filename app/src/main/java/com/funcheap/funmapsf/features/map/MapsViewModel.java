@@ -25,9 +25,17 @@ public class MapsViewModel extends ViewModel {
     private final String TAG = this.getClass().getSimpleName();
 
     private EventsRepoSingleton mEventsRepo;
-    MutableLiveData<Boolean> mIsLoading = new MutableLiveData<>();
 
+    // Whether or not to show a loading state
+    private MutableLiveData<Boolean> mIsLoading = new MutableLiveData<>();
+    // true -> ListMode, false -> MapMode
+    private MutableLiveData<Boolean> mListMode;
+    // true -> BookmarksMode, false -> SearchMode
+    private MutableLiveData<Boolean> mBookmarksMode = new MutableLiveData<>();
+    // The currently displayed filter
     private MutableLiveData<Filter> mCurrentFilter = new MutableLiveData<>();
+    // The previous filter while the user is browsing bookmarks
+    private Filter mTempFilter;
     // Holds the events to show on the map
     private LiveData<List<Events>> mEventsLiveData = Transformations.switchMap(mCurrentFilter,
             (filter) -> {
@@ -74,6 +82,18 @@ public class MapsViewModel extends ViewModel {
 
     public void setEvents(List<Events> list){
         ((MutableLiveData)mEventsLiveData).setValue(list);
+    }
+
+    public LiveData<Boolean> getListMode() {
+        if (mListMode == null) {
+            mListMode = new MutableLiveData<>();
+            mListMode.setValue(false);
+        }
+        return mListMode;
+    }
+
+    public void toggleListMode() {
+        mListMode.setValue(!mListMode.getValue());
     }
 
 }

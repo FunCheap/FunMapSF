@@ -198,7 +198,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         getMap().getUiSettings().setRotateGesturesEnabled(false);
         getMap().getUiSettings().setScrollGesturesEnabled(true);
         getMap().getUiSettings().setTiltGesturesEnabled(false);
-        getMap().setPadding(0, 0, 0, 250);
+        getMap().setPadding(0, 0, 0, 210);
 
     }
     private boolean checkPermission() {
