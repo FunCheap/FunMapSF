@@ -13,7 +13,9 @@
             android:height="5dp"/>
     </shape>
     </item>
-    <item android:drawable="@drawable/music"
+    <item
+        android:id="@+id/icon_drawable"
+        android:drawable="@drawable/ic_star_white"
         android:bottom="2dp"
         android:left="2dp"
         android:right="2dp"
