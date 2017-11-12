@@ -55,7 +55,8 @@ public class HomeFragment extends Fragment
     public static final int SAVE_REQUEST_CODE = 1;
 
     private static final String[] PLACES = new String[] {
-            "San Francisco", "EastBay", "NorthBay", "Peninsula", "SouthBay"
+            "San Francisco", "Oakland", "Berkeley", "Mill Valley", "Mountain View", "Brisbane", "Alameda",
+            "Palo Alto", "Fremont", "San Jose", "Santa Clara", "Livermore", "Dublin", "Burlingame", "San Carlos"
     };
 
     private MapsViewModel mMapsViewModel;
