@@ -114,7 +114,7 @@ public class DateCostFormatter {
             Elements paragraphs = doc.select("p");
             for(Element p : paragraphs)
                 if (!p.text().isEmpty())
-                    retContent += "<br>" + p.text() + "</br>";
+                    retContent += p.text() + "<br><br>";
         }
         catch (Exception ex)
         {
