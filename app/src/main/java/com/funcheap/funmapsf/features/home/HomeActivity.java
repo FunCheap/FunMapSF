@@ -19,7 +19,7 @@ import com.funcheap.funmapsf.commons.interfaces.OnBackClickCallback;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
 import com.funcheap.funmapsf.features.filter.list.ListFilterViewModel;
-import com.funcheap.funmapsf.features.filter.list.ListFiltersFragment;
+import com.funcheap.funmapsf.features.filter.list.ListFiltersActivity;
 import com.funcheap.funmapsf.features.list.bookmarks.ListBookmarksFragment;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
 
@@ -41,6 +41,8 @@ public class HomeActivity extends AppCompatActivity {
     private final String TAG_MAP_FRAGMENT = "map_fragment";
     private final String TAG_FILTERS_FRAGMENT = "filters_fragment";
     private final String TAG_BOOKMARKS_FRAGMENT = "bookmarks_fragment";
+
+    private final int REQUEST_CODE = 0;
 
     @BindView(R.id.bottom_navigation)
     public BottomNavigation mBottomNav;
@@ -158,7 +160,7 @@ public class HomeActivity extends AppCompatActivity {
                                 if (fm.findFragmentByTag(TAG_BOOKMARKS_FRAGMENT) != null) {
                                     ft.remove(getSupportFragmentManager().findFragmentByTag(TAG_BOOKMARKS_FRAGMENT));
                                 }
-                                ft.add(R.id.content_frame_home, ListFiltersFragment.newInstance(), TAG_FILTERS_FRAGMENT)
+                                ft.add(R.id.content_frame_home, ListFiltersActivity.newInstance(), TAG_FILTERS_FRAGMENT)
                                         .commit();
                                 break;
                             case R.id.action_bookmarks:
@@ -184,6 +186,11 @@ public class HomeActivity extends AppCompatActivity {
                 });
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    }
 
     @Override
     public void onBackPressed() {
