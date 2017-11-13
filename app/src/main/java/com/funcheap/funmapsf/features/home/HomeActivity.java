@@ -15,13 +15,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.funcheap.funmapsf.R;
-import com.funcheap.funmapsf.commons.database.MyDatabase;
 import com.funcheap.funmapsf.commons.interfaces.OnBackClickCallback;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
-import com.funcheap.funmapsf.features.filter.list.ListFilterViewModel;
 import com.funcheap.funmapsf.features.filter.list.ListFiltersActivity;
-import com.funcheap.funmapsf.features.list.bookmarks.ListBookmarksFragment;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
 
 import butterknife.BindView;
@@ -50,8 +47,6 @@ public class HomeActivity extends AppCompatActivity {
     public Toolbar mToolbar;
 
     public MapsViewModel mMapViewModel;
-    public ListFilterViewModel mListFiltersViewModel;
-    private MyDatabase db;
 
     private HomeFragment mHomeFragment = (HomeFragment) HomeFragment.newInstance();
 
@@ -62,15 +57,12 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mMapViewModel = ViewModelProviders.of(this).get(MapsViewModel.class);
-        mListFiltersViewModel = ViewModelProviders.of(this).get(ListFilterViewModel.class);
 
         initToolbar();
         checkNotification();
         initBottomNav();
         loadFragments();
 
-        db = new MyDatabase(this);
-        db.getDB();
     }
 
     @Override
@@ -138,26 +130,12 @@ public class HomeActivity extends AppCompatActivity {
                         FragmentTransaction ft = fm.beginTransaction();
                         switch (item) {
                             case R.id.action_search:
-                                ft.disallowAddToBackStack();
-                                ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-                                if (fm.findFragmentByTag(TAG_FILTERS_FRAGMENT) != null) {
-                                    ft.remove(getSupportFragmentManager().findFragmentByTag(TAG_FILTERS_FRAGMENT));
-                                }
-                                if (fm.findFragmentByTag(TAG_BOOKMARKS_FRAGMENT) != null) {
-                                    ft.remove(getSupportFragmentManager().findFragmentByTag(TAG_BOOKMARKS_FRAGMENT));
-                                }
-                                ft.show(mHomeFragment)
-                                        .commit();
+                                // Handle 'Search' button click
+                                mMapViewModel.setDisplayMode(mMapViewModel.SEARCH_MODE);
                                 break;
                             case R.id.action_bookmarks:
-                                ft.disallowAddToBackStack()
-                                        .hide(mHomeFragment);
-                                ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-                                if (fm.findFragmentByTag(TAG_FILTERS_FRAGMENT) != null) {
-                                    ft.remove(getSupportFragmentManager().findFragmentByTag(TAG_FILTERS_FRAGMENT));
-                                }
-                                ft.add(R.id.content_frame_home, ListBookmarksFragment.newInstance(), TAG_BOOKMARKS_FRAGMENT)
-                                        .commit();
+                                // Handle 'Bookmark' button click
+                                mMapViewModel.setDisplayMode(mMapViewModel.BOOKMARKS_MODE);
                                 break;
                             default:
                                 Log.d(TAG, "initBottomNav: Unrecognized menu selection!");

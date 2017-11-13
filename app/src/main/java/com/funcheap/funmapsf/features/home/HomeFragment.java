@@ -124,6 +124,7 @@ public class HomeFragment extends Fragment
         initHomeContainer();
         initBottomSheet();
         initFabs();
+        initSearchMode();
         prepareWhenList();
         preparePlace();
         prepareCategories();
@@ -173,6 +174,21 @@ public class HomeFragment extends Fragment
             }
 
             transaction.commit();
+        });
+    }
+
+    /**
+     * Handle UI toggles between Search mode and Bookmarks mode
+     */
+    private void initSearchMode() {
+        mMapsViewModel.getDisplayMode().observe( this, displayMode -> {
+            if (displayMode == MapsViewModel.SEARCH_MODE) {
+                mBottomSheetBehavior.setHideable(false);
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+            } else if (displayMode == MapsViewModel.BOOKMARKS_MODE) {
+                mBottomSheetBehavior.setHideable(true);
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
         });
     }
 
