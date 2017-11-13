@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 
 public class ListFiltersActivity extends FragmentActivity {
 
-    public final String EXTRA_FILTER_RESULT = "filter_result";
+    public static final String EXTRA_FILTER_RESULT = "filter_result";
 
     private ListFilterViewModel mListFilterViewModel;
 

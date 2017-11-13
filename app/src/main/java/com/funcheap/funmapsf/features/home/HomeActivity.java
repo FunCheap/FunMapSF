@@ -1,5 +1,6 @@
 package com.funcheap.funmapsf.features.home;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,11 +39,10 @@ public class HomeActivity extends AppCompatActivity {
 
     private final String TAG = this.getClass().getSimpleName();
 
+    public final int REQUEST_CODE_SAVED_FILTERS = 0;
     private final String TAG_MAP_FRAGMENT = "map_fragment";
     private final String TAG_FILTERS_FRAGMENT = "filters_fragment";
     private final String TAG_BOOKMARKS_FRAGMENT = "bookmarks_fragment";
-
-    private final int REQUEST_CODE = 0;
 
     @BindView(R.id.bottom_navigation)
     public BottomNavigation mBottomNav;
@@ -84,12 +84,8 @@ public class HomeActivity extends AppCompatActivity {
         // Handle presses on the action bar items
         switch (item.getItemId()) {
             case R.id.action_filters:
-                FragmentManager fm = getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.addToBackStack(null)
-                        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                        .add(R.id.content_frame_home, ListFiltersFragment.newInstance(), TAG_FILTERS_FRAGMENT)
-                        .commit();
+                Intent intent = new Intent(this, ListFiltersActivity.class);
+                startActivityForResult(intent, REQUEST_CODE_SAVED_FILTERS);
                 return true;
             case R.id.action_switch_view:
                 mMapViewModel.toggleListMode();
@@ -153,16 +149,6 @@ public class HomeActivity extends AppCompatActivity {
                                 ft.show(mHomeFragment)
                                         .commit();
                                 break;
-                            case R.id.action_filters:
-                                ft.disallowAddToBackStack()
-                                        .hide(mHomeFragment);
-                                ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
-                                if (fm.findFragmentByTag(TAG_BOOKMARKS_FRAGMENT) != null) {
-                                    ft.remove(getSupportFragmentManager().findFragmentByTag(TAG_BOOKMARKS_FRAGMENT));
-                                }
-                                ft.add(R.id.content_frame_home, ListFiltersActivity.newInstance(), TAG_FILTERS_FRAGMENT)
-                                        .commit();
-                                break;
                             case R.id.action_bookmarks:
                                 ft.disallowAddToBackStack()
                                         .hide(mHomeFragment);
@@ -189,7 +175,18 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        switch (requestCode) {
+            case REQUEST_CODE_SAVED_FILTERS:
+                // Set the current filter to the returned saved filter
+                if (resultCode == Activity.RESULT_OK) {
+                    Log.d(TAG, "onActivityResult: User applied a saved filter.");
+                    mMapViewModel.setFilter(
+                            data.getParcelableExtra(ListFiltersActivity.EXTRA_FILTER_RESULT));
+                } else {
+                    Log.d(TAG, "onActivityResult: User canceled aplying a saved filter.");
+                }
+                break;
+        }
     }
 
     @Override

@@ -176,6 +176,10 @@ public class HomeFragment extends Fragment
         });
     }
 
+    /**
+     * Hook to consume the back click provided to the parent activity.
+     * @return true if we consumed the back click, false otherwise.
+     */
     @Override
     public boolean onBackClick() {
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
