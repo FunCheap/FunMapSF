@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
     private final String TAG = this.getClass().getSimpleName();
 
     public final int REQUEST_CODE_SAVED_FILTERS = 0;
-    private final String TAG_MAP_FRAGMENT = "map_fragment";
+    private final String TAG_HOME_FRAGMENT = "home_fragment";
     private final String TAG_FILTERS_FRAGMENT = "filters_fragment";
     private final String TAG_BOOKMARKS_FRAGMENT = "bookmarks_fragment";
 
@@ -122,7 +122,7 @@ public class HomeActivity extends AppCompatActivity {
     private void loadFragments() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.disallowAddToBackStack()
-                .add(R.id.content_frame_home, mHomeFragment, TAG_MAP_FRAGMENT)
+                .add(R.id.content_frame_home, mHomeFragment, TAG_HOME_FRAGMENT)
                 .commit();
     }
 
@@ -192,7 +192,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         OnBackClickCallback homeFragment = (HomeFragment) getSupportFragmentManager()
-                .findFragmentByTag(TAG_MAP_FRAGMENT);
+                .findFragmentByTag(TAG_HOME_FRAGMENT);
         if (homeFragment != null) {
             if (!homeFragment.onBackClick()) {
                 // Selected fragment did not consume the back press event.

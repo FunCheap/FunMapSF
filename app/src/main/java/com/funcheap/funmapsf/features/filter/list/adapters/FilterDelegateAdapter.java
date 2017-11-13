@@ -84,7 +84,7 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
         }
 
         // Set the filter when it's clicked
-        viewHolder.view.setOnClickListener(myView -> mActivity.setFilter(filter));
+        viewHolder.view.setOnClickListener(myView -> mActivity.onFilterClicked(filter));
 
         viewHolder.btnDelete.setOnClickListener(view -> {
             Log.d(TAG, "Deleted " + filter.getFilterName());

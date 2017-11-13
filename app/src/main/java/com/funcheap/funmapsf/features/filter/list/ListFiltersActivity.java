@@ -5,9 +5,11 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Filter;
@@ -28,12 +30,14 @@ import butterknife.ButterKnife;
  * {@link com.funcheap.funmapsf.features.map.MapFragment}
  */
 
-public class ListFiltersActivity extends FragmentActivity {
+public class ListFiltersActivity extends AppCompatActivity {
 
     public static final String EXTRA_FILTER_RESULT = "filter_result";
 
     private ListFilterViewModel mListFilterViewModel;
 
+    @BindView(R.id.filter_list_toolbar)
+    public Toolbar mToolbar;
     @BindView(R.id.recycler_filter_list)
     public RecyclerView mFilterRecycler;
 
@@ -57,23 +61,16 @@ public class ListFiltersActivity extends FragmentActivity {
 
         mIntent = this.getIntent();
 
+        initToolbar();
         initRecyclerView();
-        initSelectListener();
     }
 
-    private void initSelectListener() {
-
-
-    }
-
-    /**
-     * Sets the activity result true with the specified filter.
-     * @param filter the filter selected by the user
-     */
-    public void setFilter(Filter filter) {
-        mIntent.putExtra(EXTRA_FILTER_RESULT, filter);
-        setResult(Activity.RESULT_OK, mIntent);
-        finish();
+    private void initToolbar() {
+        setSupportActionBar(mToolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Saved Filters");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private void initRecyclerView() {
@@ -86,8 +83,22 @@ public class ListFiltersActivity extends FragmentActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
-
+    /**
+     * Sets the activity result true with the specified filter.
+     * @param filter the filter selected by the user
+     */
+    public void onFilterClicked(Filter filter) {
+        mIntent.putExtra(EXTRA_FILTER_RESULT, filter);
+        setResult(Activity.RESULT_OK, mIntent);
+        finish();
     }
 }
