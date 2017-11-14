@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -126,26 +125,28 @@ public class HomeActivity extends AppCompatActivity {
                 new BottomNavigation.OnMenuItemSelectionListener() {
                     @Override
                     public void onMenuItemSelect(@IdRes int item, int i1, boolean b) {
-                        FragmentManager fm = getSupportFragmentManager();
-                        FragmentTransaction ft = fm.beginTransaction();
                         switch (item) {
                             case R.id.action_search:
                                 // Handle 'Search' button click
-                                mMapViewModel.setDisplayMode(mMapViewModel.SEARCH_MODE);
+                                mMapViewModel.setDisplayMode(MapsViewModel.SEARCH_MODE);
                                 break;
                             case R.id.action_bookmarks:
                                 // Handle 'Bookmark' button click
-                                mMapViewModel.setDisplayMode(mMapViewModel.BOOKMARKS_MODE);
+                                mMapViewModel.setDisplayMode(MapsViewModel.BOOKMARKS_MODE);
                                 break;
                             default:
                                 Log.d(TAG, "initBottomNav: Unrecognized menu selection!");
-                                ft.commit();
                         }
                     }
 
                     @Override
-                    public void onMenuItemReselect(@IdRes int id, int i1, boolean b) {
-                        // Do nothing
+                    public void onMenuItemReselect(@IdRes int item, int i1, boolean b) {
+                        // Re-apply filter if bookmarks is re-selected
+                        switch (item) {
+                            case R.id.action_bookmarks:
+                                mMapViewModel.setDisplayMode(MapsViewModel.BOOKMARKS_MODE);
+                                break;
+                        }
                     }
                 });
     }

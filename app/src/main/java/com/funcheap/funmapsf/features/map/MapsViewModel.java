@@ -53,7 +53,7 @@ public class MapsViewModel extends ViewModel {
         mEventsRepo = EventsRepoSingleton.getEventsRepo();
 
         mDisplayMode.setValue(SEARCH_MODE);
-        mListMode.setValue(false);
+        mListMode.setValue(true);
     }
 
     public LiveData<Boolean> isLoading() {
