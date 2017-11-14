@@ -268,6 +268,31 @@ public class HomeFragment extends Fragment
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
                 Log.d("BottomSheetCallback", "onStateChanged: " + newState);
+
+                /**
+                 * Show category chips only when drawer is expanded
+                 */
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    // Edit category chips
+                    Filter filter = mMapsViewModel.getFilter().getValue();
+                    mCategoriesSelected.clear();
+                    mCategoriesSelected.addAll(filter.getCategoriesList());
+                    mChipsCategoryLayout.removeAllViews();
+                    for (String s : filter.getCategoriesList()) {
+                        // Create category chip
+                        ChipView chip = ChipUtils.createRemovableChip(s);
+                        // Set up to remove chip when clicked
+                        chip.setOnClickListener(chipView -> {
+                            ChipView clickedChip = (ChipView) chipView;
+                            mChipsCategoryLayout.removeView(clickedChip);
+                            mCategoriesSelected.remove(clickedChip.getChipText());
+                        });
+                        mChipsCategoryLayout.addView(chip);
+
+                        ((ViewGroup.MarginLayoutParams) chip.getLayoutParams())
+                                .setMargins(0, 0, 20, 20);
+                    }
+                }
             }
 
             @Override
@@ -370,25 +395,6 @@ public class HomeFragment extends Fragment
                 mSpinWhen.setSelection(mWhenList.indexOf(filter.getWhenDate()));
                 mEditWhere.setText(filter.getVenueQuery());
                 mTogglePrice.setValue((filter.isFree()) ? 1 : 0);
-
-                // Edit category chips
-                mCategoriesSelected.clear();
-                mCategoriesSelected.addAll(filter.getCategoriesList());
-                mChipsCategoryLayout.removeAllViews();
-                for (String s : filter.getCategoriesList()) {
-                    // Create category chip
-                    ChipView chip = ChipUtils.createRemovableChip(s);
-                    // Set up to remove chip when clicked
-                    chip.setOnClickListener(chipView -> {
-                        ChipView clickedChip = (ChipView) chipView;
-                        mChipsCategoryLayout.removeView(clickedChip);
-                        mCategoriesSelected.remove(clickedChip.getChipText());
-                    });
-                    mChipsCategoryLayout.addView(chip);
-
-                    ((ViewGroup.MarginLayoutParams) chip.getLayoutParams())
-                            .setMargins(0, 0, 20, 20);
-                }
             }
         });
     }
