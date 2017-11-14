@@ -15,6 +15,6 @@
         android:title="@string/bottom_nav_bookmarks" />
     <item
         android:id="@+id/action_profile"
-        android:icon="@drawable/ic_movie"
+        android:icon="@drawable/ic_account_circle"
         android:title="@string/bottom_nav_profile" />
 </menu>

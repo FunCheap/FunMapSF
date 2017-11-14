@@ -158,7 +158,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             mClusterManager.clearItems();
             mClusterManager.addItems(eventsList);
             // Setting the zoom level back and default Location to San Francisco
-            getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.7749, -122.4194), 10));
+            getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.7749, -122.4194), 11));
             mClusterManager.setRenderer(new EventRenderer(mCtx, getMap(), mClusterManager));
             mClusterManager.cluster();
 
