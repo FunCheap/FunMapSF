@@ -7,14 +7,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
@@ -31,6 +33,7 @@ import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.commons.utils.ChipUtils;
 import com.funcheap.funmapsf.features.filter.SaveFilterDialogFragment;
 import com.funcheap.funmapsf.features.list.home.ListHomeFragment;
+import com.funcheap.funmapsf.features.map.MapFragment;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
 import com.vpaliy.chips_lover.ChipView;
 
@@ -57,20 +60,22 @@ public class HomeFragment extends Fragment
     public static final int SAVE_REQUEST_CODE = 1;
 
     private static final String[] PLACES = new String[] {
-            "San Francisco", "EastBay", "NorthBay", "Peninsula", "SouthBay"
+            "San Francisco", "Oakland", "Berkeley", "Mill Valley", "Mountain View", "Brisbane", "Alameda",
+            "Palo Alto", "Fremont", "San Jose", "Santa Clara", "Livermore", "Dublin", "Burlingame", "San Carlos"
     };
     
     private static final int REQUEST_CODE = 1;
     private static final String EVENT_POSITION = "event_position";
     private static final String EVENT_BOOKMARK = "event_bookmark";
 
+    private static final String TAG_MAP_FRAGMENT = "map_fragment";
+    private static final String TAG_LIST_FRAGMENT = "list_fragment";
+
     private MapsViewModel mMapsViewModel;
 
-    // Home Fragment
-    @BindView(R.id.pager_container_home)
-    public ViewPager mHomePager;
-    @BindView(R.id.tabs_home)
-    public TabLayout mTabLayout;
+    // Fragment Container
+    @BindView(R.id.content_frame_home_fragment)
+    public FrameLayout mHomeContainer;
 
     // Bottom Sheet
     @BindView(R.id.filter_bottom_sheet)
@@ -97,6 +102,9 @@ public class HomeFragment extends Fragment
     @BindView(R.id.fab_apply)
     public FloatingActionButton mFabApply;
 
+    MapFragment mMapFragment;
+    ListHomeFragment mListHomeFragment;
+
     private BottomSheetBehavior mBottomSheetBehavior;
 
     ArrayList<String> mWhenList;
@@ -120,9 +128,10 @@ public class HomeFragment extends Fragment
 
         mMapsViewModel = ViewModelProviders.of(getActivity()).get(MapsViewModel.class);
 
-        initHomePager();
+        initHomeContainer();
         initBottomSheet();
         initFabs();
+        initSearchMode();
         prepareWhenList();
         preparePlace();
         prepareCategories();
@@ -133,6 +142,70 @@ public class HomeFragment extends Fragment
         return root;
     }
 
+    private void initHomeContainer() {
+
+        mMapFragment = MapFragment.newInstance();
+        mListHomeFragment = ListHomeFragment.newInstance();
+
+        // Load initial fragment
+        FragmentManager fm = getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.disallowAddToBackStack()
+                .add(R.id.content_frame_home_fragment, mMapFragment, TAG_MAP_FRAGMENT)
+                .add(R.id.content_frame_home_fragment, mListHomeFragment, TAG_LIST_FRAGMENT)
+                .hide(mListHomeFragment)
+                .commit();
+
+        mMapsViewModel.getListMode().observe(this, isListMode -> {
+            FragmentTransaction transaction = fm.beginTransaction();
+            transaction.setCustomAnimations(R.animator.fragment_fade_in, R.animator.fragment_fade_out);
+
+            if (!isListMode) { // Show Map
+                if (mMapFragment.isAdded()) {
+                    transaction.show(mMapFragment);
+                } else {
+                    transaction.add(R.id.content_frame_home_fragment, mMapFragment, TAG_MAP_FRAGMENT);
+                }
+
+                if (mListHomeFragment.isAdded())
+                    transaction.hide(mListHomeFragment);
+            } else { // Show List
+                if (mListHomeFragment.isAdded()) {
+                    transaction.show(mListHomeFragment);
+                } else {
+                    transaction.add(R.id.content_frame_home_fragment, mListHomeFragment, TAG_LIST_FRAGMENT);
+                }
+
+                if (mMapFragment.isAdded()) {
+                    transaction.hide(mMapFragment);
+                }
+            }
+
+            transaction.commit();
+        });
+    }
+
+    /**
+     * Handle UI toggles between Search mode and Bookmarks mode
+     */
+    private void initSearchMode() {
+        mMapsViewModel.getDisplayMode().observe( this, displayMode -> {
+            if (displayMode == MapsViewModel.SEARCH_MODE) {
+                mBottomSheetBehavior.setHideable(false);
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                mFabSearch.setVisibility(View.VISIBLE);
+            } else if (displayMode == MapsViewModel.BOOKMARKS_MODE) {
+                mBottomSheetBehavior.setHideable(true);
+                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                mFabSearch.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    /**
+     * Hook to consume the back click provided to the parent activity.
+     * @return true if we consumed the back click, false otherwise.
+     */
     @Override
     public boolean onBackClick() {
         if (mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
@@ -163,11 +236,6 @@ public class HomeFragment extends Fragment
             final Runnable r = () -> mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
             handler.postDelayed(r, 300);
         }
-    }
-
-    private void initHomePager() {
-        mHomePager.setAdapter(new HomePagerAdapter(getChildFragmentManager(), getContext()));
-        mTabLayout.setupWithViewPager(mHomePager);
     }
 
     private void initFabs() {
@@ -201,9 +269,46 @@ public class HomeFragment extends Fragment
 
         mChipsFilterLayout.setOnClickListener(
                 view -> mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED));
+
+        mBottomSheetBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                Log.d("BottomSheetCallback", "onStateChanged: " + newState);
+
+                /**
+                 * Show category chips only when drawer is expanded
+                 */
+                if (newState == BottomSheetBehavior.STATE_EXPANDED) {
+                    // Edit category chips
+                    Filter filter = mMapsViewModel.getFilter().getValue();
+                    mCategoriesSelected.clear();
+                    mCategoriesSelected.addAll(filter.getCategoriesList());
+                    mChipsCategoryLayout.removeAllViews();
+                    for (String s : filter.getCategoriesList()) {
+                        // Create category chip
+                        ChipView chip = ChipUtils.createRemovableChip(s);
+                        // Set up to remove chip when clicked
+                        chip.setOnClickListener(chipView -> {
+                            ChipView clickedChip = (ChipView) chipView;
+                            mChipsCategoryLayout.removeView(clickedChip);
+                            mCategoriesSelected.remove(clickedChip.getChipText());
+                        });
+                        mChipsCategoryLayout.addView(chip);
+
+                        ((ViewGroup.MarginLayoutParams) chip.getLayoutParams())
+                                .setMargins(0, 0, 20, 20);
+                    }
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                Log.d("BottomSheetCallback", "onSlide: " + slideOffset);
+            }
+        });
     }
 
-    private void prepareWhenList(){
+    private void prepareWhenList() {
         List<String> temp = Arrays.asList(getResources().getStringArray(R.array.when_array));
         mWhenList = new ArrayList<>(temp);
         ArrayAdapter<String> spinAdp =
@@ -211,13 +316,13 @@ public class HomeFragment extends Fragment
         mSpinWhen.setAdapter(spinAdp);
     }
 
-    private void preparePlace(){
+    private void preparePlace() {
         ArrayAdapter<String> placeAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_dropdown_item_1line, PLACES);
         mEditWhere.setAdapter(placeAdapter);
     }
 
-    private void prepareCategories(){
+    private void prepareCategories() {
         List<String> temp = Arrays.asList(
                 getResources().getStringArray(R.array.categories_array));
         mCategoryList = new ArrayList<>(temp);
@@ -237,7 +342,7 @@ public class HomeFragment extends Fragment
                     // Create category chip
                     ChipView chip = ChipUtils.createRemovableChip(category);
                     // Set up to remove chip when clicked
-                    chip.setEndIconEventClick( endView -> {
+                    chip.setEndIconEventClick(endView -> {
                         ChipView clickedChip = (ChipView) endView.getParent();
                         mChipsCategoryLayout.removeView(clickedChip);
                         mCategoriesSelected.remove(clickedChip.getChipText());
@@ -255,13 +360,13 @@ public class HomeFragment extends Fragment
         });
     }
 
-    private void searchDBandSendEvents(){
+    private void searchDBandSendEvents() {
         Filter filter = new Filter();
         filter.setQuery(mEditQuery.getText().toString());
-        filter.setWhenDate((String)(mSpinWhen.getSelectedItem()));
+        filter.setWhenDate((String) (mSpinWhen.getSelectedItem()));
         filter.setFree(mTogglePrice.getValue() == 1); // 1 == true == FREE, 0 == false == Any
         filter.setVenueQuery(mEditWhere.getText().toString());
-        if(mCategoriesSelected.size()!=0)
+        if (mCategoriesSelected.size() != 0)
             filter.setCategories(mCategoriesSelected.toString());
         else
             filter.setCategories("default");
@@ -295,26 +400,7 @@ public class HomeFragment extends Fragment
                 mEditQuery.setText(filter.getQuery());
                 mSpinWhen.setSelection(mWhenList.indexOf(filter.getWhenDate()));
                 mEditWhere.setText(filter.getVenueQuery());
-                mTogglePrice.setValue( (filter.isFree()) ? 1 : 0 );
-
-                // Edit category chips
-                mCategoriesSelected.clear();
-                mCategoriesSelected.addAll(filter.getCategoriesList());
-                mChipsCategoryLayout.removeAllViews();
-                for (String s : filter.getCategoriesList()) {
-                    // Create category chip
-                    ChipView chip = ChipUtils.createRemovableChip(s);
-                    // Set up to remove chip when clicked
-                    chip.setOnClickListener( chipView -> {
-                        ChipView clickedChip = (ChipView) chipView;
-                        mChipsCategoryLayout.removeView(clickedChip);
-                        mCategoriesSelected.remove(clickedChip.getChipText());
-                    });
-                    mChipsCategoryLayout.addView(chip);
-
-                    ((ViewGroup.MarginLayoutParams) chip.getLayoutParams())
-                            .setMargins(0, 0, 20, 20);
-                }
+                mTogglePrice.setValue((filter.isFree()) ? 1 : 0);
             }
         });
     }

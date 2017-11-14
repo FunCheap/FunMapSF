@@ -28,5 +28,6 @@
 
     <color name="chips_background">#0288D1</color>
     <color name="chips_text">#FFFFFF</color>
+    <color name="chips_close">#EEEEEE</color>
 
 </resources>

@@ -535,7 +535,7 @@ public class Events extends BaseModel implements Parcelable, ClusterItem {
             }
 
             // Remove if categories don't match
-            if (!event.categoriesList.containsAll(filterCategories) && !(filterCategories.contains("default"))) {
+            if (!event.categoriesList.containsAll(filterCategories)) {
                 it.remove();
             }
         }

@@ -16,7 +16,7 @@ import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.commons.utils.ChipUtils;
 import com.funcheap.funmapsf.features.filter.list.ListFilterViewModel;
-import com.funcheap.funmapsf.features.home.HomeActivity;
+import com.funcheap.funmapsf.features.filter.list.ListFiltersActivity;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.vpaliy.chips_lover.ChipView;
 
@@ -39,12 +39,12 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
     private final String TAG = this.getClass().getSimpleName();
     private LayoutInflater mInflater;
     private ListFilterViewModel mListFilterViewModel;
-    private HomeActivity mHomeActivity;
+    private ListFiltersActivity mActivity;
 
     public FilterDelegateAdapter(Activity activity) {
         this.mInflater = activity.getLayoutInflater();
         mListFilterViewModel = ViewModelProviders.of((FragmentActivity) activity).get(ListFilterViewModel.class);
-        mHomeActivity = (HomeActivity) activity;
+        mActivity = (ListFiltersActivity) activity;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class FilterDelegateAdapter extends AdapterDelegate<List<Filter>> {
         }
 
         // Set the filter when it's clicked
-        viewHolder.view.setOnClickListener(myView -> mHomeActivity.setFilter(filter));
+        viewHolder.view.setOnClickListener(myView -> mActivity.onFilterClicked(filter));
 
         viewHolder.btnDelete.setOnClickListener(view -> {
             Log.d(TAG, "Deleted " + filter.getFilterName());

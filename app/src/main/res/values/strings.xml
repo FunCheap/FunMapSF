@@ -5,6 +5,7 @@
     <string name="bottom_nav_search">Search</string>
     <string name="bottom_nav_filters">Filters</string>
     <string name="bottom_nav_bookmarks">Bookmarks</string>
+    <string name="bottom_nav_profile">Profile</string>
     <string name="content_description_event_photo">Event photo</string>
 
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
@@ -56,7 +57,7 @@
         <item>Theater &amp; Performance</item>
     </string-array>
 
-    <string name="save_filter">Do you want to Save this Filter?</string>
+    <string name="save_filter">Do you want to save this Filter?</string>
     <string name="name_filter">Filter name</string>
     <string name="save">SAVE</string>
     <string name="cancel">CANCEL</string>
@@ -83,5 +84,17 @@
     <string name="login_sign_up"><u>Create one now.</u></string>
 
     <string name="detail_about">About</string>
+
+    <string name="facebook_app_id">305967693253372</string>
+    <string name="fb_login_protocol_scheme">fb305967693253372</string>
+
+    <!-- Toolbar -->
+    <string name="menu_saved_filters">Saved Filters</string>
+    <string name="menu_switch_view">Switch View</string>
+    <string name="menu_map_view">Map View</string>
+    <string name="menu_logout">Log Out</string>
+    <string name="logout_msg">Do you want to logout?</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
 
 </resources>

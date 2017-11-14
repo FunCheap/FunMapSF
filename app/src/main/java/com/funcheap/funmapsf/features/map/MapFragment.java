@@ -157,6 +157,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
             mClusterManager.clearItems();
             mClusterManager.addItems(eventsList);
+            // Setting the zoom level back and default Location to San Francisco
+            getMap().animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.7749, -122.4194), 11));
             mClusterManager.setRenderer(new EventRenderer(mCtx, getMap(), mClusterManager));
             mClusterManager.cluster();
 
@@ -192,11 +194,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     private void setMapUISettings() {
-        getMap().getUiSettings().setZoomControlsEnabled(true);
+        getMap().getUiSettings().setZoomControlsEnabled(false);
         getMap().getUiSettings().setRotateGesturesEnabled(false);
         getMap().getUiSettings().setScrollGesturesEnabled(true);
         getMap().getUiSettings().setTiltGesturesEnabled(false);
-        getMap().setPadding(0, 0, 0, 250);
+        getMap().setPadding(0, 0, 0, 210);
 
     }
     private boolean checkPermission() {

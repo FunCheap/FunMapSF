@@ -10,11 +10,11 @@
         android:icon="@drawable/ic_map"
         android:title="@string/bottom_nav_search" />
     <item
-        android:id="@+id/action_filters"
-        android:icon="@drawable/ic_filter"
-        android:title="@string/bottom_nav_filters" />
-    <item
         android:id="@+id/action_bookmarks"
         android:icon="@drawable/ic_book_multiple"
         android:title="@string/bottom_nav_bookmarks" />
+    <item
+        android:id="@+id/action_profile"
+        android:icon="@drawable/ic_account_circle"
+        android:title="@string/bottom_nav_profile" />
 </menu>
