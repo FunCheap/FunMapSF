@@ -9,12 +9,14 @@
         android:id="@+id/toolbar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_toolbar"
             android:layout_alignParentTop="true"
             android:background="@color/primary"
+            android:theme="@style/ToolbarTheme"
             app:elevation="@dimen/app_bar_elevation">
 
             <ImageView
