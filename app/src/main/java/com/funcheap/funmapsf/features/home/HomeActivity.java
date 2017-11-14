@@ -100,7 +100,6 @@ public class HomeActivity extends AppCompatActivity {
                 item.setIcon(R.drawable.ic_format_list_bulleted);
             }
         }
-        setIconInMenu(menu,R.id.action_logout,R.string.menu_logout,R.drawable.ic_logout_black);
         return true;
     }
 
