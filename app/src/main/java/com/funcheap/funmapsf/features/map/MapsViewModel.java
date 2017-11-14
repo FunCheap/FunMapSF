@@ -38,14 +38,25 @@ public class MapsViewModel extends ViewModel {
     private MutableLiveData<Filter> mCurrentFilter = new MutableLiveData<>();
     // The previous filter while the user is browsing bookmarks
     private Filter mTempFilter;
+    private List<Events> mTempEvents;
     // Holds the events to show on the map
     private LiveData<List<Events>> mEventsLiveData = Transformations.switchMap(mCurrentFilter,
             (filter) -> {
                 mIsLoading.setValue(true);
                 if (mDisplayMode.getValue() == BOOKMARKS_MODE) {
+                    // Load bookmarks
                     return mEventsRepo.getBookmarkedEvents();
                 } else {
-                    return mEventsRepo.getFilteredEvents(filter);
+                    // Load search
+                    if (filter == mTempFilter) {
+                        // Load from cache
+                        MutableLiveData<List<Events>> events = new MutableLiveData<>();
+                        events.setValue(mTempEvents);
+                        return events;
+                    } else {
+                        // Load new search
+                        return mEventsRepo.getFilteredEvents(filter);
+                    }
                 }
             });
 
@@ -108,6 +119,7 @@ public class MapsViewModel extends ViewModel {
         if (mDisplayMode.getValue() == SEARCH_MODE) {
             // If in search mode, Save the current filter
             mTempFilter = mCurrentFilter.getValue();
+            mTempEvents = mEventsLiveData.getValue();
         }
 
         if (displayMode == BOOKMARKS_MODE) {
