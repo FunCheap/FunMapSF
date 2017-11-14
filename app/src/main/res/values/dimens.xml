@@ -48,6 +48,7 @@
 
     <dimen name="z_bottom_sheet">2dp</dimen>
     <dimen name="bottom_bar_elevation">8dp</dimen>
+    <dimen name="app_bar_elevation">4dp</dimen>
 
     <!-- Override BottomNav Dimens -->
     <!-- Adjust this to change the amount of elevation -->

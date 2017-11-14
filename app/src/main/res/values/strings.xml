@@ -5,6 +5,7 @@
     <string name="bottom_nav_search">Search</string>
     <string name="bottom_nav_filters">Filters</string>
     <string name="bottom_nav_bookmarks">Bookmarks</string>
+    <string name="bottom_nav_profile">Profile</string>
     <string name="content_description_event_photo">Event photo</string>
 
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
@@ -86,5 +87,10 @@
 
     <string name="facebook_app_id">305967693253372</string>
     <string name="fb_login_protocol_scheme">fb305967693253372</string>
+
+    <!-- Toolbar -->
+    <string name="menu_saved_filters">Saved Filters</string>
+    <string name="menu_switch_view">Switch View</string>
+    <string name="menu_map_view">Map View</string>
 
 </resources>

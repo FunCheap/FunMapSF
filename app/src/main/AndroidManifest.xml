@@ -54,6 +54,7 @@
 
         <meta-data android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
+
         <service android:name=".commons.services.FunMapFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -64,9 +65,11 @@
             android:name=".features.home.HomeActivity"
             android:label="@string/title_activity_maps">
         </activity>
+
         <activity
             android:name=".features.detail.DetailActivity"/>
         <activity android:name=".features.list.cluster.ListClusterActivity" />
+
         <activity
             android:name=".features.login.LoginActivity"
             android:label="@string/title_activity_maps"
@@ -77,11 +80,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:label="@string/app_name" />
+        <activity android:name="com.funcheap.funmapsf.features.filter.list.ListFiltersActivity" />
     </application>
 
 </manifest>
