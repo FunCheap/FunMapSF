@@ -2,22 +2,29 @@ package com.funcheap.funmapsf.features.home;
 
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.facebook.login.LoginManager;
 import com.funcheap.funmapsf.R;
 import com.funcheap.funmapsf.commons.interfaces.OnBackClickCallback;
 import com.funcheap.funmapsf.commons.models.Filter;
 import com.funcheap.funmapsf.features.detail.DetailActivity;
 import com.funcheap.funmapsf.features.filter.list.ListFiltersActivity;
+import com.funcheap.funmapsf.features.login.LoginActivity;
 import com.funcheap.funmapsf.features.map.MapsViewModel;
 
 import butterknife.BindView;
@@ -64,6 +71,12 @@ public class HomeActivity extends AppCompatActivity {
         initSearchMode();
     }
 
+    private void setIconInMenu(Menu menu, int menuItemId, int labelId, int iconId){
+        MenuItem item = menu.findItem(menuItemId);
+        SpannableStringBuilder builder = new SpannableStringBuilder("    "+this.getResources().getString(labelId));
+        builder.setSpan(new ImageSpan(this,iconId),0,1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        item.setTitle(builder);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_toolbar, menu);
@@ -101,6 +114,26 @@ public class HomeActivity extends AppCompatActivity {
             case R.id.action_switch_view:
                 mMapViewModel.toggleListMode();
                 invalidateOptionsMenu();
+                return true;
+            case R.id.action_logout:
+                AlertDialog dialog = new AlertDialog.Builder(this).
+                        setMessage(this.getResources().getString(R.string.logout_msg)).
+                        setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                LoginManager.getInstance().logOut();
+                                Intent intent = new Intent();
+                                intent.setClass(HomeActivity.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }).
+                        setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                            }
+                        }).create();
+                dialog.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

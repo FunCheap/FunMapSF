@@ -11,4 +11,9 @@
         android:icon="@drawable/ic_format_list_bulleted"
         android:title="@string/menu_switch_view"
         app:showAsAction="ifRoom"/>
+
+     <item
+          android:id="@+id/action_logout"
+          android:title="@string/menu_logout"
+          app:showAsAction="never"/>
 </menu>

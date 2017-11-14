@@ -92,5 +92,9 @@
     <string name="menu_saved_filters">Saved Filters</string>
     <string name="menu_switch_view">Switch View</string>
     <string name="menu_map_view">Map View</string>
+    <string name="menu_logout">Log Out</string>
+    <string name="logout_msg">Do you want to logout?</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
 
 </resources>
