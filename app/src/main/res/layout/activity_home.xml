@@ -12,12 +12,12 @@
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar_main"
+            style="@style/Widget.MyApp.Toolbar.Solid"
             android:layout_width="match_parent"
             android:layout_height="@dimen/height_toolbar"
             android:layout_alignParentTop="true"
-            android:background="@color/primary"
-            android:theme="@style/ToolbarTheme"
-            app:elevation="@dimen/app_bar_elevation">
+            android:theme="@style/ThemeOverlay.MyApp.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
 
             <ImageView
                 android:layout_width="wrap_content"
