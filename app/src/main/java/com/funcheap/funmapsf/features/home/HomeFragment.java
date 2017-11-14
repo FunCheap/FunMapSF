@@ -153,6 +153,7 @@ public class HomeFragment extends Fragment
 
         mMapsViewModel.getListMode().observe(this, isListMode -> {
             FragmentTransaction transaction = fm.beginTransaction();
+            transaction.setCustomAnimations(R.animator.fragment_fade_in, R.animator.fragment_fade_out);
 
             if (!isListMode) { // Show Map
                 if (mMapFragment.isAdded()) {
