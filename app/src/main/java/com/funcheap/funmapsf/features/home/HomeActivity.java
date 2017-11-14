@@ -61,12 +61,32 @@ public class HomeActivity extends AppCompatActivity {
         checkNotification();
         initBottomNav();
         loadFragments();
-
+        initSearchMode();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_toolbar, menu);
+        if (mMapViewModel.getDisplayMode().getValue() != null) {
+            int displayMode = mMapViewModel.getDisplayMode().getValue();
+            MenuItem item = mToolbar.getMenu().findItem(R.id.action_filters);
+
+            if (displayMode == MapsViewModel.SEARCH_MODE) {
+                item.setVisible(true);
+            } else if (displayMode == MapsViewModel.BOOKMARKS_MODE) {
+                item.setVisible(false);
+            }
+        }
+
+        if (mMapViewModel.getListMode().getValue() != null) {
+            MenuItem item = mToolbar.getMenu().findItem(R.id.action_switch_view);
+
+            if (mMapViewModel.getListMode().getValue()) { // List Mode
+                item.setIcon(R.drawable.ic_map);
+            } else { // Map Mode
+                item.setIcon(R.drawable.ic_format_list_bulleted);
+            }
+        }
         return true;
     }
 
@@ -80,6 +100,7 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             case R.id.action_switch_view:
                 mMapViewModel.toggleListMode();
+                invalidateOptionsMenu();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -90,6 +111,14 @@ public class HomeActivity extends AppCompatActivity {
         this.setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("");
         // TODO Tint toolbar icons
+    }
+
+    private void initSearchMode() {
+        /*
+         * Hide the filter button in the options menu when
+         * the display mode is Bookmark.
+         */
+        mMapViewModel.getDisplayMode().observe(this, displayMode -> this.invalidateOptionsMenu());
     }
 
     /**

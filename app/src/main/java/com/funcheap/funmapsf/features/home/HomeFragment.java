@@ -185,9 +185,11 @@ public class HomeFragment extends Fragment
             if (displayMode == MapsViewModel.SEARCH_MODE) {
                 mBottomSheetBehavior.setHideable(false);
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                mFabSearch.setVisibility(View.VISIBLE);
             } else if (displayMode == MapsViewModel.BOOKMARKS_MODE) {
                 mBottomSheetBehavior.setHideable(true);
                 mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                mFabSearch.setVisibility(View.INVISIBLE);
             }
         });
     }
