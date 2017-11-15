@@ -110,7 +110,7 @@ public class Filter extends BaseModel implements Parcelable {
 
     public List<String> getCategoriesList() {
         List<String> categoriesList = new ArrayList<>();
-        if(!"default".equals(categories)) {
+        if(!"".equals(categories)) {
             StringTokenizer st = new StringTokenizer(categories.substring(1, categories.length()-1), ",");
             while (st.hasMoreTokens()) {
                 categoriesList.add(st.nextToken());

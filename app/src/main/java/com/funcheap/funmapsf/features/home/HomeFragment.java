@@ -364,7 +364,7 @@ public class HomeFragment extends Fragment
         if (mCategoriesSelected.size() != 0)
             filter.setCategories(mCategoriesSelected.toString());
         else
-            filter.setCategories("default");
+            filter.setCategories("");
 
         // Complete filter
         mMapsViewModel.setFilter(filter);
