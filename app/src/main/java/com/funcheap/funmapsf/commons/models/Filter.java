@@ -176,12 +176,12 @@ public class Filter extends BaseModel implements Parcelable {
         filter.query = "";
 
 
-        filter.whenDate = "This Week";
+        filter.whenDate = "Today";
         filter.explicitStartDate = "";
         filter.explicitEndDate = "";
         filter.free = false;
         filter.venueQuery = "";
-        filter.categories = "[Top Pick]";
+        filter.categories = "";
 
         return filter;
     }
