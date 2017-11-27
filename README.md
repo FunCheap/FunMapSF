@@ -2,7 +2,7 @@ FunMapSF is an event browsing app that takes the curated events from sf.funcheap
 User Stories link : https://trello.com/b/0J15yyNi/funmapsf
 
 ## Video Walkthru:
-https://www.youtube.com/watch?v=SLRmsV_Nmvk&feature=youtu.be
+https://www.youtube.com/watch?v=SLRmsV_Nmvk&feature=youtu.be  
 https://www.youtube.com/watch?v=0EEvXZjIzrQ&feature=youtu.be
 
 ## Required stories:
