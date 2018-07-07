@@ -69,6 +69,22 @@ public class EventAdapter extends RecyclerView.Adapter {
     }
 
 
+    public void updateEventBookmark(int position, boolean isBookmarked) {
+        if(mEvents.get(position).isBookmarked()!=isBookmarked) {
+            mEvents.get(position).setBookmark(isBookmarked);
+            this.notifyItemChanged(position);
+        }
+    }
+
+
+    public void removeEventBookmark(int position, boolean isBookmarked) {
+        if(!isBookmarked) {
+            mEvents.remove(position);
+            this.notifyItemRemoved(position);
+        }
+    }
+
+
     private void insertHeaders() {
         // add headers here
         if(mEvents.size()>0) {

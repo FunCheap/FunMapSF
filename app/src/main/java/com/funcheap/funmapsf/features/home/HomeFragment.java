@@ -1,5 +1,6 @@
 package com.funcheap.funmapsf.features.home;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Build;
@@ -62,6 +63,10 @@ public class HomeFragment extends Fragment
             "San Francisco", "Oakland", "Berkeley", "Mill Valley", "Mountain View", "Brisbane", "Alameda",
             "Palo Alto", "Fremont", "San Jose", "Santa Clara", "Livermore", "Dublin", "Burlingame", "San Carlos"
     };
+    
+    private static final int REQUEST_CODE = 1;
+    private static final String EVENT_POSITION = "event_position";
+    private static final String EVENT_BOOKMARK = "event_bookmark";
 
     private static final String TAG_MAP_FRAGMENT = "map_fragment";
     private static final String TAG_LIST_FRAGMENT = "list_fragment";
@@ -398,5 +403,18 @@ public class HomeFragment extends Fragment
                 mTogglePrice.setValue((filter.isFree()) ? 1 : 0);
             }
         });
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode ==  REQUEST_CODE){
+            if(resultCode == Activity.RESULT_OK){
+                if(mHomePager.getCurrentItem()==1) {
+                    ((ListHomeFragment) ((HomePagerAdapter) mHomePager.getAdapter()).getRegisteredFragment(1)).
+                            modifyAdapter(data.getExtras().getInt(EVENT_POSITION), data.getExtras().getBoolean(EVENT_BOOKMARK));
+                }
+            }
+        }
     }
 }

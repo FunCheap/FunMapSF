@@ -51,7 +51,10 @@ public class DetailActivity extends AppCompatActivity {
 
     public static final String EVENT_EXTRA_ID = "event_extra_id";
     private static final String EVENT_EXTRA = "event_extra";
+    private static final String EVENT_POSITION = "event_position";
+    private static final String EVENT_BOOKMARK = "event_bookmark";
     private final String TAG = this.getClass().getSimpleName();
+    private int position;
 
     private static final String EVENT_TYPE = "vnd.android.cursor.item/event";
     private static final String EVENT_BEGIN_TIME = "beginTime";
@@ -114,6 +117,7 @@ public class DetailActivity extends AppCompatActivity {
         if (intent.hasExtra(EVENT_EXTRA)) {
             // Get event directly
             Events event = getIntent().getExtras().getParcelable(EVENT_EXTRA);
+            position = getIntent().getExtras().getInt(EVENT_POSITION);
             mDetailViewModel.setEventData(event);
             mDetailViewModel.getEventData().observe(this, this::bindEvent);
         } else if (intent.hasExtra(EVENT_EXTRA_ID)) {
@@ -194,6 +198,16 @@ public class DetailActivity extends AppCompatActivity {
             ((ViewGroup.MarginLayoutParams) chip.getLayoutParams())
                     .setMargins(0, 0, 20, 20);
         }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(EVENT_POSITION,position);
+        intent.putExtra(EVENT_BOOKMARK, mEvent.isBookmarked());
+        setResult(RESULT_OK,intent);
+        super.onBackPressed();
     }
 
     private void initBookmark() {
